@@ -13,13 +13,13 @@ namespace Jamgine
 		{		
 			if(p_graphicalSystem == GraphicalSystem::DIRECTX)
 			{
-				try{
+				//try{
 					m_jamgineEngine = new DirectX::DirectXEngine();
-				}
-				catch(std::exception e)
-				{
+				//}
+				//catch(std::exception e)
+				//{
 					l_errorMessage = ErrorMessage::FAILED;
-				}
+				//}
 			}
 			else if(p_graphicalSystem == GraphicalSystem::OPENGL)
 			try{

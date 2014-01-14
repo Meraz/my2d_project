@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <Jamgine\Include\Jamgine.h>
 			using namespace std;
 #include <iostream>
@@ -10,12 +11,10 @@ namespace Jamgine
 		class DirectXEngine : public JamgineEngine
 		{
 		public:
-			virtual void Render()
-			{
-
-			cout << "Test" << endl;
-
-			}
+			DirectXEngine();
+			~DirectXEngine();
+			int a;
+			virtual void Render();
 		};
 	}
 }

@@ -14,5 +14,5 @@ set(LIBRARIES ${EXTERNAL_LIBRARIES})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 # TODO: Add the target (commented until we actually have a source file
-add_library(${PROJECT_NAME} SHARED ${HEADERS} ${SOURCES})
+add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})

@@ -4,11 +4,20 @@ namespace Jamgine
 {
 	namespace DirectX
 	{
-		/*void DirectXEngine::Render()
+		
+		DirectXEngine::DirectXEngine()
+		{
+			a = 5;
+		}
+
+		DirectXEngine::~DirectXEngine()
 		{
 
-			cout << "Test" << endl;
+		}
 
-		}*/
+		void DirectXEngine::Render()
+		{
+			cout << "Test" << endl;
+		}
 	}
 }

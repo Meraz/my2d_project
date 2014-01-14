@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma comment(lib, "DirectX.lib")
+
 namespace Jamgine
 {
 	namespace GraphicalSystem

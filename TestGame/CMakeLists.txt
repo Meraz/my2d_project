@@ -17,4 +17,5 @@ include_directories(Include)
 # Add the target
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/Jamgine/Debug/Jamgine.lib)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} C:/Users/Bulten/ssp/Build/Jamgine/Debug/Jamgine.lib)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} C:/Users/Bulten/ssp/Build/Jamgine/DirectX11/Debug/DirectX11.lib)
