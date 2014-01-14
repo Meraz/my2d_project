@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 # Root project settings
-set(ROOT_PROJECT_NAME 2d_engine)
+set(ROOT_PROJECT_NAME Jamgine)
 project(${ROOT_PROJECT_NAME})
 
 # Find external libraries
@@ -36,12 +36,8 @@ include_directories(${EXTERNAL_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR})
 
 
-add_subdirectory(Engine)
-#add_subdirectory(RootForce)
-#add_subdirectory(RootTools)
-#add_subdirectory(RootSystems)
-#add_subdirectory(Utility)
-#add_subdirectory(Assets)
+add_subdirectory(Jamgine)
+add_subdirectory(TestGame)
 
 
 # Copy the runtime dependencies to the output directory when dependency target is built
