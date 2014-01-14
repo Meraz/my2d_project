@@ -1,11 +1,13 @@
 #include "Jamgine.h"
-#include <Jamgine\DirectX11\Include\DirectXEngine.h>
+#include <Jamgine\Include\DirectXEngine.h>
 
-#include <exception>
+#include <stdexception>
 
 namespace Jamgine
 {
-	ErrorMessage::ErrorMessage CreateEngine(JamgineEngine* p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem)
+	JamgineEngine* JamgineEngine::m_jamgineEngine = nullptr;
+
+	ErrorMessage::ErrorMessage JamgineEngine::CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem)
 	{
 		ErrorMessage::ErrorMessage l_errorMessage = ErrorMessage::OK;
 		
@@ -13,13 +15,13 @@ namespace Jamgine
 		{		
 			if(p_graphicalSystem == GraphicalSystem::DIRECTX)
 			{
-				//try{
+				try{
 					m_jamgineEngine = new DirectX::DirectXEngine();
-				//}
-				//catch(std::exception e)
-				//{
+				}
+				catch(std::exception e)
+				{
 					l_errorMessage = ErrorMessage::FAILED;
-				//}
+				}
 			}
 			else if(p_graphicalSystem == GraphicalSystem::OPENGL)
 			try{
@@ -30,26 +32,26 @@ namespace Jamgine
 					l_errorMessage = ErrorMessage::FAILED;
 				}
 		}
-		p_jamgineEngine = m_jamgineEngine;
+		*p_jamgineEngine = m_jamgineEngine;
 		return l_errorMessage;
 	}
 
-	ErrorMessage::ErrorMessage ReleaseEngine()
+	ErrorMessage::ErrorMessage JamgineEngine::ReleaseEngine()
 	{
 		ErrorMessage::ErrorMessage l_errorMessage = ErrorMessage::OK;
 		if(m_jamgineEngine == nullptr)
 			l_errorMessage = ErrorMessage::FAILED; 
-		else
-		{
-			try
-			{
-			//	m_jamgineEngine->Safe_Delete(m_jamgineEngine);
-			}
-			catch(std::exception e)
-			{
-				l_errorMessage = ErrorMessage::FAILED; 
-			}
-		}
+		//else
+		//{
+		//	try
+		//	{
+		//	//	m_jamgineEngine->Safe_Delete(m_jamgineEngine);
+		//	}
+		//	catch(std::exception e)
+		//	{
+		//		l_errorMessage = ErrorMessage::FAILED; 
+		//	}
+		//}
 		return l_errorMessage;
 	}	
 }

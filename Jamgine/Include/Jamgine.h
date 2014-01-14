@@ -1,6 +1,6 @@
 #pragma once
 
-#pragma comment(lib, "DirectX.lib")
+//#pragma comment(lib, "DirectX.lib")
 
 namespace Jamgine
 {
@@ -31,13 +31,22 @@ namespace Jamgine
 			NONE				// No rotations specified.
 		};
 	}
-	
+
+	struct Position
+	{
+		float X;
+		float Y;
+	};
 
 	class JamgineEngine
 	{
 	public:		
 		virtual void Render() = 0;
-	
+
+	static ErrorMessage::ErrorMessage CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem);
+	static ErrorMessage::ErrorMessage ReleaseEngine();
+	static JamgineEngine* m_jamgineEngine;
+
 	/*template<typename T> void Safe_Delete(T*& a) 
 	{
 		delete a;
@@ -48,11 +57,9 @@ namespace Jamgine
 		
 	
 	protected:
-	//	virtual EngineMain() = 0;
+		//	virtual EngineMain() = 0;
 	//	virtual ~EngineMain() = 0;
 	};
+	//static JamgineEngine* m_jamgineEngine = nullptr;
 
-	static JamgineEngine* m_jamgineEngine = nullptr;
-	ErrorMessage::ErrorMessage CreateEngine(JamgineEngine* p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem);
-	ErrorMessage::ErrorMessage ReleaseEngine();
 }

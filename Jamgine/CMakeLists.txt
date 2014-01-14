@@ -13,7 +13,7 @@ file(GLOB_RECURSE SOURCES Source/*.cpp)
 include_directories(Include)
 
 # Add subdirectories
-add_subdirectory(DirectX11)
+#add_subdirectory(DirectX11)
 add_subdirectory(OpenGL)
 	
 # Add the target
