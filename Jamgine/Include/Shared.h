@@ -1,20 +1,13 @@
 #pragma once
 
+#include <Jamgine/Include/ErrorMessage.h>
+
 namespace GraphicalSystem
 {
 	enum GraphicalSystem
 	{
 		DIRECTX,
 		OPENGL
-	};
-}
-
-namespace ErrorMessage
-{
-	enum ErrorMessage
-	{
-		OK,
-		FAILED
 	};
 }
 

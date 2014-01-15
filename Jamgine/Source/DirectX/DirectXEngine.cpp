@@ -1,4 +1,4 @@
-#include <Jamgine\Include\DirectXEngine.h>
+#include <Jamgine/Include/DirectX/DirectXEngine.h>
 
 namespace Jamgine
 {

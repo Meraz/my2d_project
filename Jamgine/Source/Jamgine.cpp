@@ -1,7 +1,5 @@
-#include "Jamgine.h"
-#include <Jamgine\Include\DirectXEngine.h>
-
-//#include <stdexception>
+#include <Jamgine/Include/Jamgine.h>
+#include <Jamgine/Include/DirectX/DirectXEngine.h>
 
 namespace Jamgine
 {

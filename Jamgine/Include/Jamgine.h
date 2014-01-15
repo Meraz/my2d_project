@@ -1,8 +1,6 @@
 #pragma once
 #include <Jamgine\Include\Shared.h>
 
-//#pragma comment(lib, "DirectX.lib")
-
 namespace Jamgine
 {
 
@@ -10,7 +8,7 @@ namespace Jamgine
 	class JamgineEngine
 	{
 	public:		
-		virtual void Render() = 0;
+		virtual void Render(Position p_position, SpriteEffect::SpriteEffect p_spriteEffect, ) = 0;
 
 	static ErrorMessage::ErrorMessage CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem);
 	static ErrorMessage::ErrorMessage ReleaseEngine();
