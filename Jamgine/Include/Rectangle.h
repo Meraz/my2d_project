@@ -1,19 +1,20 @@
 #pragma once
 
-namespace Engine
-{
+#include <Jamgine\Include\Shared.h>
 
-	namespace Shared
+namespace Jamgine
+{
+	class Rectangle
 	{
-		class Rectangle
-		{
-		public:
-			Rectangle();
-			~Rectangle();
+	public:
+		Rectangle();
+
+		/* Comment */
+		Rectangle(Position l_position, float l_width, float l_height);
+
+		~Rectangle();
 			
-			
-			private:
-			
-		};
-	}
+		Position m_position;
+		float m_width, m_height;			
+	};
 }

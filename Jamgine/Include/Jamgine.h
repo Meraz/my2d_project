@@ -1,42 +1,11 @@
 #pragma once
+#include <Jamgine\Include\Shared.h>
 
 //#pragma comment(lib, "DirectX.lib")
 
 namespace Jamgine
 {
-	namespace GraphicalSystem
-	{
-		enum GraphicalSystem
-		{
-			DIRECTX,
-			OPENGL
-		};
-	}
-	
-	namespace ErrorMessage
-	{
-		enum ErrorMessage
-		{
-			OK,
-			FAILED
-		};
-	}
-	
-	namespace SpriteEffect
-	{
-		enum SpriteEffect
-		{
-			FLIPHORIZONTALLY,	// Rotate 180 degrees about the Y axis before rendering.
-			FLIPVERTICALLY,		// Rotate 180 degrees about the X axis before rendering.
-			NONE				// No rotations specified.
-		};
-	}
 
-	struct Position
-	{
-		float X;
-		float Y;
-	};
 
 	class JamgineEngine
 	{
