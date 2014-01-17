@@ -12,7 +12,6 @@ namespace Jamgine
 
 	static ErrorMessage::ErrorMessage CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem);
 	static ErrorMessage::ErrorMessage ReleaseEngine();
-	static JamgineEngine* m_jamgineEngine;
 
 	/*template<typename T> void Safe_Delete(T*& a) 
 	{
@@ -21,6 +20,7 @@ namespace Jamgine
 	}*/
 	
 	private:
+		static JamgineEngine* m_jamgineEngine;
 		
 	
 	protected:

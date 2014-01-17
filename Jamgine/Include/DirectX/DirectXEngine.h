@@ -15,6 +15,12 @@ namespace Jamgine
 			DirectXEngine();
 			~DirectXEngine();
 			virtual void Render(Position p_position, SpriteEffect::SpriteEffect p_spriteEffect);
+		
+		private:
+			void InitializeSwapChain();
+			void RegisterWindow();
+
+
 		};
 	}
 }
