@@ -9,13 +9,16 @@ project(${PROJECT_NAME})
 file(GLOB_RECURSE SOURCES Source/*.cpp)
 file(GLOB_RECURSE HEADERS Include/*.h)
 
-set(LIBRARIES ${EXTERNAL_LIBRARIES})
+set(LIBRARIES ${EXTERNAL_LIBRARIES}) # No idea what this is
 
 # Set search paths
-include_directories(Include)
+include_directories(Include)		 # No idea what this is
+
+# Set library search path
+link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Jamgine/Debug)
 
 # Add the target
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} C:/Users/Bulten/ssp/Build/Jamgine/Debug/Jamgine.lib)
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} C:/Users/Bulten/ssp/Build/Jamgine/DirectX11/Debug/DirectX11.lib)
+
+# Additional lib
+target_link_libraries(${PROJECT_NAME} Jamgine.lib)

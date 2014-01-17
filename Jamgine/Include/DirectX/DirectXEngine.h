@@ -14,7 +14,7 @@ namespace Jamgine
 		public:
 			DirectXEngine();
 			~DirectXEngine();
-			virtual void Render();
+			virtual void Render(Position p_position, SpriteEffect::SpriteEffect p_spriteEffect);
 		};
 	}
 }

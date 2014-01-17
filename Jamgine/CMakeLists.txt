@@ -12,13 +12,7 @@ file(GLOB_RECURSE SOURCES Source/*.cpp)
 # Set search paths
 include_directories(Include)
 
-# Add subdirectories
-#add_subdirectory(DirectX11)
-add_subdirectory(OpenGL)
-	
 # Add the target
 add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
-
-
+#target_link_libraries(${PROJECT_NAME} ${LIBRARIES})

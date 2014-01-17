@@ -15,7 +15,7 @@ namespace Jamgine
 
 		}
 
-		void DirectXEngine::Render()
+		void DirectXEngine::Render(Position p_position, SpriteEffect::SpriteEffect p_spriteEffect)
 		{
 			cout << "Test" << endl;
 		}

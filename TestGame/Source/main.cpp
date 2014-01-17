@@ -5,10 +5,10 @@
 int main()
 {
 	Jamgine::JamgineEngine* a = nullptr;
-//	Jamgine::JamgineEngine::CreateEngine(&a, Jamgine::GraphicalSystem::DIRECTX);
+	Jamgine::JamgineEngine::CreateEngine(&a, Jamgine::GraphicalSystem::DIRECTX);
 //	Jamgine::JamgineEngine::ReleaseEngine();
 
-	a->Render();
+	//a->Render();
 	system("pause");
 	
 
