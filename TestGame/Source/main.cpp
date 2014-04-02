@@ -21,7 +21,7 @@
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	Jamgame* l_jamgame = new Jamgame();
-	l_jamgame->Initialize();
+	l_jamgame->Initialize(hInstance, lpCmdLine, nCmdShow);
 	l_jamgame->Run();
 
 	delete l_jamgame;

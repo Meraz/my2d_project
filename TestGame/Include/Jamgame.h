@@ -9,7 +9,7 @@ class Jamgame
 public:
 	Jamgame();
 	~Jamgame();
-	void Initialize();
+	void Initialize(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow);
 	int Run();
 private:
 	HINSTANCE	m_hInstance;
@@ -25,6 +25,8 @@ private:
 	void Update();
 	void Render();
 
-	LRESULT MsgProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
+	LRESULT CALLBACK MsgProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
+
+	LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 };
 
