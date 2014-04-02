@@ -5,9 +5,9 @@ namespace Jamgine
 {
 	JamgineEngine* JamgineEngine::m_jamgineEngine = nullptr;
 
-	ErrorMessage::ErrorMessage JamgineEngine::CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem)
+	ErrorMessage JamgineEngine::CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem)
 	{
-		ErrorMessage::ErrorMessage l_errorMessage = ErrorMessage::OK;
+		ErrorMessage l_errorMessage = J_OK;
 		
 		if(m_jamgineEngine == nullptr)
 		{		
@@ -18,7 +18,7 @@ namespace Jamgine
 				}
 				catch(std::exception e)
 				{
-					l_errorMessage = ErrorMessage::FAILED;
+					l_errorMessage = J_FAIL;
 				}
 			}
 			else if(p_graphicalSystem == GraphicalSystem::OPENGL)
@@ -27,18 +27,18 @@ namespace Jamgine
 				}
 				catch(std::exception e)
 				{
-					l_errorMessage = ErrorMessage::FAILED;
+					l_errorMessage = J_FAIL;
 				}
 		}
 		*p_jamgineEngine = m_jamgineEngine;
 		return l_errorMessage;
 	}
 
-	ErrorMessage::ErrorMessage JamgineEngine::ReleaseEngine()
+	ErrorMessage JamgineEngine::ReleaseEngine()
 	{
-		ErrorMessage::ErrorMessage l_errorMessage = ErrorMessage::OK;
+		ErrorMessage l_errorMessage = J_OK;
 		if(m_jamgineEngine == nullptr)
-			l_errorMessage = ErrorMessage::FAILED; 
+			l_errorMessage = J_FAIL; 
 		//else
 		//{
 		//	try

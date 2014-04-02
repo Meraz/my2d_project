@@ -3,15 +3,15 @@
 
 namespace Jamgine
 {
-
-
 	class JamgineEngine
 	{
 	public:		
+		static ErrorMessage CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem);
+		static ErrorMessage ReleaseEngine(); 
+		
+		virtual ErrorMessage Initialize(void* p_data) = 0;
 		virtual void Render(Position p_position, SpriteEffect::SpriteEffect p_spriteEffect) = 0;
 
-	static ErrorMessage::ErrorMessage CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem);
-	static ErrorMessage::ErrorMessage ReleaseEngine();
 
 	/*template<typename T> void Safe_Delete(T*& a) 
 	{
@@ -20,13 +20,8 @@ namespace Jamgine
 	}*/
 	
 	private:
-		static JamgineEngine* m_jamgineEngine;
-		
+		static JamgineEngine* m_jamgineEngine;		
 	
 	protected:
-		//	virtual EngineMain() = 0;
-	//	virtual ~EngineMain() = 0;
 	};
-	//static JamgineEngine* m_jamgineEngine = nullptr;
-
 }

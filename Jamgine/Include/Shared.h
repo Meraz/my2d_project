@@ -17,8 +17,8 @@ namespace Jamgine
 	{
 		enum SpriteEffect
 		{
-			FLIPHORIZONTALLY,	// Rotate 180 degrees about the Y axis before rendering.
-			FLIPVERTICALLY,		// Rotate 180 degrees about the X axis before rendering.
+			FLIP_HORIZONTALLY,	// Rotate 180 degrees about the Y axis before rendering.
+			FLIP_VERTICALLY,		// Rotate 180 degrees about the X axis before rendering.
 			NONE				// No rotations specified.
 		};
 	}
