@@ -73,7 +73,7 @@ void Jamgame::Render()
 
 }
 
-LRESULT CALLBACK* Jamgame::WNDPROC(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
+LRESULT CALLBACK Jamgame::WNDPROC(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
 {
 	switch (p_msg)
 	{
