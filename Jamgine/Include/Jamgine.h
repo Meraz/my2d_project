@@ -27,6 +27,7 @@ namespace Jamgine
 
 
 		virtual void Render(Position p_position, SpriteEffect::SpriteEffect p_spriteEffect) = 0;
+		virtual void PostRender() = 0;
 
 
 	/*template<typename T> void Safe_Delete(T*& a) 

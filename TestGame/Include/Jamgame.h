@@ -18,7 +18,7 @@ public:
 private: // Functions
 	void Update();
 	void Render();
-	ErrorMessage RegisterWindow();
+	//ErrorMessage RegisterWindow();
 
 
 private: // Variable

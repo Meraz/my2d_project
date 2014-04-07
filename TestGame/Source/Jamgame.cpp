@@ -34,53 +34,26 @@ Jamgame::~Jamgame()
 void Jamgame::Initialize(HINSTANCE p_hInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	m_hInstance = p_hInstance;
-
 	
-	WNDCLASS l_wndClass;
-	l_wndClass.style         = CS_HREDRAW | CS_VREDRAW;
-	l_wndClass.lpfnWndProc   = MainWndProc; 
-	l_wndClass.cbClsExtra    = 0;
-	l_wndClass.cbWndExtra    = 0;
-	l_wndClass.hInstance     = p_hInstance;
-	l_wndClass.hIcon         = LoadIcon(0, IDI_APPLICATION);
-	l_wndClass.hCursor       = LoadCursor(0, IDC_ARROW);
-	l_wndClass.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
-	l_wndClass.lpszMenuName  = 0;
-	l_wndClass.lpszClassName = L"D3DWndClassName";
-			
-	if (!RegisterClass(&l_wndClass))
-		return;// J_FAIL;
-	
-	ErrorMessage hr;
-	
-	// Register window
-	hr = RegisterWindow();
-	if(hr == J_FAIL)
-		return;
-
+	ErrorMessage hr;	
 	// Jamengine
 	hr = Jamgine::JamgineEngine::CreateEngine(&m_jamgine, Jamgine::GraphicalSystem::DIRECTX);
 	if (hr == J_FAIL)
 		return;
 
-	// Init engine
-
-	// Gametimer
-	m_gameTimer = new GameTimer();
-	m_gameTimer->Reset();
-
-
-
-
 	Jamgine::Data_Send l_data;
 //	l_data.handle		= 0;
 	l_data.hInstance	= p_hInstance;
-//	l_data.messageProc	= &MsgProc;
+	l_data.messageProc	= &MainWndProc;
 	l_data.clientWidth	= 800;
 	l_data.clientHeight = 800;
 
-
+	// Init engine
 	hr = m_jamgine->Initialize(l_data);
+
+	// Gametimer
+	m_gameTimer = new GameTimer();
+	m_gameTimer->Reset();	
 }
 
 int Jamgame::Run()
@@ -119,48 +92,7 @@ void Jamgame::Update()
 
 void Jamgame::Render()
 {
-
-}
-
-ErrorMessage Jamgame::RegisterWindow()
-{
-	ErrorMessage l_errorMessage = J_OK;
-
-	WNDCLASSEX l_wndClass;
-	l_wndClass.style         = CS_HREDRAW | CS_VREDRAW;
-	l_wndClass.lpfnWndProc   = MainWndProc; 
-	l_wndClass.cbClsExtra    = 0;
-	l_wndClass.cbWndExtra    = 0;
-	l_wndClass.hInstance     = m_hInstance;
-	l_wndClass.hIcon         = LoadIcon(0, IDI_APPLICATION);
-	l_wndClass.hCursor       = LoadCursor(0, IDC_ARROW);
-	l_wndClass.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
-	l_wndClass.lpszMenuName  = 0;
-	l_wndClass.lpszClassName = L"D3DWndClassName";
-			
-	if (!RegisterClassEx(&l_wndClass))
-		return J_FAIL;
-
-				
-	// Create window
-	RECT rc = { 0, 0, m_clientHeight, m_clientWidth};
-	//AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-
-	m_handle = CreateWindow(
-		L"TestGame",
-		L"Welcome to this window",
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT,
-		rc.right - rc.left,
-		rc.bottom - rc.top,
-		NULL,
-		NULL, 
-		m_hInstance, 
-		NULL);
-	if(m_handle == NULL)
-		return J_FAIL;
-
-	return l_errorMessage;
+	m_jamgine->PostRender();
 }
 
 

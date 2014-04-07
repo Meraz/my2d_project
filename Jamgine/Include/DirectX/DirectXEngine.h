@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Jamgine\Include\Jamgine.h>
-#include <DirectX\D3DX11.h>
+#include <Jamgine/Include/Jamgine.h>
+#include <d3d11.h>
 
 using namespace std;
 //#include <iostream>
@@ -20,10 +20,14 @@ namespace Jamgine
 			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data);
 
 			virtual void Render(Position p_position, SpriteEffect::SpriteEffect p_spriteEffect);
+			virtual void PostRender();
+
 		
 		private:
 			ID3D11Device*			m_device;
-			ID3D11DeviceContext*	m_context;
+			ID3D11DeviceContext*	m_deviceContext;
+			IDXGISwapChain*			m_swapChain;
+
 			HWND					m_handle;
 			HINSTANCE				m_hInstance;
 			int						m_clientWidth;
@@ -33,7 +37,7 @@ namespace Jamgine
 			ErrorMessage RegisterWindow(Jamgine::Data_Send p_data);
 			
 
-			void InitializeSwapChain();
+			ErrorMessage InitializeSwapChain();
 
 		};
 	}
