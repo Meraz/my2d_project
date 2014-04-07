@@ -37,11 +37,10 @@ namespace Jamgine
 		{
 			ErrorMessage l_errorMessage = J_OK;
 
-			m_handle		=	p_data.l_handle;
-			m_hInstance		=	p_data.l_hInstance;
+			m_hInstance		=	p_data.hInstance;
 			try
 			{
-				RegisterWindow(p_data);
+//				RegisterWindow(p_data);
 			}
 			catch (std::exception e) 
 			{
@@ -57,6 +56,8 @@ namespace Jamgine
 				return J_FAIL;
 			}
 
+//			*p_data.handle = &m_handle;
+
 			return l_errorMessage;
 		}
 
@@ -65,41 +66,47 @@ namespace Jamgine
 			
 		}
 
-		ErrorMessage DirectXEngine::RegisterWindow(Jamgine::Data_Send p_data)
-		{
-			ErrorMessage l_errorMessage = J_OK;
+	ErrorMessage DirectXEngine::RegisterWindow()
+	{
+		ErrorMessage l_errorMessage = J_OK;
 
-			WNDCLASS l_wndclass;
-			l_wndclass.style = CS_HREDRAW | CS_VREDRAW;
-			l_wndclass.lpfnWndProc = p_data.WNDPROC;
-			l_wndclass.cbClsExtra = 0;
-			l_wndclass.cbWndExtra = 0;
-			l_wndclass.hInstance = p_data.l_hInstance;
-			l_wndclass.hIcon = 0;
-			l_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-			l_wndclass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-			l_wndclass.lpszMenuName = NULL;
-			l_wndclass.lpszClassName = L"TestGame";
+		WNDCLASSEX l_wndClass;
+		l_wndClass.style         = CS_HREDRAW | CS_VREDRAW;
+		l_wndClass.lpfnWndProc   = MainWndProc; 
+		l_wndClass.cbClsExtra    = 0;
+		l_wndClass.cbWndExtra    = 0;
+		l_wndClass.hInstance     = m_hInstance;
+		l_wndClass.hIcon         = LoadIcon(0, IDI_APPLICATION);
+		l_wndClass.hCursor       = LoadCursor(0, IDC_ARROW);
+		l_wndClass.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
+		l_wndClass.lpszMenuName  = 0;
+		l_wndClass.lpszClassName = L"D3DWndClassName";
 			
-			if (!RegisterClass(&l_wndclass))
-				return J_FAIL;
+		if (!RegisterClassEx(&l_wndClass))
+			return J_FAIL;
 
 				
-			// Create window
-			RECT rc = { 0, 0, p_data.p_clientWidth, p_data.p_clientHeight };
-			//AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+		// Create window
+		RECT rc = { 0, 0, m_clientHeight, m_clientWidth};
+		//AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-			if (!CreateWindow(L"TestGame", L"Welcome to this window",
-				WS_OVERLAPPEDWINDOW,
-				CW_USEDEFAULT, CW_USEDEFAULT,
-				rc.right - rc.left,
-				rc.bottom - rc.top,
-				NULL, NULL, p_data.l_hInstance, NULL))
-			{
-				return J_FAIL;
-			}
-			return l_errorMessage;
-		}
+		m_handle = CreateWindow(
+			L"TestGame",
+			L"Welcome to this window",
+			WS_OVERLAPPEDWINDOW,
+			CW_USEDEFAULT, CW_USEDEFAULT,
+			rc.right - rc.left,
+			rc.bottom - rc.top,
+			NULL,
+			NULL, 
+			m_hInstance, 
+			NULL);
+		if(m_handle == NULL)
+			return J_FAIL;
+
+		return l_errorMessage;
+	}
+		
 
 		void DirectXEngine::InitializeSwapChain()
 		{

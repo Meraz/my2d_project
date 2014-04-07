@@ -31,6 +31,7 @@ namespace Jamgine
 
 		//	ErrorMessage RegisterWindow(HINSTANCE l_hInstance, LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam));
 			ErrorMessage RegisterWindow(Jamgine::Data_Send p_data);
+			
 
 			void InitializeSwapChain();
 

@@ -1,3 +1,5 @@
+#include <Jamgame.h>
+
 #if defined(WIN32) && !defined(UNIX)
 /* Do windows stuff */
 #include <Windows.h>
