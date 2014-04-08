@@ -1,4 +1,4 @@
-#include <Jamgame.h>
+#include <TestGame/Include/Jamgame.h>
 
 #if defined(WIN32) && !defined(UNIX)
 /* Do windows stuff */
@@ -49,8 +49,7 @@ return 0;
 /* Error, both can't be defined or undefined same time */
 
 #endif
-#include <Windows.h>
-#include <TestGame\Include\Jamgame.h>
+
 
 
 

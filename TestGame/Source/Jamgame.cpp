@@ -8,8 +8,6 @@ namespace
 	Jamgame* g_jamgame = nullptr;
 }
 
-// Forwards declarion for MsgProc
-//LRESULT CALLBACK MsgProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
 
 LRESULT CALLBACK MainWndProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
 {
