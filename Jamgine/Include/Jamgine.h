@@ -27,13 +27,6 @@ namespace Jamgine
 		virtual void Render(Position p_position, Texture2DInterface* p_textureInterface, SpriteEffect p_spriteEffect) = 0;
 		virtual void PostRender() = 0;
 
-
-	/*template<typename T> void Safe_Delete(T*& a) 
-	{
-		delete a;
-		a = nullptr;
-	}*/
-	
 	private:
 		static JamgineEngine* m_jamgineEngine;		
 	

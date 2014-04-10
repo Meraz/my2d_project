@@ -12,6 +12,8 @@ namespace Jamgine
 			float depth;
 			Texture2DInterface* texture;
 			SpriteEffect spriteEffect;
+			// rotation
+			// origin pos
 			
 			SpriteData(Position p_position, float p_depth, Texture2DInterface* p_texture, SpriteEffect p_spriteEffect)
 			{

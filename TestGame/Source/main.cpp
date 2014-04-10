@@ -3,20 +3,6 @@
 #if defined(WIN32) && !defined(UNIX)
 /* Do windows stuff */
 #include <Windows.h>
-//#include <winerror.h>
-//--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything.
-//--------------------------------------------------------------------------------------
-/*
-int main()
-{
-	HINSTANCE hInstance = GetModuleHandle(0);	// http://stackoverflow.com/questions/6728782/how-does-getmodulehandle-work-in-visual-c
-	HINSTANCE hPrevInstance = 0;
-	LPWSTR lpCmdLine = GetCommandLine();
-	//int nCmdShow = GetStartupInfo();
-	return 0;
-}
-*/
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)

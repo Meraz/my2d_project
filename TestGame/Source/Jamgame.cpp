@@ -40,7 +40,6 @@ void Jamgame::Initialize(HINSTANCE p_hInstance, LPWSTR lpCmdLine, int nCmdShow)
 		return;
 
 	Jamgine::Data_Send l_data;
-//	l_data.handle		= 0;
 	l_data.hInstance	= p_hInstance;
 	l_data.messageProc	= &MainWndProc;
 	l_data.clientWidth	= 800;
@@ -92,8 +91,6 @@ void Jamgame::Render()
 {
 	m_jamgine->PostRender();
 }
-
-
 
 LRESULT CALLBACK Jamgame::MsgProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
 {
