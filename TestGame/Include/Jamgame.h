@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Jamgine\Include\Jamgine.h>
-#include <TestGame\Include\GameTimer.h>
+#include <Jamgine/Include/Jamgine.h>
+#include <TestGame/Include/GameTimer.h>
 #include <Windows.h>
 
 class Jamgame
@@ -19,7 +19,7 @@ private: // Functions
 	void Update();
 	void Render();
 	//ErrorMessage RegisterWindow();
-
+	
 
 private: // Variable
 	// Window variables
@@ -37,5 +37,12 @@ private: // Variable
 	int			m_mousePositionX;
 	int			m_mousePositionY;
 	bool		m_lMouseClicked;
+
+
+	// TEST CASES
+	Jamgine::Texture2DInterface* a;
+	Jamgine::Texture2DInterface* b;
+	Jamgine::Texture2DInterface* c;
+	Jamgine::Texture2DInterface* d;
 };
 

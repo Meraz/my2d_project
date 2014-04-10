@@ -23,6 +23,8 @@ add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 # Additional lib
 target_link_libraries(${PROJECT_NAME} Jamgine.lib)
 target_link_libraries(${PROJECT_NAME} d3d11.lib)
+target_link_libraries(${PROJECT_NAME} d3dcompiler.lib)
+target_link_libraries(${PROJECT_NAME} dxguid.lib)
 
 # Set SUBSYSTEM:WINDOWS
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")

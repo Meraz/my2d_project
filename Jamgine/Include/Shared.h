@@ -24,10 +24,23 @@ namespace Jamgine
 		float x;
 		float y;
 
+		Position()
+		{
+
+		}
+		Position(float _x, float _y) : x(_x), y(_y){}
+
 		Position& operator+(Position p_position)
 		{
 			x += p_position.x;
 			y += p_position.y;
+			return *this;
+		}
+
+		Position& operator=(const Position& p_position)
+		{
+			x = p_position.x;
+			y = p_position.y;
 			return *this;
 		}
 	};
