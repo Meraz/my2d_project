@@ -15,7 +15,7 @@ namespace Jamgine
 			if(p_graphicalSystem == GraphicalSystem::DIRECTX)
 			{
 				try{
-					m_jamgineEngine = new DirectX::DirectXEngine();
+					m_jamgineEngine = new JDirectX::DirectXEngine();
 				}
 				catch(std::exception e)
 				{

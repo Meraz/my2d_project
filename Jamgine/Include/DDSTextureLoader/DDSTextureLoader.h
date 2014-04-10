@@ -23,6 +23,7 @@
 
 #define _WIN32_WINNT _WIN32_WINNT_WIN7 // Must be defined, look it up.
 
+/*
 #if defined(_XBOX_ONE) && defined(_TITLE) && MONOLITHIC
 #include <d3d11_x.h>
 #define DCOMMON_H_INCLUDED
@@ -30,6 +31,8 @@
 #else
 #include <d3d11_1.h>
 #endif
+*/
+#include <d3d11_1.h>
 
 #pragma warning(push)
 #pragma warning(disable : 4005)

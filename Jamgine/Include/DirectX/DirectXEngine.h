@@ -5,13 +5,14 @@
 #include <Jamgine/Include/DirectX/SpriteData.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
 #include <DirectX/d3d11_1.h>
+#include <DirectX/DirectXMath.h>
 
 #include <vector>
 
 
 namespace Jamgine
 {
-	namespace DirectX
+	namespace JDirectX
 	{
 		struct SpriteData;
 
@@ -20,7 +21,6 @@ namespace Jamgine
 		public:
 			DirectXEngine();
 			~DirectXEngine();
-			
 			
 			virtual ErrorMessage Initialize(void* p_data);			
 			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data);
@@ -41,6 +41,11 @@ namespace Jamgine
 			ID3D11Texture2D*			m_depthStencil;
 			ID3D11DepthStencilState*	m_depthStencilState;
 			ID3D11DepthStencilView*		m_depthStencilView;
+			ID3D11Buffer*				m_perFrameBuffer;
+			ID3D11Buffer*				m_perTextureBuffer;
+			ID3D11Buffer*				m_vertexBuffer;
+			ID3D11SamplerState*			m_samplerState;
+			ID3D11RasterizerState*		m_rasterizerState;
 
 			HWND					m_handle;
 			HINSTANCE				m_hInstance;
@@ -54,11 +59,16 @@ namespace Jamgine
 			ID3D11GeometryShader* m_geometryShader;
 			ID3D11InputLayout*	m_inputLayout;
 
+
 			std::vector<SpriteData> m_renderData;
+
+			DirectX::XMFLOAT4X4 m_view;
 
 			void LoadShaders();
 			void SortSprites();
-		//	bool SortAlgorithm(SpriteData p_a, SpriteData p_b);
+			void CreateBuffer();
+			HRESULT CreateRasterizers();
+			void SetViewport();
 
 			ErrorMessage RegisterWindow(Jamgine::Data_Send p_data);
 			ErrorMessage InitializeSwapChain();

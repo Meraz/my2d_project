@@ -4,7 +4,7 @@
 
 namespace Jamgine
 {
-	#define STANDARD_SPRITE_DEPTH 0.5f
+	#define STANDARD_SPRITE_DEPTH 50.5f
 	
 	enum class GraphicalSystem
 	{
@@ -14,9 +14,10 @@ namespace Jamgine
 
 	enum class SpriteEffect
 	{
-		FLIP_HORIZONTALLY,	// Rotate 180 degrees about the Y axis before rendering.
-		FLIP_VERTICALLY,		// Rotate 180 degrees about the X axis before rendering.
-		NONE				// No rotations specified.
+		FLIP_HORIZONTALLY,	
+		FLIP_VERTICALLY,
+		FLIP_BOTH,
+		FLIP_NONE
 	};
 
 	struct Position

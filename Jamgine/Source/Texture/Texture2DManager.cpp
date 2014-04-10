@@ -7,7 +7,7 @@ namespace Jamgine
 
 		ErrorMessage Texture2DManager::CreateTexture2DManager(Texture2DManager** p_textureManager)
 		{
-			ErrorMessage l_errorMessage = J_FAIL;
+			ErrorMessage l_errorMessage = J_OK;
 
 			if(m_texture2DManager == nullptr)
 			{

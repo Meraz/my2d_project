@@ -4,19 +4,19 @@
 
 namespace Jamgine
 {
-	namespace DirectX
+	namespace JDirectX
 	{
 		struct SpriteData
 		{
 			Position position;
 			float depth;
-			Texture2DInterface* texture;
+			Texture2D* texture;
 			SpriteEffect spriteEffect;
 			// rotation
 			// origin pos
 
 
-			SpriteData(Position p_position, float p_depth, Texture2DInterface* p_texture, SpriteEffect p_spriteEffect)
+			SpriteData(Position p_position, float p_depth, Texture2D* p_texture, SpriteEffect p_spriteEffect)
 			{
 				position		= p_position;
 				depth			= p_depth;
@@ -24,7 +24,7 @@ namespace Jamgine
 				spriteEffect	= p_spriteEffect;
 			}
 
-			SpriteData(Position p_position, Texture2DInterface* p_texture, SpriteEffect p_spriteEffect)
+			SpriteData(Position p_position, Texture2D* p_texture, SpriteEffect p_spriteEffect)
 			{
 				position		= p_position;
 				depth			= STANDARD_SPRITE_DEPTH;
@@ -32,20 +32,20 @@ namespace Jamgine
 				spriteEffect	= p_spriteEffect;
 			}
 
-			SpriteData(Position p_position, float p_depth, Texture2DInterface* p_texture)
+			SpriteData(Position p_position, float p_depth, Texture2D* p_texture)
 			{
 				position		= p_position;
 				depth			= p_depth;
 				texture			= p_texture;
-				spriteEffect	= SpriteEffect::NONE;
+				spriteEffect	= SpriteEffect::FLIP_NONE;
 			}
 
-			SpriteData(Position p_position, Texture2DInterface* p_texture)
+			SpriteData(Position p_position, Texture2D* p_texture)
 			{
 				position		= p_position;
 				depth			= STANDARD_SPRITE_DEPTH;
 				texture			= p_texture;
-				spriteEffect	= SpriteEffect::NONE;
+				spriteEffect	= SpriteEffect::FLIP_NONE;
 			}
 		};
 	}	

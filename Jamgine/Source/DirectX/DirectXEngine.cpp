@@ -10,13 +10,35 @@
 
 namespace Jamgine
 {
-	namespace DirectX
+	namespace JDirectX
 	{		
+		struct Vertex
+		{
+			DirectX::XMFLOAT3 position;
+			DirectX::XMFLOAT2 origin;
+			DirectX::XMFLOAT2 offset;
+			DirectX::XMFLOAT2 texture_offset;
+			float  rotation;
+
+			Vertex()
+			{
+			
+			}
+
+			Vertex(SpriteData input)
+			{
+				position = DirectX::XMFLOAT3(input.position.x, input.position.y, input.depth);
+				origin	 = DirectX::XMFLOAT2(position.x, position.y);
+				offset	 = DirectX::XMFLOAT2(500.0f, 500.0f); //HARD CODEDDDED : TODO
+				texture_offset = DirectX::XMFLOAT2(0.0f,0.0f);
+				rotation = 0.0f;
+			}
+		};
 
 		DirectXEngine::DirectXEngine()
 			: m_device(nullptr), m_deviceContext(nullptr), m_texture2DManager(nullptr)
 		{
-
+			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
 		}
 
 		DirectXEngine::~DirectXEngine()
@@ -68,9 +90,79 @@ namespace Jamgine
 			m_texture2DManager->Initialize(m_device);
 			if(l_errorMessage != J_OK)
 				return J_FAIL; 
+
+			CreateDepthBuffer();
+			InitializeRenderTarget();
 			LoadShaders();
+			CreateBuffer();
+			SetViewport();
+			CreateRasterizers();
 
 			return l_errorMessage;
+		}
+
+		void DirectXEngine::SetViewport()
+		{
+			D3D11_VIEWPORT vp;
+			vp.Width = (FLOAT)m_clientWidth;
+			vp.Height = (FLOAT)m_clientHeight;
+			vp.MinDepth = 0.0f;
+			vp.MaxDepth = 1.0f;
+			vp.TopLeftX = 0;
+			vp.TopLeftY = 0;
+			m_deviceContext->RSSetViewports(1, &vp);
+		}
+
+		HRESULT DirectXEngine::CreateRasterizers()
+		{
+			HRESULT hr = S_OK;
+			D3D11_RASTERIZER_DESC desc;
+
+			desc.FillMode = D3D11_FILL_SOLID;
+			desc.CullMode = D3D11_CULL_NONE;
+			desc.FrontCounterClockwise = false;
+			desc.DepthBias = 0;
+			desc.SlopeScaledDepthBias = 0.0f;
+			desc.DepthBiasClamp = 0.0f;
+			desc.DepthClipEnable = true;
+			desc.ScissorEnable = false;
+			desc.MultisampleEnable = false;
+			desc.AntialiasedLineEnable = false;
+
+			hr = m_device->CreateRasterizerState(&desc, &m_rasterizerState);
+			if (FAILED(hr))
+				return hr;
+
+			m_deviceContext->RSSetState(m_rasterizerState);
+
+			return hr;
+		}
+
+		void DirectXEngine::CreateBuffer()
+		{
+			HRESULT hr = S_OK;
+
+			D3D11_BUFFER_DESC bufferDesc;
+			bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			bufferDesc.Usage	 = D3D11_USAGE_DEFAULT;
+			bufferDesc.CPUAccessFlags = 0;
+			bufferDesc.MiscFlags = 0;
+			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4X4);
+			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perFrameBuffer);
+
+			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
+			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perTextureBuffer);
+
+			bufferDesc.BindFlags				= D3D11_BIND_VERTEX_BUFFER;
+			bufferDesc.Usage					= D3D11_USAGE_DYNAMIC;
+			bufferDesc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;
+			bufferDesc.ByteWidth				= sizeof(Vertex) * 300000; // LOL fix this maybe
+			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_vertexBuffer);
+			UINT stride = sizeof(Vertex);
+			UINT offset = 0;
+
+			m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+
 		}
 
 		void DirectXEngine::InitializeRenderTarget()
@@ -80,6 +172,8 @@ namespace Jamgine
 			hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&l_backBuffer);
 			hr = m_device	->CreateRenderTargetView(l_backBuffer, nullptr, &m_backBuffer_RTV);
 			hr = m_device	->CreateUnorderedAccessView(l_backBuffer, nullptr, &m_backBuffer_UAV);
+
+			m_deviceContext->OMSetRenderTargets(1, &m_backBuffer_RTV, m_depthStencilView);
 
 			l_backBuffer->Release();
 		}
@@ -91,25 +185,25 @@ namespace Jamgine
 			// Create depth stencil texture
 			D3D11_TEXTURE2D_DESC descDepth;
 			ZeroMemory(&descDepth, sizeof(descDepth));
-			descDepth.Width = m_clientWidth;
-			descDepth.Height = m_clientHeight;
-			descDepth.MipLevels = 1;
-			descDepth.ArraySize = 1;
-			descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-			descDepth.SampleDesc.Count = 1;
+			descDepth.Width				= m_clientWidth;
+			descDepth.Height			= m_clientHeight;
+			descDepth.MipLevels			= 1;
+			descDepth.ArraySize			= 1;
+			descDepth.Format			= DXGI_FORMAT_D24_UNORM_S8_UINT;
+			descDepth.SampleDesc.Count	= 1;
 			descDepth.SampleDesc.Quality = 0;
-			descDepth.Usage = D3D11_USAGE_DEFAULT;
-			descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-			descDepth.CPUAccessFlags = 0;
-			descDepth.MiscFlags = 0;
+			descDepth.Usage				= D3D11_USAGE_DEFAULT;
+			descDepth.BindFlags			= D3D11_BIND_DEPTH_STENCIL;
+			descDepth.CPUAccessFlags	= 0;
+			descDepth.MiscFlags			= 0;
 
 			hr = m_device->CreateTexture2D(&descDepth, nullptr, &m_depthStencil);
 
 			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 			ZeroMemory(&descDSV, sizeof(descDSV));
-			descDSV.Format = descDepth.Format;
-			descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-			descDSV.Texture2D.MipSlice = 0;
+			descDSV.Format				= descDepth.Format;
+			descDSV.ViewDimension		= D3D11_DSV_DIMENSION_TEXTURE2D;
+			descDSV.Texture2D.MipSlice	= 0;
 			hr = m_device->CreateDepthStencilView(m_depthStencil, &descDSV, &m_depthStencilView);
 
 			//create states
@@ -118,38 +212,65 @@ namespace Jamgine
 			// Depth test parameters
 			dsDesc.DepthEnable = true;
 			dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-			//dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		//	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 			dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
 			// Stencil test parameters
 			dsDesc.StencilEnable = true;	// YES?1
 			dsDesc.StencilReadMask = 0xFF;
 			dsDesc.StencilWriteMask = 0xFF;
+			// Stencil operations if pixel is front-facing
+			dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+			dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+			dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+			// Stencil operations if pixel is back-facing
+			dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+			dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+			dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
 
 			hr = m_device->CreateDepthStencilState(&dsDesc, &m_depthStencilState);
 		}
 
 		void DirectXEngine::LoadShaders()
 		{
-			m_shaderLoader->CreateGeometryShader(L"geometryshader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
-			m_shaderLoader->CreatePixelShader(L"pixelshader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
+			HRESULT hr;
+			m_shaderLoader->CreateGeometryShader(L"GeometryShader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
+			m_shaderLoader->CreatePixelShader(L"PixelShader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
 
 			D3D11_INPUT_ELEMENT_DESC l_desc[] =
 			{
 				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "ORIGIN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "OFFSET", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"ROTATION", 0,	DXGI_FORMAT_R32G32B32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"ANIMATION_FLOAT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+				{ "ORIGIN", 0, DXGI_FORMAT_R32G32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{ "OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{ "TEXTURE_OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{"ROTATION", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
 
 			unsigned int l_numElements = ARRAYSIZE(l_desc);
-			m_shaderLoader->CreateVertexShaderWithInputLayout(L"vertexshader.hlsl", "VS", "vs_5_0", m_device, &m_vertexShader, l_desc, l_numElements, &m_inputLayout);
+			m_shaderLoader->CreateVertexShaderWithInputLayout(L"VertexShader.hlsl", "VS", "vs_5_0", m_device, &m_vertexShader, l_desc, l_numElements, &m_inputLayout);
 
 			m_deviceContext->VSSetShader(m_vertexShader,	nullptr, 0);
 			m_deviceContext->PSSetShader(m_pixelShader,		nullptr, 0);
 			m_deviceContext->GSSetShader(m_geometryShader,	nullptr, 0);
-			m_deviceContext->IASetInputLayout(m_inputLayout);			
+			m_deviceContext->IASetInputLayout(m_inputLayout);	
+			m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+			
+			D3D11_SAMPLER_DESC sampler_desc;
+			ZeroMemory(&sampler_desc, sizeof(sampler_desc));
+			sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+			sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+			sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+			sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+			sampler_desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+			sampler_desc.MinLOD = 0;
+			sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+			hr = m_device->CreateSamplerState(&sampler_desc, &m_samplerState);
+			m_deviceContext->PSSetSamplers(0, 1, &m_samplerState);
 		}
 
 
@@ -160,20 +281,56 @@ namespace Jamgine
 		
 		void DirectXEngine::Render(Position p_position, Texture2DInterface* p_textureInterface, SpriteEffect p_spriteEffect)
 		{
-			m_renderData.push_back(SpriteData(p_position, p_textureInterface, p_spriteEffect));
+			m_renderData.push_back(SpriteData(p_position, (Texture2D*)p_textureInterface, p_spriteEffect));
 		}
 		
 		void DirectXEngine::PostRender()
 		{
 			SortSprites();
+			unsigned int max = m_renderData.size() - 1;
 
-			//
+			Vertex* a = new Vertex[max + 1];
+
+			for (int i = 0; i < max + 1; i++)
+			{
+				a[i] = Vertex(m_renderData[i]);
+			}
+
+			D3D11_MAPPED_SUBRESOURCE mappedResource;
+			m_deviceContext->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+			memcpy(mappedResource.pData, a, (max+1) * sizeof(Vertex));
+			//*(Vertex*)mappedResource.pData = *a;
+			m_deviceContext->Unmap(m_vertexBuffer, 0);
+			
+			
 			m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, );
+			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Black);
 
+			// Update per frame buffer
+			m_deviceContext->UpdateSubresource(m_perFrameBuffer, 0, nullptr, &m_view, 0, 0); // Transposse?
+
+			
+			unsigned int l_currentIndex = 0;
+			unsigned int l_amount = 1;
+//			unsigned int max = m_renderData.size()-1;
+			for (unsigned int i = 0; i < max; i++)
+			{
+				if (m_renderData[i].texture == m_renderData[i + 1].texture)
+					l_amount++;
+				else
+				{
+					ID3D11ShaderResourceView* a = m_renderData[i].texture->GetShaderResourceView();	// change name
+					m_deviceContext->PSSetShaderResources(0, 1, &a);
+					m_deviceContext->Draw(l_currentIndex, l_amount);
+					l_currentIndex += l_amount;
+					l_amount = 1;
+				}	
+			}
+			m_deviceContext->Draw(l_currentIndex, l_amount);			
 
 
 			m_swapChain->Present(0, 0);
+			m_renderData.clear();
 		}
 				
 		bool SortAlgorithm(SpriteData p_a, SpriteData p_b)
@@ -239,9 +396,9 @@ namespace Jamgine
 			l_swapChainDesc.BufferDesc.RefreshRate.Numerator	= 60;
 			l_swapChainDesc.BufferDesc.RefreshRate.Denominator	= 1;
 			l_swapChainDesc.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;
-			l_swapChainDesc.SampleDesc.Count					= 4;
-			l_swapChainDesc.SampleDesc.Quality					= 1;
-			l_swapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT;// | DXGI_USAGE_UNORDERED_ACCESS;
+			l_swapChainDesc.SampleDesc.Count					= 1;
+			l_swapChainDesc.SampleDesc.Quality					= 0;
+			l_swapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_UNORDERED_ACCESS;
 			l_swapChainDesc.BufferCount							= 1;
 			l_swapChainDesc.OutputWindow						= m_handle;
 			l_swapChainDesc.Windowed							= true;
