@@ -2,6 +2,7 @@
 #include <exception>
 #include <algorithm>  
 
+#include <DirectX/DirectXColors.h>
 
 // Project files
 #include <Jamgine/Include/DirectX/DirectXEngine.h>
@@ -130,7 +131,6 @@ namespace Jamgine
 
 		void DirectXEngine::LoadShaders()
 		{
-			/*
 			m_shaderLoader->CreateGeometryShader(L"geometryshader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
 			m_shaderLoader->CreatePixelShader(L"pixelshader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
 
@@ -149,8 +149,7 @@ namespace Jamgine
 			m_deviceContext->VSSetShader(m_vertexShader,	nullptr, 0);
 			m_deviceContext->PSSetShader(m_pixelShader,		nullptr, 0);
 			m_deviceContext->GSSetShader(m_geometryShader,	nullptr, 0);
-			m_deviceContext->IASetInputLayout(m_inputLayout);
-			*/
+			m_deviceContext->IASetInputLayout(m_inputLayout);			
 		}
 
 
@@ -169,18 +168,13 @@ namespace Jamgine
 			SortSprites();
 
 			//
+			m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, );
 
 
 
 			m_swapChain->Present(0, 0);
 		}
-		
-		/*
-		bool DirectXEngine::SortAlgorithm(SpriteData p_a, SpriteData p_b) 
-		{
-			return (p_a.texture < p_b.texture); 
-		}
-		*/
 				
 		bool SortAlgorithm(SpriteData p_a, SpriteData p_b)
 		{
