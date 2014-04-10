@@ -1,14 +1,21 @@
+// Official libs
+#include <exception>
+
+// Third parties libs included in this lib
+#include <DirectX/D3D11.h>
+
+// Project files
 #include <Jamgine/Include/DirectX/DirectXEngine.h>
 #include <Jamgine/Include/DirectX/DirectXShared.h>
-#include <DirectX/D3D11.h>
-#include <exception>
+#include <Jamgine/Include/DirectX/SpriteData.h>
 
 namespace Jamgine
 {
 	namespace DirectX
 	{		
+
 		DirectXEngine::DirectXEngine()
-			: m_device(nullptr), m_deviceContext(nullptr)
+			: m_device(nullptr), m_deviceContext(nullptr), m_texture2DManager(nullptr)
 		{
 
 		}
@@ -26,11 +33,16 @@ namespace Jamgine
 			{
 				l_data = *(Jamgine::Data_Send*)p_data;
 			}
-			catch (exception e)
+			catch (std::exception e)
 			{
 				return J_FAIL;
 			}
+			
+			// Run regular init
 			l_errorMessage = Initialize(l_data);
+			if(l_errorMessage != J_OK)
+				return J_FAIL;
+
 			return l_errorMessage;
 		}
 
@@ -38,34 +50,51 @@ namespace Jamgine
 		{
 			ErrorMessage l_errorMessage = J_OK;
 
-			m_hInstance		=	p_data.hInstance;
-			m_clientWidth = p_data.clientWidth;
-			m_clientHeight = p_data.clientHeight;
-//			try
-//			{
-				RegisterWindow(p_data);
-//			}
-//			catch (std::exception e) 
-//			{
-//				return J_FAIL; 
-//			}
+			m_hInstance		= p_data.hInstance;
+			m_clientWidth	= p_data.clientWidth;
+			m_clientHeight	= p_data.clientHeight;
+			
+			// Register window
+			l_errorMessage  = RegisterWindow(p_data);
+				if(l_errorMessage != J_OK)
+				return J_FAIL; 
 
+			// Init swapchain and device
 			l_errorMessage = InitializeSwapChain();
 			if(l_errorMessage != J_OK)
 				return J_FAIL; 
 
+			// Create texturemanger
+			l_errorMessage = Texture2DManager::CreateTexture2DManager(&m_texture2DManager);
+			m_texture2DManager->Initialize(m_device);
+			if(l_errorMessage != J_OK)
+				return J_FAIL; 
 
 			return l_errorMessage;
 		}
 
-		void DirectXEngine::Render(Position p_position, SpriteEffect::SpriteEffect p_spriteEffect)
+		ErrorMessage DirectXEngine::LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath)
 		{
-			//m_swapChain->Present(0, 0);
+			return m_texture2DManager->GetTexture(p_texture2DInterface, p_filePath);
 		}
-
+		
+		void DirectXEngine::Render(Position p_position, Texture2DInterface* p_textureInterface, SpriteEffect p_spriteEffect)
+		{
+			m_renderData.push_back(SpriteData(p_position, p_textureInterface, p_spriteEffect));
+		}
+		
 		void DirectXEngine::PostRender()
 		{
+			// Sort everything up.
 			m_swapChain->Present(0, 0);
+		}
+		
+		void DirectXEngine::SortSprites()
+		{
+			for(unsigned int i = 0; i < m_renderData.size(); i++)
+			{
+				//m_renderData.
+			}
 		}
 
 		ErrorMessage DirectXEngine::RegisterWindow(Jamgine::Data_Send p_data)
@@ -86,8 +115,7 @@ namespace Jamgine
 			
 			if (!RegisterClass(&l_wndClass))
 				return J_FAIL;
-
-				
+							
 			// Create window
 			RECT rc = { 0, 0, m_clientHeight, m_clientWidth};
 			//AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
@@ -110,8 +138,7 @@ namespace Jamgine
 			ShowWindow( m_handle, SW_SHOW);
 
 			return l_errorMessage;
-		}
-		
+		}		
 
 		ErrorMessage DirectXEngine::InitializeSwapChain()
 		{
@@ -123,8 +150,6 @@ namespace Jamgine
 			l_swapChainDesc.BufferDesc.RefreshRate.Numerator	= 60;
 			l_swapChainDesc.BufferDesc.RefreshRate.Denominator	= 1;
 			l_swapChainDesc.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;
-	//			l_swapChainDesc.BufferDesc.ScanlineOrdering			= DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	//			l_swapChainDesc.BufferDesc.Scaling					= DXGI_MODE_SCALING_UNSPECIFIED;
 			l_swapChainDesc.SampleDesc.Count					= 4;
 			l_swapChainDesc.SampleDesc.Quality					= 1;
 			l_swapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT;// | DXGI_USAGE_UNORDERED_ACCESS;
@@ -162,8 +187,5 @@ namespace Jamgine
 
 			return l_errorMessage;
 		}
-
-
-	
 	}
 }

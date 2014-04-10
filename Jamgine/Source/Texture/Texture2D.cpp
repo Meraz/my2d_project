@@ -2,9 +2,9 @@
 
 namespace Jamgine
 {
-	Texture2D::Texture2D(ID3D11Device* p_device, char* p_filepath)
+	Texture2D::Texture2D(ID3D11Device* p_device, std::string p_filePath) // SHOULD RETURN HRESULT OR SOMETHING
 	{
-		DirectX::CreateDDSTextureFromFile(p_device, L"Filename.dds", (ID3D11Resource**)&m_texture2DBuffer , &m_texture2D_SRV);
+		DirectX::CreateDDSTextureFromFile(p_device, L"Box_Texture.dds", (ID3D11Resource**)&m_texture2DBuffer , &m_texture2D_SRV); 
 	}
 
 	Texture2D::~Texture2D()

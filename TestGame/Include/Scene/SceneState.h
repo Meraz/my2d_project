@@ -1,12 +1,9 @@
 #pragma once
 
-namespace SceneState
+enum class SceneState
 {
-	enum State
-	{
-		MAIN_MENU,
-		GAME,
-		HIGHSCORE,
-		EXIT
-	};
-}
+	MAIN_MENU,
+	GAME,
+	HIGHSCORE,
+	EXIT
+};

@@ -1,7 +1,7 @@
 #ifndef BASESCENE_H
 #define BASESCENE_H
 
-#include <TestGame\Include\Scene\SceneState.h>
+#include <TestGame/Include/Scene/SceneState.h>
 
 class BaseScene
 {
@@ -14,7 +14,7 @@ public:
 	virtual void Render() = 0;
 
 protected:
-	SceneState::State m_sceneState;
+	SceneState m_sceneState;
 	bool m_previousMouseState;
 
 };

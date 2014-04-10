@@ -26,23 +26,31 @@ namespace Jamgine
 			return l_errorMessage;
 		}
 
+		Texture2DManager::Texture2DManager()
+		{
+			//m_texture = std::map<char*,Texture2D*>();
+		}	
+		
+		void Texture2DManager::Initialize(ID3D11Device* p_device)
+		{
+			m_device = p_device;
+		}
+
 		void Texture2DManager::ReleaseTexture2DManager()
 		{
 			//  Release map here
 		}
 
-		ErrorMessage Texture2DManager::LoadTexture(Texture2DInterface** p_texture2D, char* p_filePath)
+		ErrorMessage Texture2DManager::GetTexture(Texture2DInterface** p_texture2D, std::string p_filePath)
 		{
 			ErrorMessage l_errorMessage = J_FAIL;
 
 			if(m_texture[p_filePath] == nullptr)
 				m_texture[p_filePath] = new Texture2D(m_device, p_filePath); // I AM HERE
+			*p_texture2D = m_texture[p_filePath];
 
-			return J_FAIL;
+			return J_OK; // ALWAYS RETURNS TRUE ATM
 		}
 
-		Texture2DManager::Texture2DManager()
-		{
-			//m_texture = std::map<char*,Texture2D*>();
-		}		
+	
 }

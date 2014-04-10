@@ -4,34 +4,30 @@
 
 namespace Jamgine
 {
-	namespace GraphicalSystem
+	#define STANDARD_SPRITE_DEPTH 0.5f
+	
+	enum class GraphicalSystem
 	{
-		enum GraphicalSystem
-		{
-			DIRECTX,
-			OPENGL
-		};
-	}
+		DIRECTX,
+		OPENGL
+	};
 
-	namespace SpriteEffect
+	enum class SpriteEffect
 	{
-		enum SpriteEffect
-		{
-			FLIP_HORIZONTALLY,	// Rotate 180 degrees about the Y axis before rendering.
-			FLIP_VERTICALLY,		// Rotate 180 degrees about the X axis before rendering.
-			NONE				// No rotations specified.
-		};
-	}
+		FLIP_HORIZONTALLY,	// Rotate 180 degrees about the Y axis before rendering.
+		FLIP_VERTICALLY,		// Rotate 180 degrees about the X axis before rendering.
+		NONE				// No rotations specified.
+	};
 
 	struct Position
 	{
-		float X;
-		float Y;
+		float x;
+		float y;
 
 		Position& operator+(Position p_position)
 		{
-			X += p_position.X;
-			Y += p_position.Y;
+			x += p_position.x;
+			y += p_position.y;
 			return *this;
 		}
 	};

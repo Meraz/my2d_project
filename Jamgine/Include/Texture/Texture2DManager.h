@@ -10,17 +10,20 @@ namespace Jamgine
 	class Texture2DManager
 	{
 	public:
-		ErrorMessage LoadTexture(Texture2DInterface** p_texture2D, char* p_filePath);
+		static ErrorMessage CreateTexture2DManager(Texture2DManager** p_textureManager);
+		void Initialize(ID3D11Device* p_device);
+
+		ErrorMessage GetTexture(Texture2DInterface** p_texture2D, std::string p_filePath);
 
 	private:
 		Texture2DManager();
 //		virtual ~Texture2DManager();
 		ID3D11Device* m_device;
-		static ErrorMessage CreateTexture2DManager(Texture2DManager** p_textureManager);
+		
 		static void ReleaseTexture2DManager();
 		static Texture2DManager* m_texture2DManager;
 
-		std::map<char*,Texture2D*> m_texture;
+		std::map<std::string,Texture2D*> m_texture;
 		
 		/*
 		ErrorMessage JamgineEngine::CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem::GraphicalSystem p_graphicalSystem)
