@@ -92,6 +92,7 @@ namespace Jamgine
 			ID3D11Buffer*				m_vertexBuffer;
 			ID3D11SamplerState*			m_samplerState;
 			ID3D11RasterizerState*		m_rasterizerState;
+			ID3D11BlendState*			m_blendState;
 
 			HWND					m_handle;
 			HINSTANCE				m_hInstance;
@@ -115,6 +116,7 @@ namespace Jamgine
 			void CreateBuffer();
 			HRESULT CreateRasterizers();
 			void SetViewport();
+			void SetBlendState();
 
 			ErrorMessage RegisterWindow(Jamgine::Data_Send p_data);
 			ErrorMessage InitializeSwapChain();
