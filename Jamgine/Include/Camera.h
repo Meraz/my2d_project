@@ -1,17 +1,16 @@
 #pragma once
+#include <Jamgine/Include/Shared.h>
 
 namespace Jamgine
 {
 
-	class Camera
+	struct Camera
 	{
-	public:
-
-		Camera();
-		~Camera();
-
-	private:
-		//Position 
-
+		Position position;
+		Camera()
+		{
+			position = Position(-1, -1);
+		}
+		Camera(Position l_position): position(l_position){};
 	};
 }

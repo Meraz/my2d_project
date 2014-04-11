@@ -44,5 +44,6 @@ private: // Variable
 	Jamgine::Texture2DInterface* b;
 	Jamgine::Texture2DInterface* c;
 	Jamgine::Texture2DInterface* d;
+	Jamgine::Camera m_camera;
 };
 

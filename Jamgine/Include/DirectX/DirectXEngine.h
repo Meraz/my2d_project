@@ -4,6 +4,7 @@
 #include <Jamgine/Include/Texture/Texture2DManager.h>
 #include <Jamgine/Include/DirectX/SpriteData.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
+#include <Jamgine/Include/Camera.h>
 #include <DirectX/d3d11_1.h>
 #include <DirectX/DirectXMath.h>
 
@@ -74,7 +75,7 @@ namespace Jamgine
 		*/
 
 
-			virtual void PostRender();
+			virtual void PostRender(Camera* p_camera);
 
 		
 		private:

@@ -360,19 +360,20 @@ namespace Jamgine
 			m_renderData.push_back(SpriteData(p_position, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth));
 		}
 		
-		void DirectXEngine::PostRender()
+		void DirectXEngine::PostRender(Camera* p_camera)
 		{
 			int max = m_renderData.size() - 1;
 			if(max < 0)
 				return; // DO NOTHING
 
-			SortSprites();
-		
+			// Sort sprites after textures
+			SortSprites();		
 
 			Vertex* a = new Vertex[max + 1];
 
 			for (int i = 0; i < max + 1; i++)
 			{
+				m_renderData[i].position -= p_camera->position;
 				a[i] = Vertex(m_renderData[i]);
 			}
 

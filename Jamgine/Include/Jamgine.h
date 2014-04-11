@@ -1,6 +1,7 @@
 #pragma once
 #include <Jamgine/Include/Shared.h>
 #include <Jamgine/Include/Texture/Texture2DInterface.h>
+#include <Jamgine/Include/Camera.h>
 
 namespace Jamgine
 {
@@ -48,7 +49,9 @@ namespace Jamgine
 			float p_height,
 			float p_depth
 				) = 0;
-		virtual void PostRender() = 0;
+
+		// This function is called once per draw, this call actually renders the sprites to the backbuffer. Camera is used for offset
+		virtual void PostRender(Camera* p_camera) = 0;
 
 	private:
 		static JamgineEngine* m_jamgineEngine;		

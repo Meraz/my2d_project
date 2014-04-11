@@ -38,6 +38,27 @@ namespace Jamgine
 			return *this;
 		}
 
+		Position& operator-(Position p_position)
+		{
+			x -= p_position.x;
+			y -= p_position.y;
+			return *this;
+		}
+
+		Position& operator-=(Position p_position)
+		{
+			x -= p_position.x;
+			y -= p_position.y;
+			return *this;
+		}
+
+		Position& operator+=(Position p_position)
+		{
+			x += p_position.x;
+			y += p_position.y;
+			return *this;
+		}
+
 		Position& operator=(const Position& p_position)
 		{
 			x = p_position.x;
