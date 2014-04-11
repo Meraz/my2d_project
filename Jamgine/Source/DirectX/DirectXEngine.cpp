@@ -99,6 +99,7 @@ namespace Jamgine
 			CreateBuffer();
 			SetViewport();
 			CreateRasterizers();
+			SetBlendState();
 
 			return l_errorMessage;
 		}
@@ -114,6 +115,28 @@ namespace Jamgine
 			vp.TopLeftY = 0;
 			m_deviceContext->RSSetViewports(1, &vp);
 		}
+
+		void DirectXEngine::SetBlendState()
+		{			
+			HRESULT hr = S_OK;
+			D3D11_BLEND_DESC l_blendStateDesc;
+			l_blendStateDesc.AlphaToCoverageEnable			= false;
+			l_blendStateDesc.IndependentBlendEnable			= false;
+			l_blendStateDesc.RenderTarget[0].BlendEnable	= true;
+			l_blendStateDesc.RenderTarget[0].SrcBlend		= D3D11_BLEND_SRC_ALPHA;
+			l_blendStateDesc.RenderTarget[0].DestBlend		= D3D11_BLEND_INV_SRC_ALPHA;
+			l_blendStateDesc.RenderTarget[0].BlendOp		= D3D11_BLEND_OP_ADD;
+			l_blendStateDesc.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND_ONE;
+			l_blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+			l_blendStateDesc.RenderTarget[0].BlendOpAlpha	= D3D11_BLEND_OP_ADD;
+			l_blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+			hr = m_device->CreateBlendState(&l_blendStateDesc, &m_blendState);
+
+			float l_blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
+			m_deviceContext->OMSetBlendState(m_blendState, l_blendFactor, 0xffffffff);
+		}
+
 
 		HRESULT DirectXEngine::CreateRasterizers()
 		{
@@ -361,7 +384,7 @@ namespace Jamgine
 			
 			
 			m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Black);
+			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Yellow);
 
 			// Update per frame buffer
 			m_deviceContext->UpdateSubresource(m_perFrameBuffer, 0, nullptr, &m_view, 0, 0); // Transposse?
