@@ -19,6 +19,7 @@ namespace Jamgine
 			DirectX::XMFLOAT2 offset;
 			DirectX::XMFLOAT2 texture_offset;
 			float  rotation;
+			unsigned int flip;
 
 			Vertex()
 			{
@@ -28,10 +29,11 @@ namespace Jamgine
 			Vertex(SpriteData input)
 			{
 				position = DirectX::XMFLOAT3(input.position.x, input.position.y, input.depth);
-				origin	 = DirectX::XMFLOAT2(position.x, position.y);
-				offset	 = DirectX::XMFLOAT2(500.0f, 500.0f); //HARD CODEDDDED : TODO
-				texture_offset = DirectX::XMFLOAT2(0.0f,0.0f);
-				rotation = 0.0f;
+				origin	 = DirectX::XMFLOAT2(input.origin.x, input.origin.y);
+				offset	 = DirectX::XMFLOAT2(input.width, input.height); //HARD CODEDDDED : TODO
+				texture_offset = DirectX::XMFLOAT2(input.textureOffset.x, input.textureOffset.y);
+				rotation = input.rotation;
+				flip = (unsigned int)input.spriteEffect;
 			}
 		};
 
@@ -124,7 +126,7 @@ namespace Jamgine
 			desc.DepthBias = 0;
 			desc.SlopeScaledDepthBias = 0.0f;
 			desc.DepthBiasClamp = 0.0f;
-			desc.DepthClipEnable = true;
+			desc.DepthClipEnable = false;
 			desc.ScissorEnable = false;
 			desc.MultisampleEnable = false;
 			desc.AntialiasedLineEnable = false;
@@ -152,16 +154,26 @@ namespace Jamgine
 
 			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
 			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perTextureBuffer);
+			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
+			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perWindowChangeBuffer);
+
 
 			bufferDesc.BindFlags				= D3D11_BIND_VERTEX_BUFFER;
 			bufferDesc.Usage					= D3D11_USAGE_DYNAMIC;
 			bufferDesc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;
 			bufferDesc.ByteWidth				= sizeof(Vertex) * 300000; // LOL fix this maybe
 			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_vertexBuffer);
+			
 			UINT stride = sizeof(Vertex);
 			UINT offset = 0;
-
 			m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+
+			m_deviceContext->GSSetConstantBuffers(0, 1, &m_perFrameBuffer);			// maybe fix array? yes
+			m_deviceContext->GSSetConstantBuffers(1, 1, &m_perTextureBuffer);
+			m_deviceContext->VSSetConstantBuffers(2, 1, &m_perWindowChangeBuffer);
+
+			DirectX::XMFLOAT4 PerWindowChange = DirectX::XMFLOAT4(m_clientWidth, m_clientHeight, 0, 0);
+			m_deviceContext->UpdateSubresource(m_perWindowChangeBuffer, 0, nullptr, &PerWindowChange, 0, 0); // UPDATE
 
 		}
 
@@ -247,7 +259,8 @@ namespace Jamgine
 				{ "ORIGIN", 0, DXGI_FORMAT_R32G32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{ "OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{ "TEXTURE_OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{"ROTATION", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"ROTATION", 0, DXGI_FORMAT_R32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"FLIP", 0, DXGI_FORMAT_R32_UINT,				0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
 
 			unsigned int l_numElements = ARRAYSIZE(l_desc);
@@ -278,16 +291,60 @@ namespace Jamgine
 		{
 			return m_texture2DManager->GetTexture(p_texture2DInterface, p_filePath);
 		}
-		
-		void DirectXEngine::Render(Position p_position, Texture2DInterface* p_textureInterface, SpriteEffect p_spriteEffect)
+	
+		void DirectXEngine::Render(Position p_position,
+			Position p_origin,
+			Position p_textureOffset,
+			Texture2DInterface* p_texture,
+			SpriteEffect p_spriteEffect,
+			float p_width,
+			float p_height,
+			float p_depth,
+			float p_rotation)
 		{
-			m_renderData.push_back(SpriteData(p_position, (Texture2D*)p_textureInterface, p_spriteEffect));
+			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation));
+		}
+
+		void DirectXEngine::Render(
+			Position p_position,
+			Position p_origin,
+			Position p_textureOffset,
+			Texture2DInterface* p_texture,
+			float p_width,
+			float p_height,
+			float p_depth,
+			float p_rotation) 
+		{
+			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_width, p_height, p_depth, p_rotation));
+		}
+
+		void DirectXEngine::Render(Position p_position,
+			Position p_textureOffset,
+			Texture2DInterface* p_texture,
+			float p_width,
+			float p_height,
+			float p_depth)
+		{
+			m_renderData.push_back(SpriteData(p_position, p_textureOffset, (Texture2D*)p_texture, p_width, p_height, p_depth));
+		}
+		void DirectXEngine::Render(Position p_position, Position p_textureOffset,
+			Texture2DInterface* p_texture,
+			SpriteEffect p_spriteEffect,
+			float p_width,
+			float p_height,
+			float p_depth)
+		{
+			m_renderData.push_back(SpriteData(p_position, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth));
 		}
 		
 		void DirectXEngine::PostRender()
 		{
+			int max = m_renderData.size() - 1;
+			if(max < 0)
+				return; // DO NOTHING
+
 			SortSprites();
-			unsigned int max = m_renderData.size() - 1;
+		
 
 			Vertex* a = new Vertex[max + 1];
 
@@ -308,7 +365,6 @@ namespace Jamgine
 
 			// Update per frame buffer
 			m_deviceContext->UpdateSubresource(m_perFrameBuffer, 0, nullptr, &m_view, 0, 0); // Transposse?
-
 			
 			unsigned int l_currentIndex = 0;
 			unsigned int l_amount = 1;
@@ -321,12 +377,21 @@ namespace Jamgine
 				{
 					ID3D11ShaderResourceView* a = m_renderData[i].texture->GetShaderResourceView();	// change name
 					m_deviceContext->PSSetShaderResources(0, 1, &a);
-					m_deviceContext->Draw(l_currentIndex, l_amount);
+
+					DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
+					m_deviceContext->UpdateSubresource(m_perTextureBuffer, 0, nullptr, &PerTexture, 0, 0); // UPDATE
+	
+					m_deviceContext->Draw(l_amount,l_currentIndex);
 					l_currentIndex += l_amount;
 					l_amount = 1;
 				}	
 			}
-			m_deviceContext->Draw(l_currentIndex, l_amount);			
+			ID3D11ShaderResourceView* b = m_renderData[l_currentIndex].texture->GetShaderResourceView();	// change name
+			m_deviceContext->PSSetShaderResources(0, 1, &b);
+
+			DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
+			m_deviceContext->UpdateSubresource(m_perTextureBuffer, 0, nullptr, &PerTexture, 0, 0); // UPDATE
+			m_deviceContext->Draw(l_amount, l_currentIndex);			
 
 
 			m_swapChain->Present(0, 0);

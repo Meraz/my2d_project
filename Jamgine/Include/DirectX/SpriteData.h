@@ -9,43 +9,102 @@ namespace Jamgine
 		struct SpriteData
 		{
 			Position position;
-			float depth;
+			Position origin;
+			Position textureOffset;
 			Texture2D* texture;
 			SpriteEffect spriteEffect;
-			// rotation
-			// origin pos
+			float width;
+			float height;
+			float depth;
+			float rotation;
 
-
-			SpriteData(Position p_position, float p_depth, Texture2D* p_texture, SpriteEffect p_spriteEffect)
+			SpriteData(
+				Position p_position,
+				Position p_origin,
+				Position p_textureOffset,
+				Texture2D* p_texture,
+				SpriteEffect p_spriteEffect,
+				float p_width,
+				float p_height,
+				float p_depth,
+				float p_rotation
+				)
 			{
-				position		= p_position;
-				depth			= p_depth;
-				texture			= p_texture;
-				spriteEffect	= p_spriteEffect;
+				position = p_position;
+				origin	= p_origin;
+				textureOffset = p_textureOffset;
+				texture = p_texture;
+				spriteEffect = p_spriteEffect;
+				width = p_width;
+				height = p_height;
+				depth = p_depth;
+				rotation = p_rotation;
+			}
+			
+			// Without flip
+			SpriteData
+				(
+				Position p_position,
+				Position p_origin,
+				Position p_textureOffset,
+				Texture2D* p_texture,
+				float p_width,
+				float p_height,
+				float p_depth,
+				float p_rotation)
+			{
+				position = p_position;
+				origin	= p_origin;
+				textureOffset = p_textureOffset;
+				texture = p_texture;
+				spriteEffect =	SpriteEffect::FLIP_NONE;
+				width = p_width;
+				height = p_height;
+				depth = p_depth;
+				rotation = p_rotation;
 			}
 
-			SpriteData(Position p_position, Texture2D* p_texture, SpriteEffect p_spriteEffect)
+			// without flip and origin
+			SpriteData(
+				Position p_position,
+				Position p_textureOffset,
+				Texture2D* p_texture,
+				float p_width,
+				float p_height,
+				float p_depth
+				)
 			{
-				position		= p_position;
-				depth			= STANDARD_SPRITE_DEPTH;
-				texture			= p_texture;
-				spriteEffect	= p_spriteEffect;
+				position = p_position;
+				origin	= Position(0,0);
+				textureOffset = p_textureOffset;
+				texture = p_texture;
+				spriteEffect =	SpriteEffect::FLIP_NONE;
+				width = p_width;
+				height = p_height;
+				depth = p_depth;
+				rotation = 0;
 			}
 
-			SpriteData(Position p_position, float p_depth, Texture2D* p_texture)
+			// Without origin and rotation
+			SpriteData(
+				Position p_position,
+				Position p_textureOffset,
+				Texture2D* p_texture,
+				SpriteEffect p_spriteEffect,
+				float p_width,
+				float p_height,
+				float p_depth
+				)
 			{
-				position		= p_position;
-				depth			= p_depth;
-				texture			= p_texture;
-				spriteEffect	= SpriteEffect::FLIP_NONE;
-			}
-
-			SpriteData(Position p_position, Texture2D* p_texture)
-			{
-				position		= p_position;
-				depth			= STANDARD_SPRITE_DEPTH;
-				texture			= p_texture;
-				spriteEffect	= SpriteEffect::FLIP_NONE;
+				position = p_position;
+				origin	= Position(0,0);
+				textureOffset = p_textureOffset;
+				texture = p_texture;
+				spriteEffect =	p_spriteEffect;
+				width = p_width;
+				height = p_height;
+				depth = p_depth;
+				rotation = 0;
 			}
 		};
 	}	

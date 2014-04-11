@@ -4,7 +4,7 @@
 
 namespace Jamgine
 {
-	#define STANDARD_SPRITE_DEPTH 50.5f
+	#define STANDARD_SPRITE_DEPTH -50.5f
 	
 	enum class GraphicalSystem
 	{
@@ -14,10 +14,10 @@ namespace Jamgine
 
 	enum class SpriteEffect
 	{
+		FLIP_NONE,
 		FLIP_HORIZONTALLY,	
 		FLIP_VERTICALLY,
-		FLIP_BOTH,
-		FLIP_NONE
+		FLIP_BOTH		
 	};
 
 	struct Position

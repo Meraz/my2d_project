@@ -94,14 +94,10 @@ void Jamgame::Update()
 
 void Jamgame::Render()
 {
-	m_jamgine->Render(Jamgine::Position(0, 0), a, Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(1025, 350), c, Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(9, 35), a, Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(0, 0), b, Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(050, 0), b, Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(90, 90), a, Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(900, 711), c, Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(0, 0), d, Jamgine::SpriteEffect::FLIP_NONE);
+//	m_jamgine->Render(Jamgine::Position(0, 0), a,	  Jamgine::SpriteEffect::FLIP_NONE);
+	m_jamgine->Render(Jamgine::Position(400, 400), Jamgine::Position(0,0), c, 50, 50, -5);
+	m_jamgine->Render(Jamgine::Position(0,0),Jamgine::Position(0,0),a,Jamgine::SpriteEffect::FLIP_BOTH,300,100,-2);
+
 
 	m_jamgine->PostRender();
 }

@@ -28,7 +28,52 @@ namespace Jamgine
 			void InitializeRenderTarget();
 			void CreateDepthBuffer();
 
-			virtual void Render(Position p_position, Texture2DInterface* p_textureInterface, SpriteEffect p_spriteEffect);
+			virtual void Render(Position p_position,
+				Position p_origin,
+				Position p_textureOffset,
+				Texture2DInterface* p_texture,
+				SpriteEffect p_spriteEffect,
+				float p_width,
+				float p_height,
+				float p_depth,
+				float p_rotation);
+
+			virtual void Render(
+				Position p_position,
+				Position p_origin,
+				Position p_textureOffset,
+				Texture2DInterface* p_texture,
+				float p_width,
+				float p_height,
+				float p_depth,
+				float p_rotation);
+			virtual void Render(Position p_position,
+				Position p_textureOffset,
+				Texture2DInterface* p_texture,
+				float p_width,
+				float p_height,
+				float p_depth);
+			virtual void Render(Position p_position, Position p_textureOffset,
+				Texture2DInterface* p_texture,
+				SpriteEffect p_spriteEffect,
+				float p_width,
+				float p_height,
+				float p_depth
+				);
+
+		/*
+						Position p_position,
+				Position p_origin,
+				Position p_textureOffset,
+				Texture2D* p_texture,
+				SpriteEffect p_spriteEffect,
+				float p_width,
+				float p_height,
+				float p_depth,
+				float p_rotation
+		*/
+
+
 			virtual void PostRender();
 
 		
@@ -43,6 +88,7 @@ namespace Jamgine
 			ID3D11DepthStencilView*		m_depthStencilView;
 			ID3D11Buffer*				m_perFrameBuffer;
 			ID3D11Buffer*				m_perTextureBuffer;
+			ID3D11Buffer*				m_perWindowChangeBuffer;
 			ID3D11Buffer*				m_vertexBuffer;
 			ID3D11SamplerState*			m_samplerState;
 			ID3D11RasterizerState*		m_rasterizerState;
