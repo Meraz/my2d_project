@@ -5,10 +5,6 @@
 
 RenderEntity::RenderEntity()
 {
-
-}
-RenderEntity::RenderEntity()
-{
 }
 
 RenderEntity::~RenderEntity()
@@ -100,6 +96,10 @@ void RenderEntity::Initialize(Position p_position, float p_width, float p_height
 void RenderEntity::SetTexture(Texture2DInterface* p_texture)
 {
 	m_texture = p_texture;
+}
+
+void RenderEntity::Update(double p_deltaTime)
+{
 }
 
 void RenderEntity::Render(Jamgine::JamgineEngine* p_engine)

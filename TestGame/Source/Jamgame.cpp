@@ -3,6 +3,7 @@
 #include <Windowsx.h>
 #include <Jamgine/Include/DirectX/DirectXShared.h>
 
+
 namespace
 {
 	Jamgame* g_jamgame = nullptr;
