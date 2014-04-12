@@ -5,6 +5,10 @@
 
 RenderEntity::RenderEntity()
 {
+
+}
+RenderEntity::RenderEntity()
+{
 }
 
 RenderEntity::~RenderEntity()
