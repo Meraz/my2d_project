@@ -488,7 +488,7 @@ namespace Jamgine
 				}
 			}
 			
-			int transparentStart;
+			int transparentStart = 0;
 			for (int i = 0; i < size + 1; i++)
 			{
 				if (m_renderData[i].hasTransparent)

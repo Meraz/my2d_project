@@ -22,16 +22,17 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_engine->LoadTexture(&a, "Alpha.dds");
 	m_engine->LoadTexture(&b, "Circle.dds");
-	m_engine->LoadTexture(&c, "Box1.dds");
-	m_engine->LoadTexture(&d, "Anim1.dds");
-	m_engine->LoadTexture(&e, "Anim2.dds");
+//	m_engine->LoadTexture(&c, "Box1.dds");
+//	m_engine->LoadTexture(&d, "Anim1.dds");
+//	m_engine->LoadTexture(&e, "Anim2.dds");
 
+	int i = 0;
 	for (unsigned int y = 0; y < 10; y++)
 	{
 		for (unsigned int x = 0; x < 10; x++)
 		{
 			m_renderEntity.push_back(new RenderEntity());
-			m_renderEntity[y+x]->Initialize(Position(), a, 50*x, 50*y);
+			m_renderEntity[10*y+x]->Initialize(Position(x*50,y*50), a, 50, 50);
 		}
 	}
 }
@@ -49,6 +50,6 @@ void GameScene::Render()
 	{
 		m_renderEntity[i]->Render(m_engine);
 	}
-	m_engine->PostRender();
+	m_engine->PostRender(&m_camera);
 	// Get engine pointer and call postrender, also everything else
 }

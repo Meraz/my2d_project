@@ -39,7 +39,7 @@ void RenderEntity::Initialize(Position p_position, Position p_textureOffset, Tex
 		STANDARD_SPRITE_DEPTH, 
 		0,
 		false,
-		Position(0, 0)
+		Position(1, 1)
 		);
 }
 void RenderEntity::Initialize(Position p_position, Texture2DInterface* p_texture, float p_width, float p_height)
@@ -55,7 +55,7 @@ void RenderEntity::Initialize(Position p_position, Texture2DInterface* p_texture
 		STANDARD_SPRITE_DEPTH,
 		0,
 		false,
-		Position(0, 0)
+		Position(1, 1)
 		);
 }
 
@@ -72,7 +72,7 @@ void RenderEntity::Initialize(Position p_position, float p_width, float p_height
 		STANDARD_SPRITE_DEPTH,
 		0, 
 		false,
-		Position(0, 0)
+		Position(1, 1)
 		);
 }
 
@@ -89,7 +89,7 @@ void RenderEntity::Initialize(Position p_position, float p_width, float p_height
 		STANDARD_SPRITE_DEPTH,
 		0,
 		p_hasTransparent,
-		Position(0, 0)
+		Position(1, 1)
 		);
 }
 
