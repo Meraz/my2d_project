@@ -9,7 +9,9 @@ public:
 	~EnemyEntity();
 
 	void Update();
-	void collisionWall();
+	bool cornerCollision();
+	bool verticalCollision();
+	bool horizontalCollision();
 	int getPlayerPos();
 private:
 	Position			m_moveDir;
@@ -19,11 +21,11 @@ private:
 	Position			m_position;
 	Position			m_origin;
 	Position			m_textureOffset;
+	float	m_gravity;
 	float	m_width;
 	float	m_height;
 	float	m_depth;
 	float	m_rotation;
-	bool	hasJumped;
 	bool	onGround;
 };
 
