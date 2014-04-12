@@ -13,17 +13,31 @@ void GS(point VS_OUTPUT input[1], inout TriangleStream <GS_OUTPUT> triangle_stre
 
 	GS_OUTPUT output;
 
-	/*
-	float2 topLeftUV	= TextureDeltaUVSize * input[0].texture_offset;
-	float2 topRightUV	= topLeftUV + float2(TextureDeltaUVSize.x, 0.0f);
-	float2 botLeftUV	= topLeftUV + float2(0.0f, TextureDeltaUVSize.y);
-	float2 botRightUV	= botLeftUV + float2(TextureDeltaUVSize.x, 0.0f);
-	*/
+	
+	/*float2 topLeftUV	= input[0].textureDeltaUVSize * input[0].texture_offset;
+	float2 topRightUV	= topLeftUV + float2(input[0].textureDeltaUVSize.x, 0.0f);
+	float2 botLeftUV	= topLeftUV + float2(0.0f, input[0].textureDeltaUVSize.y);
+	float2 botRightUV	= botLeftUV + float2(input[0].textureDeltaUVSize.x, 0.0f);*/
+	
 
-	float2 topLeftUV	= float2(0,0);
+	/*float2 topLeftUV	= float2(0,0);
 	float2 topRightUV	= float2(1,0);
 	float2 botLeftUV	= float2(0,1);
-	float2 botRightUV	= float2(1,1);
+	float2 botRightUV	= float2(1,1);*/
+
+	/*float2 topLeftUV	= float2(input[0].textureDeltaUVSize.x * input[0].texture_offset.x,											input[0].textureDeltaUVSize.y * input[0].texture_offset.y);
+	float2 topRightUV	= float2(input[0].textureDeltaUVSize.x * input[0].texture_offset.x + input[0].textureDeltaUVSize.x,			input[0].textureDeltaUVSize.y * input[0].texture_offset.y);
+	float2 botLeftUV	= float2(input[0].textureDeltaUVSize.x * input[0].texture_offset.x ,										input[0].textureDeltaUVSize.y * input[0].texture_offset.y + input[0].textureDeltaUVSize.y);
+	float2 botRightUV	= float2(input[0].textureDeltaUVSize.x * input[0].texture_offset.x + input[0].textureDeltaUVSize.x,			input[0].textureDeltaUVSize.y * input[0].texture_offset.y + input[0].textureDeltaUVSize.y);
+*/
+	float2 topLeftUV	= float2(input[0].textureDeltaUVSize.x * input[0].texture_offset.x,										 input[0].textureDeltaUVSize.y * input[0].texture_offset.y);
+	float2 topRightUV	= float2(input[0].textureDeltaUVSize.x * input[0].texture_offset.x + input[0].textureDeltaUVSize.x,		 input[0].textureDeltaUVSize.y * input[0].texture_offset.y);
+	float2 botLeftUV	= float2(input[0].textureDeltaUVSize.x * input[0].texture_offset.x,										 input[0].textureDeltaUVSize.y * input[0].texture_offset.y + input[0].textureDeltaUVSize.y);
+	float2 botRightUV	= float2(input[0].textureDeltaUVSize.x * input[0].texture_offset.x + input[0].textureDeltaUVSize.x,		 input[0].textureDeltaUVSize.y * input[0].texture_offset.y + input[0].textureDeltaUVSize.y);
+
+
+
+
 
 	
 	float2 temp;

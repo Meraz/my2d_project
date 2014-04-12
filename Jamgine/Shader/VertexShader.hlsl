@@ -19,6 +19,7 @@ VS_OUTPUT VS(VS_OUTPUT input)
 	output.rotation = input.rotation;
 
 	output.flip = input.flip;
+	output.textureDeltaUVSize = input.textureDeltaUVSize;
 
 	return output;
 };

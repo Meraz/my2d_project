@@ -19,13 +19,11 @@ public:
 	void Render();
 
 private:
+
 	std::vector<GameEntity*>		m_gameEntity;
 	std::vector<RenderEntity*>		m_renderEntity;
 
 	Jamgine::Camera m_camera;
 	Jamgine::Texture2DInterface* a;
 	Jamgine::Texture2DInterface* b;
-	Jamgine::Texture2DInterface* c;
-	Jamgine::Texture2DInterface* d;
-	Jamgine::Texture2DInterface* e;
 };

@@ -22,9 +22,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_engine->LoadTexture(&a, "Alpha.dds");
 	m_engine->LoadTexture(&b, "Circle.dds");
-//	m_engine->LoadTexture(&c, "Box1.dds");
-//	m_engine->LoadTexture(&d, "Anim1.dds");
-//	m_engine->LoadTexture(&e, "Anim2.dds");
+
 
 	int i = 0;
 	for (unsigned int y = 0; y < 10; y++)
@@ -35,12 +33,11 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 			m_renderEntity[10*y+x]->Initialize(Position(x*50,y*50), a, 50, 50);
 		}
 	}
+
 }
 
 void GameScene::Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_lMouseClicked)
 {
-//		m_sceneManagerInterface->SwapSceneState(SceneState::MAIN_MENU);
-	
 
 }
 
