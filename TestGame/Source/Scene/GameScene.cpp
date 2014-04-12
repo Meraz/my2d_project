@@ -33,7 +33,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 			m_renderEntity[10*y+x]->Initialize(Position(x*50,y*50), a, 50, 50);
 		}
 	}
-
+	
 }
 
 void GameScene::Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_lMouseClicked)
