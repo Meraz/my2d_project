@@ -13,11 +13,8 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 {
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
-	m_engine->LoadTexture(&a,"Alpha.dds");
-	m_engine->LoadTexture(&b,"Circle.dds");
-	m_engine->LoadTexture(&c,"Box1.dds");
-	m_engine->LoadTexture(&d,"Anim1.dds");
-	m_engine->LoadTexture(&e,"Anim2.dds");
+
+	m_camera.position = Jamgine::Position(0,0);
 }
 
 void GameScene::Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_lMouseClicked)
@@ -25,10 +22,7 @@ void GameScene::Update(double p_deltaTime, int p_mousePositionX, int p_mousePosi
 //		m_sceneManagerInterface->SwapSceneState(SceneState::MAIN_MENU);
 	
 
-	for (int i = 0; i < 100; i++)
-	{
-
-	}
+	m_engine->PostRender(&m_camera);
 }
 
 void GameScene::Render()

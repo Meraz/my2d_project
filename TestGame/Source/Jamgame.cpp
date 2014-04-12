@@ -88,7 +88,7 @@ int Jamgame::Run()
 
 void Jamgame::Update()
 {
-	m_sceneManager->Update(0, 0, 0, false);
+	m_sceneManager->Update(m_gameTimer->DeltaTime(), 0, 0, false);
 }
 
 void Jamgame::Render()

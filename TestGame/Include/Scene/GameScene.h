@@ -14,9 +14,5 @@ public:
 	void Render();
 
 private:
-	Jamgine::Texture2DInterface* a;
-	Jamgine::Texture2DInterface* b;
-	Jamgine::Texture2DInterface* c;
-	Jamgine::Texture2DInterface* d;
-	Jamgine::Texture2DInterface* e;
+	Jamgine::Camera m_camera;
 };
