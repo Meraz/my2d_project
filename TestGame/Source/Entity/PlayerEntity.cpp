@@ -12,18 +12,18 @@ PlayerEntity::~PlayerEntity()
 
 void PlayerEntity::moveLeft()
 {
-	if (!collisionWall)
+	/*if (!collisionWall)
 		m_moveDir.x = -1;
 	else
-		m_moveDir.x = 0;
+		m_moveDir.x = 0;*/
 }
 
 void PlayerEntity::moveRight()
 {
-	if (!collisionWall)
+	/*if (!collisionWall)
 		m_moveDir.x = 1;
 	else
-		m_moveDir.x = 0;
+		m_moveDir.x = 0;*/
 }
 
 void PlayerEntity::jump()
@@ -34,7 +34,7 @@ void PlayerEntity::jump()
 
 void PlayerEntity::Update()
 {
-	if (hasJumped && !onGround)
+	/*if (hasJumped && !onGround)
 	{
 		m_moveDir.y--;
 
@@ -43,7 +43,7 @@ void PlayerEntity::Update()
 			m_moveDir.y = 0;
 			onGround = true;
 		}
-	}
+	}*/
 
 	m_position += m_moveDir;
 }

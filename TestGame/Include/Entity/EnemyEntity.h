@@ -9,7 +9,6 @@ public:
 	~EnemyEntity();
 
 	void Update();
-	void jump();
 	void collisionWall();
 	int getPlayerPos();
 private:

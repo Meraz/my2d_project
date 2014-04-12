@@ -22,6 +22,7 @@ private:
 	float	m_height;
 	float	m_depth;
 	float	m_rotation;
+	int		m_playerID;
 	bool	hasJumped;
 	bool	onGround;
 };
