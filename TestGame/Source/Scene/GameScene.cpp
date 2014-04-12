@@ -22,6 +22,26 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
+	
+	/* iterate collision objects
+	for(int i = 0; i < m_collisionEntity.size(); i++)
+	{
+		for(int j = 0; j < m_collisionEntity.size(); j++)
+		{
+			if(m_collisionEntity.at(j) == m_collisionEntity.at(i)){}
+			else
+			{
+				if(collisionCheck(m_collisionEntity.at(i), m_collisionEntity.at(j)))
+				{
+					if(m_collisionEntity.at(i)->getType() == m_collisionEntity.at(j)->getType())
+					{
+						won't work, figure shiet aut
+					}
+				}
+			}
+		}
+	}
+	*/
 }
 
 void GameScene::Render()
