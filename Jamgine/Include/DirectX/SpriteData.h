@@ -17,6 +17,7 @@ namespace Jamgine
 			float height;
 			float depth;
 			float rotation;
+			bool hasTransparent;
 
 			SpriteData(
 				Position p_position,
@@ -27,7 +28,8 @@ namespace Jamgine
 				float p_width,
 				float p_height,
 				float p_depth,
-				float p_rotation
+				float p_rotation,
+				bool p_hasTransparent
 				)
 			{
 				position = p_position;
@@ -39,6 +41,7 @@ namespace Jamgine
 				height = p_height;
 				depth = p_depth;
 				rotation = p_rotation;
+				hasTransparent = p_hasTransparent;
 			}
 			
 			// Without flip
@@ -62,6 +65,7 @@ namespace Jamgine
 				height = p_height;
 				depth = p_depth;
 				rotation = p_rotation;
+				hasTransparent = false;
 			}
 
 			// without flip and origin
@@ -83,6 +87,7 @@ namespace Jamgine
 				height = p_height;
 				depth = p_depth;
 				rotation = 0;
+				hasTransparent = false;
 			}
 
 			// Without origin and rotation
@@ -105,6 +110,7 @@ namespace Jamgine
 				height = p_height;
 				depth = p_depth;
 				rotation = 0;
+				hasTransparent = false;
 			}
 		};
 	}	
