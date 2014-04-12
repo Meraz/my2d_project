@@ -10,7 +10,7 @@
 // c++ Includes
 #include <sstream>
 
-
+#define GRAVITY -700.0
 
 using namespace Jamgine;
 
@@ -29,13 +29,14 @@ public:
 
 
 	void SetTexture(Texture2DInterface* p_texture);
+	virtual void Update(double p_deltaTime);
 	virtual	void Render(Jamgine::JamgineEngine* p_engine);
 	
 	// Load and save class
 	std::stringstream ToFile();
 //	void LoadClassFromString();
 	
-private:
+protected:
 	Jamgine::Texture2DInterface* m_texture;
 	Jamgine::SpriteEffect		m_spriteEffect;
 	Jamgine::Position			m_position;

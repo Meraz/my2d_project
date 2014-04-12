@@ -33,19 +33,21 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 			m_renderEntity[10*y+x]->Initialize(Position(x*50,y*50), a, 50, 50);
 		}
 	}
-	
+	player = new PlayerEntity();
+	player->Initialize(Jamgine::Position(0,0), a, 50, 50);
 }
 
 void GameScene::Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_lMouseClicked)
 {
-
+	player->Update(p_deltaTime);
 }
 
 void GameScene::Render()
 {
-	for (int i = 0; i < 10 * 10; i++)
+	/*for (int i = 0; i < 10 * 10; i++)
 	{
 		m_renderEntity[i]->Render(m_engine);
-	}
+	}*/
+	player->Render(m_engine);
 	m_engine->PostRender(&m_camera);
 }
