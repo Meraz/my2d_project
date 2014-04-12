@@ -3,6 +3,8 @@
 #include <Windowsx.h>
 #include <Jamgine/Include/DirectX/DirectXShared.h>
 
+#define CLIENT_WIDTH 800
+#define CLIENT_HEIGHT 800
 namespace
 {
 	Jamgame* g_jamgame = nullptr;
@@ -44,8 +46,8 @@ void Jamgame::Initialize(HINSTANCE p_hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	Jamgine::Data_Send l_data;
 	l_data.hInstance	= p_hInstance;
 	l_data.messageProc	= &MainWndProc;
-	l_data.clientWidth	= 800;
-	l_data.clientHeight = 800;
+	l_data.clientWidth	= CLIENT_WIDTH;
+	l_data.clientHeight = CLIENT_HEIGHT;
 
 	// Init engine
 	hr = m_jamgine->Initialize(l_data);
@@ -54,7 +56,7 @@ void Jamgame::Initialize(HINSTANCE p_hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	m_gameTimer->Reset();	
 
 	// Scenemanager
-	m_sceneManager->Initialize(m_jamgine);
+	m_sceneManager->Initialize(m_jamgine, m_handle);
 }
 
 int Jamgame::Run()
@@ -88,7 +90,8 @@ int Jamgame::Run()
 
 void Jamgame::Update()
 {
-	m_sceneManager->Update(m_gameTimer->DeltaTime(), m_mousePositionX, m_mousePositionY, m_mouseClicked);
+													// Convert from top left to topright origo
+	m_sceneManager->Update(m_gameTimer->DeltaTime(), m_mousePositionX, (CLIENT_HEIGHT)-40 - m_mousePositionY, m_mouseClicked);
 	m_mouseClicked = false;
 }
 

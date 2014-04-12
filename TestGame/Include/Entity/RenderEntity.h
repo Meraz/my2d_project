@@ -21,6 +21,7 @@ enum class ENTITY
 };
 
 
+
 class RenderEntity
 {
 public:
@@ -41,7 +42,6 @@ public:
 	virtual std::stringstream ToFile();
 	virtual void LoadClassFromData(char* p_data); // Return how many variables you read
 	
-protected:
 	ENTITY m_entity;
 	char m_texturePath[50];
 	Jamgine::Texture2DInterface* m_texture;
@@ -56,6 +56,9 @@ protected:
 	bool			  m_hasTransparent;
 	Jamgine::Position m_amountOfSubImages;	//1-n
 	Jamgine::JamgineEngine* m_engine;		//1-n
+
+protected:
+
 
 	void GetEngine();
 };

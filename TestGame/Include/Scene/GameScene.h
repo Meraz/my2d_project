@@ -7,6 +7,7 @@ class RenderEntity;
 
 #include <vector>
 
+
 class GameScene : public BaseScene
 {
 public:
@@ -15,7 +16,7 @@ public:
 
 
 	virtual void Initialize(SceneManagerInterface* p_sceneManagerInteface, Jamgine::JamgineEngine* p_engine);
-	void Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_lMouseClicked);
+	void Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked);
 	void Render();
 
 private:
