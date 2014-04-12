@@ -4,7 +4,7 @@ class GameEntity
 {
 public:
 	GameEntity();
-	~GameEntity();
+	virtual ~GameEntity();
 
 private:
 };

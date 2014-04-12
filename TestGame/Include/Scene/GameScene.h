@@ -22,7 +22,7 @@ private:
 	std::vector<GameEntity*>		m_gameEntity;
 	std::vector<RenderEntity*>		m_renderEntity;
 
-
+	Camera m_camera;
 	Jamgine::Texture2DInterface* a;
 	Jamgine::Texture2DInterface* b;
 	Jamgine::Texture2DInterface* c;
