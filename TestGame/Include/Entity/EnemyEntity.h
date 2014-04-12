@@ -1,12 +1,14 @@
 #ifndef ENEMYENTITY_H
 #define ENEMYENTITY_H
+
 #include <TestGame/Include/Entity/AnimationEntity.h>
-class EnemyEntity : public RenderEntity
+
+class EnemyEntity : public AnimationEntity
 {
 public:
 	EnemyEntity();
 	EnemyEntity(Position* playerPos);
-	~EnemyEntity();
+	virtual ~EnemyEntity();
 
 	void Update();
 	bool cornerCollision();

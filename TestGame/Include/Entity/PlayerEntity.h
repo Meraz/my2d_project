@@ -1,5 +1,8 @@
 #ifndef PLAYERENTITY_H
 #define PLAYERENTITY_H
+
+#include <TestGame/Include/Entity/RenderEntity.h>
+
 #include <TestGame/Include/Entity/AnimationEntity.h>
 #include <TestGame/Include/XBOXController.h>
 
@@ -17,7 +20,10 @@ class PlayerEntity : public AnimationEntity
 {
 public:
 	PlayerEntity();
-	~PlayerEntity();
+	virtual ~PlayerEntity();
+
+	virtual std::stringstream ToFile();
+	virtual void LoadClassFromData(char* p_data);
 
 	
 	virtual void Update(double p_deltaTime);
@@ -40,7 +46,7 @@ private:
 	double  m_goatDurationTimer;
 	double  m_goatJumpColdownTimer;
 
-	Position m_velocity;
+	Jamgine::Position m_velocity;
 
 	XBOXController* m_playerOneController;
 	XBOXController* m_playerTwoController;

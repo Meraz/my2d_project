@@ -9,7 +9,7 @@ namespace Jamgine
 		Position position;
 		Camera() : position(0, 0) {}
 
-		Camera(int x, int y) : position(x, y) {}
+		Camera(float x, float y) : position(x, y) {}
 
 		Camera(Position l_position): position(l_position) {}
 	};

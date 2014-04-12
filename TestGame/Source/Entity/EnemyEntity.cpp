@@ -3,6 +3,7 @@
 
 EnemyEntity::EnemyEntity()
 {
+
 }
 
 EnemyEntity::EnemyEntity(Position* playerPos)
@@ -79,7 +80,7 @@ void EnemyEntity::Update()
 		m_moveDir.x = -1;
 	else
 		m_moveDir.x = 1;
-	
+
 	if (m_moveDir.y > 0)
 	{
 		onGround = false;

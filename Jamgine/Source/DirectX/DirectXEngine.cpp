@@ -198,7 +198,7 @@ namespace Jamgine
 			m_deviceContext->GSSetConstantBuffers(1, 1, &m_perTextureBuffer);
 			m_deviceContext->VSSetConstantBuffers(2, 1, &m_perWindowChangeBuffer);
 
-			DirectX::XMFLOAT4 PerWindowChange = DirectX::XMFLOAT4(m_clientWidth, m_clientHeight, 0, 0);
+			DirectX::XMFLOAT4 PerWindowChange = DirectX::XMFLOAT4(static_cast<float>(m_clientWidth), static_cast<float>(m_clientHeight), 0, 0);
 			m_deviceContext->UpdateSubresource(m_perWindowChangeBuffer, 0, nullptr, &PerWindowChange, 0, 0); // UPDATE
 
 		}
@@ -369,8 +369,12 @@ namespace Jamgine
 		void DirectXEngine::PostRender(Camera* p_camera)
 		{
 			int max = m_renderData.size() - 1;
-			if(max < 0)
+			if (max < 0)
+			{
+				m_swapChain->Present(0, 0);
 				return; // DO NOTHING
+			}
+				
 
 			// Sort sprites after textures
 			SortSprites();		
@@ -399,7 +403,7 @@ namespace Jamgine
 			unsigned int l_currentIndex = 0;
 			unsigned int l_amount = 1;
 //			unsigned int max = m_renderData.size()-1;
-			for (unsigned int i = 0; i < max; i++)
+			for ( int i = 0; i < max; i++)
 			{
 				if (m_renderData[i].texture == m_renderData[i + 1].texture)
 					l_amount++;

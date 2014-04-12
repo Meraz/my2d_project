@@ -35,9 +35,9 @@ private: // Variable
 	// Other
 	GameTimer*	m_gameTimer;
 	bool		m_gamePaused;
-	int			m_mousePositionX;
-	int			m_mousePositionY;
-	bool		m_lMouseClicked;
+	float		m_mousePositionX;
+	float		m_mousePositionY;
+	bool		m_mouseClicked;
 
 	// Game
 	SceneManager* m_sceneManager;

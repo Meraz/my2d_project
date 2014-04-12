@@ -4,6 +4,6 @@ enum class SceneState
 {
 	MAIN_MENU,
 	GAME,
-	HIGHSCORE,
-	EXIT
+	EDIT,
+	NONE
 };

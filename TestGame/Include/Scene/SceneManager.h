@@ -10,7 +10,7 @@ public:
 	~SceneManager();
 
 	void Initialize(Jamgine::JamgineEngine* p_engine);
-	void Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_mouseClicked);
+	void Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked);
 	void Render();
 
 	// Inherited functions

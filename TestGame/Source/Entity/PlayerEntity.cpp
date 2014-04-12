@@ -3,6 +3,7 @@
 
 PlayerEntity::PlayerEntity()
 {
+	m_entity = ENTITY::PLAYER;
 	m_playerOneController = new XBOXController(0);
 	m_playerTwoController = new XBOXController(1);
 	m_hasGoatBoost = false;
@@ -13,9 +14,21 @@ PlayerEntity::PlayerEntity()
 	m_velocity = Position(0,0);
 }
 
-
 PlayerEntity::~PlayerEntity()
 {
+}
+
+std::stringstream PlayerEntity::ToFile()
+{
+	using namespace std;
+	stringstream l_returnValue = RenderEntity::ToFile();	
+
+	return l_returnValue;
+}
+
+void PlayerEntity::LoadClassFromData(char* p_data)
+{
+	RenderEntity::LoadClassFromData(p_data);
 }
 
 void PlayerEntity::MoveSideways(float amount)
@@ -108,8 +121,6 @@ void PlayerEntity::Update(double deltaTime)
 	//move + save position
 	Position lastPos = m_position;
 
-	
-
 	float rocketHover = 0;
 
 
@@ -118,7 +129,7 @@ void PlayerEntity::Update(double deltaTime)
 		rocketHover = GOAT_JUMP_VELOCITY;
 	}
 
-	m_velocity.y += deltaTime*(double)(GRAVITY + rocketHover); 
+	m_velocity.y += deltaTime*(double)(GRAVITY + rocketHover);
 	m_position += Position(m_velocity.x*deltaTime, m_velocity.y*deltaTime);
 
 	if (m_position.y <= 0)
@@ -136,7 +147,7 @@ void PlayerEntity::Update(double deltaTime)
 			m_velocity.x = 0;
 		}
 	}
-	else if(m_velocity.x < 0)
+	else if (m_velocity.x < 0)
 	{
 		m_velocity.x += FRICTION_X_LINEAR_SUBTRACTER*deltaTime;
 		if (m_velocity.x > 0)
@@ -144,7 +155,7 @@ void PlayerEntity::Update(double deltaTime)
 			m_velocity.x = 0;
 		}
 	}
-	
+
 	if (m_goatDurationTimer != GOAT_HOVER_MAX_TIME)
 	{
 		m_goatDurationTimer += deltaTime;
@@ -163,6 +174,7 @@ void PlayerEntity::Update(double deltaTime)
 			m_goatJumpColdownTimer = 0;
 		}
 	}
+}
 
 	//check collision for Y and X seperate nullify velocity if hit wall etc,
 	//if (m_hasGoatJumped)
@@ -182,8 +194,4 @@ void PlayerEntity::Update(double deltaTime)
 		{
 			m_moveDir.y = 0;
 			onGround = true;
-		}
-	}
-	*/
-
-}
+		}*/

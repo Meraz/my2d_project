@@ -1,9 +1,11 @@
 #include <TestGame/Include/Scene/SceneManager.h>
 #include <TestGame/Include/Scene/GameScene.h>
 #include <TestGame/Include/Scene/MainMenuScene.h>
+#include <TestGame/Include/Scene/EditScene.h>
+
 
 SceneManager::SceneManager()
-	: m_currentSceneState(SceneState::MAIN_MENU), m_currentScene(nullptr), m_exit(false)
+	: m_currentSceneState(SceneState::NONE), m_currentScene(nullptr), m_exit(false)
 {
 
 }
@@ -12,11 +14,10 @@ SceneManager::SceneManager()
 void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine)
 {
 	m_engine = p_engine;
-	m_currentSceneState = SceneState::MAIN_MENU;
 	SwapSceneState(SceneState::GAME);
 }
 
-void SceneManager::Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_mouseClicked)
+void SceneManager::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked)
 {
 	m_currentScene->Update(p_deltaTime, p_mousePositionX, p_mousePositionY, p_mouseClicked);
 }
@@ -53,6 +54,10 @@ void SceneManager::SwapSceneState(SceneState p_sceneState)
 	else if (p_sceneState == SceneState::GAME)
 	{
 		m_currentScene = new GameScene();
+	}
+	else if (p_sceneState == SceneState::EDIT)
+	{
+		m_currentScene = new EditScene();
 	}
 	else // Nothing to do, return
 	{
