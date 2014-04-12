@@ -2,6 +2,7 @@
 
 #include <Jamgine/Include/Jamgine.h>
 #include <TestGame/Include/GameTimer.h>
+#include <TestGame/Include/Scene/SceneManager.h>
 #include <Windows.h>
 
 class Jamgame
@@ -38,12 +39,7 @@ private: // Variable
 	int			m_mousePositionY;
 	bool		m_lMouseClicked;
 
-
-	// TEST CASES
-	Jamgine::Texture2DInterface* a;
-	Jamgine::Texture2DInterface* b;
-	Jamgine::Texture2DInterface* c;
-	Jamgine::Texture2DInterface* d;
-	Jamgine::Camera m_camera;
+	// Game
+	SceneManager* m_sceneManager;
 };
 

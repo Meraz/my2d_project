@@ -2,11 +2,11 @@
 
 #include <TestGame/Include/Scene/BaseScene.h>
 
-class GameScene : public BaseScene
+class MainMenuScene : public BaseScene
 {
 public:
-	GameScene();
-	virtual ~GameScene();
+	MainMenuScene();
+	virtual ~MainMenuScene();
 
 	int i;
 	virtual void Initialize(SceneManagerInterface* p_sceneManagerInteface);

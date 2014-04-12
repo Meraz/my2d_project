@@ -19,9 +19,11 @@ LRESULT CALLBACK MainWndProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_
 
 Jamgame::Jamgame()
 :	m_gameTimer(nullptr), m_gamePaused(false), m_mousePositionX(0), m_mousePositionY(0), m_lMouseClicked(false),
-	m_jamgine(nullptr)
+	m_jamgine(nullptr), m_sceneManager(nullptr)
 {
 	g_jamgame = this;
+	m_gameTimer = new GameTimer();
+	m_sceneManager = new SceneManager();
 }
 
 Jamgame::~Jamgame()
@@ -49,13 +51,10 @@ void Jamgame::Initialize(HINSTANCE p_hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	hr = m_jamgine->Initialize(l_data);
 
 	// Gametimer
-	m_gameTimer = new GameTimer();
 	m_gameTimer->Reset();	
 
-	m_jamgine->LoadTexture(&a, "Box1.dds");
-	m_jamgine->LoadTexture(&b, "Box2.dds");
-	m_jamgine->LoadTexture(&c, "Box3.dds");
-	m_jamgine->LoadTexture(&d, "Box4.dds");
+	// Scenemanager
+	m_sceneManager->Initialize();
 }
 
 int Jamgame::Run()
@@ -89,17 +88,12 @@ int Jamgame::Run()
 
 void Jamgame::Update()
 {
-
+	m_sceneManager->Update(0, 0, 0, false);
 }
 
 void Jamgame::Render()
 {
-//	m_jamgine->Render(Jamgine::Position(0, 0), a,	  Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(400, 400), Jamgine::Position(0,0), c, 50, 50, -5);
-	m_jamgine->Render(Jamgine::Position(0,0),Jamgine::Position(0,0),a,Jamgine::SpriteEffect::FLIP_BOTH,300,100,-2);
-
-
-	m_jamgine->PostRender();
+	m_sceneManager->Render();
 }
 
 LRESULT CALLBACK Jamgame::MsgProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)

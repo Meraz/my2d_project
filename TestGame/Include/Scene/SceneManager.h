@@ -1,8 +1,7 @@
-#ifndef SCENEMANAGER_H
-#define SCENEMANAGER_H
+#pragma once
 
+//#include <TestGame/Include/Scene/SceneManagerInterface.h>
 #include <TestGame/Include/Scene/BaseScene.h>
-#include <TestGame/Include/Scene/SceneManagerInteface.h>
 
 class SceneManager : public SceneManagerInterface
 {
@@ -24,4 +23,3 @@ private:
 	bool m_exit;
 
 };
-#endif
