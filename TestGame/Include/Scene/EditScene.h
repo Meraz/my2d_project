@@ -7,11 +7,11 @@ class RenderEntity;
 
 #include <vector>
 
-class GameScene : public BaseScene
+class EditScene : public BaseScene
 {
 public:
-	GameScene();
-	virtual ~GameScene();
+	EditScene();
+	virtual ~EditScene();
 
 
 	virtual void Initialize(SceneManagerInterface* p_sceneManagerInteface, Jamgine::JamgineEngine* p_engine);
@@ -20,11 +20,15 @@ public:
 
 private:
 	std::vector<RenderEntity*>		m_renderEntity;
+	std::vector<RenderEntity*>		m_editSpecific;
 
 	Jamgine::Camera m_camera;
-	Jamgine::Texture2DInterface* a;
-	Jamgine::Texture2DInterface* b;
 
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
+
+	bool m_prevMouseClick;
+	bool m_creatingBox;
+	Jamgine::Position m_firstPos;
+	Jamgine::Position m_secondPos;
 };

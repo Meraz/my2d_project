@@ -3,6 +3,7 @@
 
 EnemyEntity::EnemyEntity()
 {
+
 }
 
 

@@ -37,7 +37,7 @@ private: // Variable
 	bool		m_gamePaused;
 	int			m_mousePositionX;
 	int			m_mousePositionY;
-	bool		m_lMouseClicked;
+	bool		m_mouseClicked;
 
 	// Game
 	SceneManager* m_sceneManager;

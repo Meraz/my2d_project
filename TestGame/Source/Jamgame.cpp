@@ -18,7 +18,7 @@ LRESULT CALLBACK MainWndProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_
 
 
 Jamgame::Jamgame()
-:	m_gameTimer(nullptr), m_gamePaused(false), m_mousePositionX(0), m_mousePositionY(0), m_lMouseClicked(false),
+:	m_gameTimer(nullptr), m_gamePaused(false), m_mousePositionX(0), m_mousePositionY(0), m_mouseClicked(false),
 	m_jamgine(nullptr), m_sceneManager(nullptr)
 {
 	g_jamgame = this;
@@ -88,7 +88,8 @@ int Jamgame::Run()
 
 void Jamgame::Update()
 {
-	m_sceneManager->Update(m_gameTimer->DeltaTime(), 0, 0, false);
+	m_sceneManager->Update(m_gameTimer->DeltaTime(), m_mousePositionX, m_mousePositionY, m_mouseClicked);
+	m_mouseClicked = false;
 }
 
 void Jamgame::Render()
@@ -127,15 +128,15 @@ LRESULT CALLBACK Jamgame::MsgProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPAR
 		// Don't beep when we alt-enter.
 		return MAKELRESULT(0, MNC_CLOSE);
 	case WM_LBUTTONDOWN:
-//		g_jamgame->m_lMouseClicked = true;
+		m_mouseClicked = true;
 		return 0;
 	case WM_LBUTTONUP:
-//		m_lMouseClicked = false;
+		m_mouseClicked = false;
 		return 0;
 
 	case WM_MOUSEMOVE:
-//		m_mousePositionX = GET_X_LPARAM(p_lParam);
-//		m_mousePositionY = GET_Y_LPARAM(p_lParam);
+		m_mousePositionX = GET_X_LPARAM(p_lParam);
+		m_mousePositionY = GET_Y_LPARAM(p_lParam);
 		return 0;
 	}
 	return DefWindowProc(p_hwnd, p_msg, p_wParam, p_lParam);
