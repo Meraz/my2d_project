@@ -4,7 +4,7 @@
 
 namespace Jamgine
 {
-	#define STANDARD_SPRITE_DEPTH -50.5f
+	#define STANDARD_SPRITE_DEPTH 0.5f
 	
 	enum class GraphicalSystem
 	{

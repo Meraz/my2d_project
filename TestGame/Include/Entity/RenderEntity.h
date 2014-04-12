@@ -40,13 +40,13 @@ private:
 	Jamgine::SpriteEffect		m_spriteEffect;
 	Jamgine::Position			m_position;
 	Jamgine::Position			m_origin;
-	Jamgine::Position			m_currentSubImage;
+	Jamgine::Position			m_currentSubImage; // 0-n
 	float m_width;
 	float m_height;
 	float m_depth;
 	float m_rotation;
 	bool			  m_hasTransparent;
-	Jamgine::Position m_amountOfSubImages;
+	Jamgine::Position m_amountOfSubImages;	//1-n
 
 };
 

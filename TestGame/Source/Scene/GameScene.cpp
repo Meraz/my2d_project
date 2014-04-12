@@ -20,7 +20,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_camera = Jamgine::Camera(0,0);
 
-	m_engine->LoadTexture(&a, "Alpha.dds");
+	m_engine->LoadTexture(&a, "Box1.dds");
 	m_engine->LoadTexture(&b, "Circle.dds");
 
 
@@ -48,5 +48,4 @@ void GameScene::Render()
 		m_renderEntity[i]->Render(m_engine);
 	}
 	m_engine->PostRender(&m_camera);
-	// Get engine pointer and call postrender, also everything else
 }

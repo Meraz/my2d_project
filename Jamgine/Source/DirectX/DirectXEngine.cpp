@@ -22,8 +22,6 @@ namespace Jamgine
 			DirectX::XMFLOAT2 TextureDeltaUVSize;	// 1 / number of subpictures
 			unsigned int flip;
 			
-
-
 			Vertex()
 			{
 			
