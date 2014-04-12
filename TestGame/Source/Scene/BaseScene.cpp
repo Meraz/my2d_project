@@ -1,7 +1,7 @@
 #include <TestGame/Include/Scene/BaseScene.h>
 
 BaseScene::BaseScene()
-	: m_previousMouseState(false), m_sceneState(SceneState::MAIN_MENU)
+	: m_previousMouseState(false), m_sceneState(SceneState::MAIN_MENU), m_sceneManagerInterface(nullptr)
 {
 
 }
