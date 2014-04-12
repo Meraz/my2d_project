@@ -6,7 +6,6 @@ class GameEntity;
 class RenderEntity;
 
 #include <vector>
-#include <Windows.h>
 
 enum class CURRENTTOOL
 {
@@ -39,6 +38,7 @@ private:
 	std::vector<RenderEntity*>		m_renderEntity;
 	std::vector<RenderEntity*>		m_editSpecific;
 	std::vector<Jamgine::Texture2DInterface*>	m_texture;
+
 	int m_currentSprite;
 
 

@@ -42,10 +42,7 @@ void PlayerEntity::LoadClassFromData(char* p_data)
 
 void PlayerEntity::MoveSideways(float amount)
 {
-	/*if (!collisionWall)
-		m_moveDir.x = -1;
-	else
-		m_moveDir.x = 0;*/
+	
 	amount /= INPUT_X_DEVIDER;
 	if (amount*m_velocity.x >= 0)
 	{
@@ -135,6 +132,7 @@ void PlayerEntity::CheckMovementInputs()
 
 void PlayerEntity::Update(double deltaTime)
 {
+	if (hasJumped && !onGround)
 	//check inputs
 	CheckMovementInputs();
 
@@ -201,6 +199,7 @@ void PlayerEntity::Update(double deltaTime)
 		m_animationWhaleJumpTimer += deltaTime;
 		if (m_animationWhaleJumpTimer > 0.06)
 		{
+
 			m_animationWhaleJumpTimer = 0;
 			if (Animate())
 			{
@@ -238,3 +237,4 @@ void PlayerEntity:: UseAnimationSetup(int p_setupIndex)
 
 	ResetAnimation();
 }
+

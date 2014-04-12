@@ -25,12 +25,12 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
-	player->Update(p_deltaTime);
+	//player->Update(p_deltaTime);
 }
 
 void GameScene::Render()
 {
-	player->Render(m_engine);
+	//player->Render(m_engine);
 	m_engine->PostRender(&m_camera);
 }
 
