@@ -18,6 +18,8 @@ namespace Jamgine
 			float depth;
 			float rotation;
 			bool hasTransparent;
+			Position textureDelta;
+
 
 			SpriteData(
 				Position p_position,
@@ -29,7 +31,8 @@ namespace Jamgine
 				float p_height,
 				float p_depth,
 				float p_rotation,
-				bool p_hasTransparent
+				bool p_hasTransparent,
+				Position p_textureDelta
 				)
 			{
 				position = p_position;
@@ -42,6 +45,7 @@ namespace Jamgine
 				depth = p_depth;
 				rotation = p_rotation;
 				hasTransparent = p_hasTransparent;
+				textureDelta = p_textureDelta;
 			}
 			
 			// Without flip
@@ -66,6 +70,7 @@ namespace Jamgine
 				depth = p_depth;
 				rotation = p_rotation;
 				hasTransparent = false;
+				textureDelta = Position(1,1);
 			}
 
 			// without flip and origin
@@ -88,6 +93,7 @@ namespace Jamgine
 				depth = p_depth;
 				rotation = 0;
 				hasTransparent = false;
+				textureDelta = Position(1,1);
 			}
 
 			// Without origin and rotation
@@ -111,6 +117,7 @@ namespace Jamgine
 				depth = p_depth;
 				rotation = 0;
 				hasTransparent = false;
+				textureDelta = Position(1,1);
 			}
 		};
 	}	

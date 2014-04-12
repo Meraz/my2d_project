@@ -11,7 +11,8 @@ BaseScene::~BaseScene()
 
 }
 
-void BaseScene::Initialize(SceneManagerInterface* p_sceneManagerInterface)
+void BaseScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgine::JamgineEngine* p_engine)
 {
 	m_sceneManagerInterface = p_sceneManagerInterface;
+	m_engine = p_engine;
 }
