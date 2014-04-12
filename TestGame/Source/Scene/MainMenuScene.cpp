@@ -9,9 +9,9 @@ MainMenuScene::~MainMenuScene()
 {
 }
 
-void MainMenuScene::Initialize(SceneManagerInterface* p_sceneManagerInterface)
+void MainMenuScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgine::JamgineEngine* p_engine)
 {
-	BaseScene::Initialize(p_sceneManagerInterface);
+	BaseScene::Initialize(p_sceneManagerInterface,p_engine);
 }
 
 void MainMenuScene::Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_lMouseClicked)

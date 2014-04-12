@@ -4,7 +4,7 @@
 
 namespace Jamgine
 {
-	#define STANDARD_SPRITE_DEPTH -50.5f
+	#define STANDARD_SPRITE_DEPTH 0.5f
 	
 	enum class GraphicalSystem
 	{
@@ -25,10 +25,7 @@ namespace Jamgine
 		float x;
 		float y;
 
-		Position()
-		{
-
-		}
+		Position() : x(0), y(0){}
 		Position(float _x, float _y) : x(_x), y(_y){}
 
 		Position& operator+(Position p_position)

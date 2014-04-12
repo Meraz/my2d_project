@@ -19,8 +19,9 @@ namespace Jamgine
 			DirectX::XMFLOAT2 offset;
 			DirectX::XMFLOAT2 texture_offset;
 			float  rotation;
+			DirectX::XMFLOAT2 TextureDeltaUVSize;	// 1 / number of subpictures
 			unsigned int flip;
-
+			
 			Vertex()
 			{
 			
@@ -33,6 +34,7 @@ namespace Jamgine
 				offset	 = DirectX::XMFLOAT2(input.width, input.height); //HARD CODEDDDED : TODO
 				texture_offset = DirectX::XMFLOAT2(input.textureOffset.x, input.textureOffset.y);
 				rotation = input.rotation;
+				TextureDeltaUVSize = DirectX::XMFLOAT2(1/input.textureDelta.x, 1/input.textureDelta.y);
 				flip = (unsigned int)input.spriteEffect;
 			}
 		};
@@ -279,12 +281,13 @@ namespace Jamgine
 
 			D3D11_INPUT_ELEMENT_DESC l_desc[] =
 			{
-				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "ORIGIN", 0, DXGI_FORMAT_R32G32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "TEXTURE_OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{"ROTATION", 0, DXGI_FORMAT_R32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"FLIP", 0, DXGI_FORMAT_R32_UINT,				0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{ "ORIGIN", 0, DXGI_FORMAT_R32G32_FLOAT,			0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{ "OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT,			0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{ "TEXTURE_OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "ROTATION", 0, DXGI_FORMAT_R32_FLOAT,				0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{ "TEXTUREDELTA", 0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{ "FLIP", 0, DXGI_FORMAT_R32_UINT,					0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},// 1 / number of subpictures}
 			};
 
 			unsigned int l_numElements = ARRAYSIZE(l_desc);
@@ -325,9 +328,10 @@ namespace Jamgine
 			float p_height,
 			float p_depth,
 			float p_rotation,
-			bool p_hasTransparent)
+			bool p_hasTransparent,
+			Position p_textureDelta)
 		{
-			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation, p_hasTransparent));
+			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation, p_hasTransparent, p_textureDelta));
 		}
 
 		void DirectXEngine::Render(
@@ -483,7 +487,7 @@ namespace Jamgine
 				}
 			}
 			
-			int transparentStart;
+			int transparentStart = 0;
 			for (int i = 0; i < size + 1; i++)
 			{
 				if (m_renderData[i].hasTransparent)

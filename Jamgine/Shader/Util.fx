@@ -6,11 +6,6 @@ cbuffer PerFrame : register(b0)
 	float4x4 ViewMatrix;
 };
 
-cbuffer PerTexture : register(b1)
-{
-	float2 TextureDeltaUVSize;	// 1 / number of subpictures
-	float2 padding;
-};
 
 cbuffer PerWindowChange :  register(b2)
 {
@@ -24,12 +19,13 @@ SamplerState Sampler : register(s0);
 
 struct VS_OUTPUT
 {
-	float3 position			: POSITION;
-	float2 origin			: ORIGIN;
-	float2 offset			: OFFSET;
-	float2 texture_offset	: TEXTURE_OFFSET;	// Index on subimage
-	float  rotation			: ROTATION;
-	uint   flip				: FLIP;
+	float3 position				: POSITION;
+	float2 origin				: ORIGIN;
+	float2 offset				: OFFSET;
+	float2 texture_offset		: TEXTURE_OFFSET;	// Index on subimage
+	float  rotation				: ROTATION;
+	float2 textureDeltaUVSize	: TEXTUREDELTA;	// 1 / number of subpictures
+	uint   flip					: FLIP;
 };
 
 struct GS_OUTPUT
