@@ -122,6 +122,7 @@ namespace Jamgine
 			D3D11_BLEND_DESC l_blendStateDesc;
 			l_blendStateDesc.AlphaToCoverageEnable			= false;
 			l_blendStateDesc.IndependentBlendEnable			= false;
+
 			l_blendStateDesc.RenderTarget[0].BlendEnable	= true;
 			l_blendStateDesc.RenderTarget[0].SrcBlend		= D3D11_BLEND_SRC_ALPHA;
 			l_blendStateDesc.RenderTarget[0].DestBlend		= D3D11_BLEND_INV_SRC_ALPHA;
@@ -149,7 +150,7 @@ namespace Jamgine
 			desc.DepthBias = 0;
 			desc.SlopeScaledDepthBias = 0.0f;
 			desc.DepthBiasClamp = 0.0f;
-			desc.DepthClipEnable = false;
+			desc.DepthClipEnable = true;
 			desc.ScissorEnable = false;
 			desc.MultisampleEnable = false;
 			desc.AntialiasedLineEnable = false;
@@ -246,8 +247,8 @@ namespace Jamgine
 
 			// Depth test parameters
 			dsDesc.DepthEnable = true;
-			dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		//	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		//	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+			dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 			dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
 			// Stencil test parameters
@@ -323,9 +324,10 @@ namespace Jamgine
 			float p_width,
 			float p_height,
 			float p_depth,
-			float p_rotation)
+			float p_rotation,
+			bool p_hasTransparent)
 		{
-			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation));
+			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation, p_hasTransparent));
 		}
 
 		void DirectXEngine::Render(
@@ -384,7 +386,7 @@ namespace Jamgine
 			
 			
 			m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Yellow);
+			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Black);
 
 			// Update per frame buffer
 			m_deviceContext->UpdateSubresource(m_perFrameBuffer, 0, nullptr, &m_view, 0, 0); // Transposse?
@@ -420,15 +422,77 @@ namespace Jamgine
 			m_swapChain->Present(0, 0);
 			m_renderData.clear();
 		}
-				
-		bool SortAlgorithm(SpriteData p_a, SpriteData p_b)
+		bool SortTransparentAlgorithm(SpriteData p_a, SpriteData p_b)
+		{
+			/*
+				if p_a has transparent and p_b has transparent = > ok
+
+				if p_a has transparent and p_b hasn't transparent = > false
+
+				if p_a hasn't transparent and p_b has transparent => ok
+
+				if p_a hasn't transaprent and p_b hasn't transparent => ok
+			*/
+			if (p_a.hasTransparent && p_b.hasTransparent)
+			{
+				return false;
+			}
+			else if(p_a.hasTransparent && !p_b.hasTransparent)
+			{
+				return true;
+			}
+			else if(!p_a.hasTransparent && p_b.hasTransparent)
+			{
+				return false;
+			}
+			else 
+			{
+				return false;
+			}
+
+			/*return (p_a.hasTransparent && !p_b.hasTransparent);*/
+		}
+
+		bool SortTextureAlgorithm(SpriteData p_a, SpriteData p_b)
 		{
 			return (p_a.texture < p_b.texture);
 		}
+		bool SortDepthAlgorithm(SpriteData p_a, SpriteData p_b)
+		{
+			return (p_a.depth > p_b.depth);
+		}
 		
 		void DirectXEngine::SortSprites()
-		{
-			std::sort(m_renderData.begin(), m_renderData.end(), &SortAlgorithm);
+		{	
+			//std::sort(m_renderData.begin(), m_renderData.end(), &SortTransparentAlgorithm);
+			int size = m_renderData.size() - 1;
+			bool NOTWORKING = TRUE;
+			while (NOTWORKING)
+			{
+				NOTWORKING = false;
+				for (int i = 0; i < size; i++)
+				{
+					if (SortTransparentAlgorithm(m_renderData[i], m_renderData[i+1]))
+					{
+						SpriteData temp = m_renderData[i];
+						m_renderData[i] = m_renderData[i + 1];
+						m_renderData[i + 1] = temp;
+						NOTWORKING = true;
+					}
+				}
+			}
+			
+			int transparentStart;
+			for (int i = 0; i < size + 1; i++)
+			{
+				if (m_renderData[i].hasTransparent)
+				{
+					transparentStart = i;
+					i = size + 1;
+				}
+			}
+			std::sort(m_renderData.begin(), m_renderData.begin() + transparentStart, &SortTextureAlgorithm);
+			std::sort(m_renderData.begin() + transparentStart, m_renderData.end(), &SortDepthAlgorithm);
 		}
 
 		ErrorMessage DirectXEngine::RegisterWindow(Jamgine::Data_Send p_data)
@@ -479,19 +543,19 @@ namespace Jamgine
 			ErrorMessage l_errorMessage = J_OK;
 
 			DXGI_SWAP_CHAIN_DESC l_swapChainDesc;
-			l_swapChainDesc.BufferDesc.Width					= m_clientWidth;
-			l_swapChainDesc.BufferDesc.Height					= m_clientHeight;
-			l_swapChainDesc.BufferDesc.RefreshRate.Numerator	= 60;
-			l_swapChainDesc.BufferDesc.RefreshRate.Denominator	= 1;
-			l_swapChainDesc.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;
-			l_swapChainDesc.SampleDesc.Count					= 1;
-			l_swapChainDesc.SampleDesc.Quality					= 0;
-			l_swapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_UNORDERED_ACCESS;
-			l_swapChainDesc.BufferCount							= 1;
-			l_swapChainDesc.OutputWindow						= m_handle;
-			l_swapChainDesc.Windowed							= true;
-			l_swapChainDesc.SwapEffect							= DXGI_SWAP_EFFECT_DISCARD;
-			l_swapChainDesc.Flags								= 0;
+			ZeroMemory( &l_swapChainDesc, sizeof( l_swapChainDesc ) );
+
+			l_swapChainDesc.BufferDesc.Width					= m_clientWidth; //ok
+			l_swapChainDesc.BufferDesc.Height					= m_clientHeight; //ok
+			l_swapChainDesc.BufferDesc.RefreshRate.Numerator	= 60; //ok
+			l_swapChainDesc.BufferDesc.RefreshRate.Denominator	= 1; //ok
+			l_swapChainDesc.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;//ok
+			l_swapChainDesc.SampleDesc.Count					= 1; //OK
+			l_swapChainDesc.SampleDesc.Quality					= 0;  //OK
+			l_swapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_UNORDERED_ACCESS; //OK
+			l_swapChainDesc.BufferCount							= 1; //OK
+			l_swapChainDesc.OutputWindow						= m_handle; //OK
+			l_swapChainDesc.Windowed							= true; //OK
 
 			D3D_FEATURE_LEVEL featureLevelsToTry[] = {
 				D3D_FEATURE_LEVEL_11_0,

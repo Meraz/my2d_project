@@ -53,9 +53,9 @@ void Jamgame::Initialize(HINSTANCE p_hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	m_gameTimer->Reset();	
 
 	m_jamgine->LoadTexture(&a, "Alpha.dds");
+	m_jamgine->LoadTexture(&c, "Box1.dds");
+	m_jamgine->LoadTexture(&d, "Box1.dds");
 	m_jamgine->LoadTexture(&b, "Circle.dds");
-	m_jamgine->LoadTexture(&c, "Box3.dds");
-	m_jamgine->LoadTexture(&d, "Box4.dds");
 }
 
 int Jamgame::Run()
@@ -94,11 +94,6 @@ void Jamgame::Update()
 
 void Jamgame::Render()
 {
-//	m_jamgine->Render(Jamgine::Position(0, 0), a,	  Jamgine::SpriteEffect::FLIP_NONE);
-	m_jamgine->Render(Jamgine::Position(300, 400), Jamgine::Position(0,0), c, 500, 500, -5);
-	m_jamgine->Render(Jamgine::Position(400, 500), Jamgine::Position(0, 0), b, Jamgine::SpriteEffect::FLIP_NONE, 100, 100, -1);
-	//m_jamgine->Render(Jamgine::Position(450, 410), Jamgine::Position(0, 0), a, Jamgine::SpriteEffect::FLIP_NONE, 100, 100, -2);
-
 
 	m_jamgine->PostRender();
 }

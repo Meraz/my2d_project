@@ -24,7 +24,7 @@ namespace Jamgine
 		virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath) = 0;
 
 		//virtual void PreRender() = 0;
-		virtual	void Render(Position p_position, Position p_origin,	Position p_textureOffset, Texture2DInterface* p_texture, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation)= 0;
+		virtual	void Render(Position p_position, Position p_origin,	Position p_textureOffset, Texture2DInterface* p_texture, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation,bool p_hasTransparent)= 0;
 
 		virtual void Render(
 			Position p_position,

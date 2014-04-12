@@ -36,7 +36,8 @@ namespace Jamgine
 				float p_width,
 				float p_height,
 				float p_depth,
-				float p_rotation);
+				float p_rotation,
+				bool p_hasTransparent);
 
 			virtual void Render(
 				Position p_position,
