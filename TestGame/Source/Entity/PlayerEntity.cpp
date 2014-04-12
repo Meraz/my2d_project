@@ -10,8 +10,17 @@ PlayerEntity::PlayerEntity()
 	m_hasWhaleJumped = false;
 	m_goatDurationTimer = 0;
 	m_goatJumpColdownTimer = 0;
+	m_animationWhaleJumpTimer = 0;
 	m_onGround = true;
+	m_isWhaleAnimating = false;
 	m_velocity = Position(0,0);
+
+	AnimationSetup newSetup;
+	newSetup.numOfSubTextures = m_amountOfSubImages;
+	newSetup.height = m_height;
+	newSetup.width = m_width;
+	newSetup.texture = m_texture;
+	m_animations.push_back(newSetup);
 }
 
 PlayerEntity::~PlayerEntity()
@@ -67,6 +76,7 @@ void PlayerEntity::WhaleJump()	//TODO: start animation?
 			m_velocity.y = MAX_Y_VELOCITY;
 		}
 		m_hasWhaleJumped = true;
+		m_isWhaleAnimating = true;
 	}
 }
 
@@ -84,15 +94,15 @@ void PlayerEntity::GoatJump()	//TODO: start animation?
 
 void PlayerEntity::CheckMovementInputs()
 {
+	XboxStickDirection dir = XboxStickDirection(0,0);
 	if (m_playerOneController->IsConnected())
 	{
 		if (((m_playerOneController->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0))
 		{
 			WhaleJump();
 		}
-		XboxStickDirection dir = m_playerOneController->CheckMovmentStickLeft();
-		MoveSideways(dir.x);
-		//move camera y?
+		dir += m_playerOneController->CheckMovmentStickLeft();
+
 	}
 
 	if (m_playerTwoController->IsConnected())
@@ -106,9 +116,17 @@ void PlayerEntity::CheckMovementInputs()
 			m_hasGoatBoost = false;
 		}
 
-		XboxStickDirection dir = m_playerTwoController->CheckMovmentStickLeft();
-		MoveSideways(dir.x);
-		//move camera y?
+		dir += m_playerTwoController->CheckMovmentStickLeft();
+
+	}
+	MoveSideways(dir.x);
+	if (dir.x < 0)
+	{
+		m_spriteEffect = Jamgine::SpriteEffect::FLIP_HORIZONTALLY;
+	}
+	else if(dir.x != 0)
+	{
+		m_spriteEffect = Jamgine::SpriteEffect::FLIP_NONE;
 	}
 }
 
@@ -137,6 +155,8 @@ void PlayerEntity::Update(double deltaTime)
 		m_position.y = 0;
 		m_velocity.y = 0;
 		m_hasWhaleJumped = false;
+		m_isWhaleAnimating = false;
+		ResetAnimation();
 	}
 
 	if (m_velocity.x > 0)
@@ -174,24 +194,47 @@ void PlayerEntity::Update(double deltaTime)
 			m_goatJumpColdownTimer = 0;
 		}
 	}
+	if (m_isWhaleAnimating)
+	{
+		m_animationWhaleJumpTimer += deltaTime;
+		if (m_animationWhaleJumpTimer > 0.06)
+		{
+
+			m_animationWhaleJumpTimer = 0;
+			if (Animate())
+			{
+				m_isWhaleAnimating = false;
+				
+			}
+		}
+	}
 }
 
-	//check collision for Y and X seperate nullify velocity if hit wall etc,
-	//if (m_hasGoatJumped)
-	//{
-	//	m_goatHoverTimer+=deltaSec;
-	//	if (m_goatHoverTimer > GOAT_HOVER_MAX_TIME)
-	//	{
-	//		m_hasGoatJumped = false; //add cooldown
-	//	}
-	//}
-	//JEEEEENS FIX DIS!
-	/*if (hasJumped && !onGround)
-	{
-		m_moveDir.y--;
 
-		if (m_position.y - 1 == groundheight)
-		{
-			m_moveDir.y = 0;
-			onGround = true;
-		}*/
+void PlayerEntity::AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Position p_numOfSubTextures)
+{
+	AnimationSetup newSetup;
+	newSetup.numOfSubTextures = p_numOfSubTextures;
+	newSetup.height = p_height;
+	newSetup.width = p_width;
+	m_engine->LoadTexture( &newSetup.texture , p_textureName);
+	m_animations.push_back(newSetup);
+}
+
+void PlayerEntity:: UseAnimationSetup(int p_setupIndex)
+{
+	if (p_setupIndex >= m_animations.size())
+	{
+		return;
+	}
+
+	AnimationSetup a = m_animations[p_setupIndex];
+
+	m_height = a.height;
+	m_width = a.width;
+	m_texture = a.texture;
+	m_amountOfSubImages = a.numOfSubTextures;
+
+	ResetAnimation();
+}
+
