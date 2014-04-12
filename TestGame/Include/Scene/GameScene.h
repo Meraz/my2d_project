@@ -1,6 +1,7 @@
 #pragma once
 
 #include <TestGame/Include/Scene/BaseScene.h>
+#include <TestGame/Include/Entity/PlayerEntity.h>
 
 class GameEntity;
 class RenderEntity;
@@ -25,7 +26,7 @@ private:
 	Jamgine::Camera m_camera;
 	Jamgine::Texture2DInterface* a;
 	Jamgine::Texture2DInterface* b;
-
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
+
 };

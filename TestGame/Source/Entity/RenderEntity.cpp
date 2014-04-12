@@ -102,6 +102,10 @@ void RenderEntity::SetTexture(Texture2DInterface* p_texture)
 	m_texture = p_texture;
 }
 
+void RenderEntity::Update(double p_deltaTime)
+{
+}
+
 void RenderEntity::Render(Jamgine::JamgineEngine* p_engine)
 {
 

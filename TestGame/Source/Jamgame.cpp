@@ -5,6 +5,7 @@
 
 #define CLIENT_WIDTH 800
 #define CLIENT_HEIGHT 800
+
 namespace
 {
 	Jamgame* g_jamgame = nullptr;

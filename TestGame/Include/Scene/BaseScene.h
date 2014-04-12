@@ -6,6 +6,8 @@
 
 #include <TestGame/Include/Scene/SceneManagerInterface.h>
 
+#include <TestGame/Include/XBOXController.h>
+
 class BaseScene
 {
 public:

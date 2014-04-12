@@ -369,8 +369,12 @@ namespace Jamgine
 		void DirectXEngine::PostRender(Camera* p_camera)
 		{
 			int max = m_renderData.size() - 1;
-			if(max < 0)
+			if (max < 0)
+			{
+				m_swapChain->Present(0, 0);
 				return; // DO NOTHING
+			}
+				
 
 			// Sort sprites after textures
 			SortSprites();		

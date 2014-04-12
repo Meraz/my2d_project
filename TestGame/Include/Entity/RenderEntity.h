@@ -19,8 +19,9 @@ enum class ENTITY
 	ENENMY,
 	PLAYER
 };
+#define GRAVITY -700.0
 
-
+using namespace Jamgine;
 
 class RenderEntity
 {
@@ -36,12 +37,14 @@ public:
 
 
 	void SetTexture(Texture2DInterface* p_texture);
+	virtual void Update(double p_deltaTime);
 	virtual	void Render(Jamgine::JamgineEngine* p_engine);
 	
 	// Load and save class
 	virtual std::stringstream ToFile();
 	virtual void LoadClassFromData(char* p_data); // Return how many variables you read
 	
+
 	ENTITY m_entity;
 	char m_texturePath[50];
 	Jamgine::Texture2DInterface* m_texture;
@@ -58,8 +61,6 @@ public:
 	Jamgine::JamgineEngine* m_engine;		//1-n
 
 protected:
-
-
 	void GetEngine();
 };
 
