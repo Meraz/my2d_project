@@ -8,13 +8,12 @@
 #include <fstream>
 
 
-EditScene::EditScene(HWND p_handle)
+EditScene::EditScene()
 { 
 	m_renderEntity = std::vector<RenderEntity*>();
 	m_editSpecific = std::vector<RenderEntity*>();
 	m_texture = std::vector<Jamgine::Texture2DInterface*>();
 	
-	m_handle = p_handle;
 	m_creatingBox = false;
 	m_currTool = CURRENTTOOL::NEWRECT;
 	m_currentSprite = 0;

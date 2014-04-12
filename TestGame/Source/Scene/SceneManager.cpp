@@ -11,11 +11,10 @@ SceneManager::SceneManager()
 }
 
 
-void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine, HWND p_handle)
+void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine)
 {
 	m_engine = p_engine;
 	SwapSceneState(SceneState::GAME);
-	m_handle = p_handle;
 }
 
 void SceneManager::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked)
@@ -58,7 +57,7 @@ void SceneManager::SwapSceneState(SceneState p_sceneState)
 	}
 	else if (p_sceneState == SceneState::EDIT)
 	{
-		m_currentScene = new EditScene(m_handle);
+		m_currentScene = new EditScene();
 	}
 	else // Nothing to do, return
 	{

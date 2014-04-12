@@ -26,7 +26,7 @@ enum class CURRENTTOOL
 class EditScene : public BaseScene
 {
 public:
-	EditScene(HWND p_handle);
+	EditScene();
 	virtual ~EditScene();
 
 
@@ -39,7 +39,6 @@ private:
 	std::vector<RenderEntity*>		m_renderEntity;
 	std::vector<RenderEntity*>		m_editSpecific;
 	std::vector<Jamgine::Texture2DInterface*>	m_texture;
-	HWND m_handle = nullptr;
 	int m_currentSprite;
 
 

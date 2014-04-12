@@ -29,4 +29,5 @@ private:
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
 
+	PlayerEntity* player;
 };
