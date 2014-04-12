@@ -9,7 +9,7 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void Initialize();
+	void Initialize(Jamgine::JamgineEngine* p_engine);
 	void Update(double p_deltaTime, int p_mousePositionX, int p_mousePositionY, bool p_mouseClicked);
 	void Render();
 
@@ -21,5 +21,6 @@ private:
 	SceneState m_currentSceneState;
 	BaseScene* m_currentScene;
 	bool m_exit;
+	Jamgine::JamgineEngine* m_engine;
 
 };

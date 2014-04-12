@@ -9,8 +9,9 @@ SceneManager::SceneManager()
 }
 
 
-void SceneManager::Initialize()
+void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine)
 {
+	m_engine = p_engine;
 	m_currentSceneState = SceneState::MAIN_MENU;
 	SwapSceneState(SceneState::GAME);
 }
@@ -61,7 +62,7 @@ void SceneManager::SwapSceneState(SceneState p_sceneState)
 	// Initialize new screen, if it's not a nullptr
 	if (m_currentScene != nullptr)
 	{
-		m_currentScene->Initialize((SceneManagerInterface*)this);
+		m_currentScene->Initialize((SceneManagerInterface*)this,m_engine);
 		m_currentSceneState = p_sceneState; // Save knowledge for new state
 	}
 }
