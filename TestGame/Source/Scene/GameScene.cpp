@@ -6,6 +6,8 @@
 #include <TestGame/Include/Entity/EnemyEntity.h>
 #include <TestGame/Include/Entity/ProjectileEntity.h>
 #include <TestGame/Include/Entity/AnimationEntity.h>
+#include <TestGame/Include/Sound/FMODHandler.h>
+#include <TestGame/Include/Sound/SoundHandler.h>
 
 // c++ includes
 #include <fstream>
@@ -26,17 +28,23 @@ GameScene::~GameScene()
 void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgine::JamgineEngine* p_engine)
 {
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
+	
+	m_soundHandler = new SoundHandler();
+	m_soundHandler->AddSource("LionKing.wav");
+	//m_soundHandler->PlaySoundCustom();
 
 	m_camera = Jamgine::Camera(0,0);
 	player = new PlayerEntity();
 	LoadCurrentSetup("Level.lvl");
+	
+
 	//player->Initialize(Jamgine::Position(200,200),Jamgine::Position(0,0),Jamgine::Position(0,0),"VAL_ANIMATION.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Position(5,5)); //funkar med valtexture
 	//player->AddAnimationTexture(50,50,"Anim2.dds", Jamgine::Position(3,3)); //test for multiple animations
 }
 
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
-	
+	m_soundHandler->Update();
 	/* iterate collision objects
 	for(int i = 0; i < m_collisionEntity.size(); i++)
 	{

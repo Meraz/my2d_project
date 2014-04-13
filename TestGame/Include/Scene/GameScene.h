@@ -10,6 +10,7 @@ class ProjectileEntity;
 class AnimationEntity;
 class PlayerEntity;
 class CollisionEntity;
+class SoundHandler;
 
 #include <vector>
 
@@ -44,4 +45,5 @@ private:
 	void CheckCollision();
 	bool GameScene::InScreen(CollisionEntity* entity);
 	void CreateObject(int l_entity, char* l_data);
+	SoundHandler* m_soundHandler;
 };
