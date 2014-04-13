@@ -38,6 +38,8 @@ public:
 
 
 private:
+	void CreateDirt(int yStart, int yEnd, int xStart, int xEnd);
+
 	std::vector<RenderEntity*>	m_renderEntity;
 	std::vector<Jamgine::Texture2DInterface*>	m_texture;
 	std::vector<char*>	m_texturePath;
@@ -48,7 +50,8 @@ private:
 	int m_selectedSpriteVibrateTimer;
 	bool m_newSpriteSelected;
 	Jamgine::Position m_originalSpritePosition;
-
+	float grassTile;
+	float dirtTile;
 
 	Jamgine::Camera m_camera;
 
