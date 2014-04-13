@@ -57,7 +57,7 @@ void Jamgame::Initialize(HINSTANCE p_hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	m_gameTimer->Reset();	
 
 	// Scenemanager
-	m_sceneManager->Initialize(m_jamgine, m_handle);
+	m_sceneManager->Initialize(m_jamgine);
 }
 
 int Jamgame::Run()

@@ -110,7 +110,7 @@ void RenderEntity::Update(double p_deltaTime)
 void RenderEntity::Render(Jamgine::JamgineEngine* p_engine)
 {
 
-	p_engine->Render(m_position, m_origin, m_currentSubImage, m_texture, m_spriteEffect, m_width, m_height, m_depth, m_rotation, false, Jamgine::Position(1, 1));
+	p_engine->Render(m_position, m_origin, m_currentSubImage, m_texture, m_spriteEffect, m_width, m_height, m_depth, m_rotation, m_hasTransparent, m_amountOfSubImages);
 }
 
 std::stringstream RenderEntity::ToFile()

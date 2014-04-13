@@ -8,12 +8,11 @@
 #include <fstream>
 
 
-EditScene::EditScene(HWND p_handle)
+EditScene::EditScene()
 { 
 	m_renderEntity = std::vector<RenderEntity*>();
 	m_texture = std::vector<Jamgine::Texture2DInterface*>();
 	
-	m_handle = p_handle;
 	m_creatingBox = false;
 	editBox = false;
 	m_depthStep = 0.1f;
