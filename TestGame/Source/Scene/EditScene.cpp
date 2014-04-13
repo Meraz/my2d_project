@@ -7,7 +7,6 @@
 
 #include <fstream>
 
-
 EditScene::EditScene()
 { 
 	m_renderEntity = std::vector<RenderEntity*>();
@@ -178,10 +177,7 @@ void EditScene::Entity()
 			m_renderEntity[m_currentSprite]->m_entity = ENTITY::PLAYER;
 
 		else if (m_renderEntity[m_currentSprite]->m_entity == ENTITY::PLAYER)
-			m_renderEntity[m_currentSprite]->m_entity = ENTITY::WALL;
-
-		else if (m_renderEntity[m_currentSprite]->m_entity == ENTITY::WALL)
-			m_renderEntity[m_currentSprite]->m_entity = ENTITY::RENDER;
+			m_renderEntity[m_currentSprite]->m_entity = ENTITY::RENDER;			
 
 		m_renderEntity[m_currentSprite]->m_origin = m_firstPos;
 		PrintDebugWithValue("enity:%f \t%f %f \n", (float)m_renderEntity[m_currentSprite]->m_entity, 0, 0);

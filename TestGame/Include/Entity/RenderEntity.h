@@ -17,8 +17,7 @@ enum class ENTITY
 	COLLISION,
 	ANIMATION,
 	ENENMY,
-	PLAYER,
-	WALL
+	PLAYER
 };
 #define GRAVITY -700.0
 

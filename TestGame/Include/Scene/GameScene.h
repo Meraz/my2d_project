@@ -43,4 +43,5 @@ private:
 
 	void CheckCollision();
 	bool GameScene::InScreen(CollisionEntity* entity);
+	void CreateObject(int l_entity, char* l_data);
 };

@@ -6,6 +6,10 @@
 #include <TestGame/Include/Entity/EnemyEntity.h>
 #include <TestGame/Include/Entity/ProjectileEntity.h>
 #include <TestGame/Include/Entity/AnimationEntity.h>
+#include <TestGame/Include/Entity/EntityFactory.h>
+
+// c++ includes
+#include <fstream>
 
 GameScene::GameScene()
 { 
@@ -13,6 +17,7 @@ GameScene::GameScene()
 	m_enemyEntities			= std::vector<EnemyEntity*>();
 	m_projectileEntities	= std::vector<ProjectileEntity*>();
 	m_animationEntities		= std::vector<AnimationEntity*>();
+	m_collisionEntities		= std::vector<CollisionEntity*>();
 }
 
 GameScene::~GameScene()
@@ -118,10 +123,85 @@ void GameScene::Render()
 
 void GameScene::SaveCurrentSetup(char* p_fileName)
 {
+	using namespace std;
 
+	ofstream l_file;
+	l_file.open(p_fileName);
+
+	unsigned int l_totalObjects = m_renderEntities.size();
+	for (unsigned int i = 0; i < l_totalObjects; i++)
+	{
+		l_file << m_renderEntities[i]->ToFile().str();
+		l_file << "\n";
+	}
+	l_file.close();
 }
 
 void GameScene::LoadCurrentSetup(char* p_fileName)
 {
+	using namespace std;
+
+	EntityFactory* m_entityFactory;
+	m_entityFactory = new EntityFactory();
+
+	ifstream l_stream;
+	l_stream.open(p_fileName);
+
+	unsigned int l_totalObjects = m_renderEntities.size();
+
+	char l_buffer[1024];
+
+	while (l_stream.getline(l_buffer, 1024))
+	{
+		char lKey[8];
+
+		// Texture
+		RenderEntity* l_renderEntity;
+		sscanf_s(l_buffer, "%i ", lKey, sizeof(lKey));
+		l_renderEntity = m_entityFactory->CreateObject(lKey[0], l_buffer);
+		m_renderEntities.push_back(l_renderEntity);
+	}
+
+	l_stream.close();
+	delete m_entityFactory;
+}
+
+void GameScene::CreateObject(int l_entityType, char* l_data)
+{
+	RenderEntity* l_entity;
+
+	if (l_entityType == (int)ENTITY::RENDER)
+	{
+		l_entity = new EnemyEntity();
+	}
+	else if (l_entityType == (int)ENTITY::COLLISION)
+	{
+		l_entity = new PlayerEntity();
+		m_collisionEntities.push_back(static_cast<CollisionEntity*>(l_entity));
+	}
+	else if (l_entityType == (int)ENTITY::ANIMATION)
+	{
+		l_entity = new AnimationEntity();
+		m_animationEntities.push_back(static_cast<AnimationEntity*>(l_entity));
+	}
+	else if (l_entityType == (int)ENTITY::ENENMY)
+	{
+		l_entity = new RenderEntity();
+		m_enemyEntities.push_back(static_cast<EnemyEntity*>(l_entity));
+	}
+	else if (l_entityType == (int)ENTITY::PLAYER)
+	{
+		return; // l_entity = new RenderEntity(); // This should not happen
+	}
+//	else if (l_entityType == (int)ENTITY::WALL)
+//	{
+//		l_entity = new CollisionEntity();
+//		m_collisionEntities.push_back(static_cast<CollisionEntity*>(l_entity));
+//	}
+	l_entity->LoadClassFromData(l_data);
+
+	
+	m_renderEntities.push_back(l_entity);
+	
 
 }
