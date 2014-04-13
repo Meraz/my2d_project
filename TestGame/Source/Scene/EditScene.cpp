@@ -13,6 +13,7 @@ EditScene::EditScene()
 { 
 	m_renderEntity = std::vector<RenderEntity*>();
 	m_texture = std::vector<Jamgine::Texture2DInterface*>();
+	std::vector<char*>	m_texturePath;
 	
 	m_creatingBox = false;
 	editBox = false;
@@ -38,10 +39,17 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_camera = Jamgine::Camera(0,0);
 
-	m_texture.resize(3);
-	m_engine->LoadTexture(&m_texture[0], "Box1.dds");
-	m_engine->LoadTexture(&m_texture[1], "Circle.dds");
-	m_engine->LoadTexture(&m_texture[2], "EditScreenButton.dds");
+	m_texturePath.push_back("Box1.dds");
+	m_texturePath.push_back("Circle.dds");
+	m_texturePath.push_back("EditScreenButton.dds");
+
+	int max = m_texturePath.size();
+	m_texture.resize(max);
+	for (unsigned int i = 0; i < max; i++)
+	{
+		m_engine->LoadTexture(&m_texture[i], m_texturePath[i]);
+	}
+
 	m_totalTextures = m_texture.size();
 }
 
@@ -153,7 +161,7 @@ void EditScene::NewRect(float p_mousePositionX, float p_mousePositionY, bool p_m
 		float l_width = m_secondPos.x - m_firstPos.x;
 		float l_heigth = m_secondPos.y - m_firstPos.y;
 
-		m_renderEntity.push_back(new PlayerEntity());
+		m_renderEntity.push_back(new RenderEntity());
 		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(m_firstPos), "EditScreenButton.dds", l_width, l_heigth);
 
 		m_creatingBox = false;
@@ -178,7 +186,10 @@ void EditScene::Entity()
 			m_renderEntity[m_currentSprite]->m_entity = ENTITY::PLAYER;
 
 		else if (m_renderEntity[m_currentSprite]->m_entity == ENTITY::PLAYER)
-			m_renderEntity[m_currentSprite]->m_entity = ENTITY::RENDER;			
+			m_renderEntity[m_currentSprite]->m_entity = ENTITY::PROJECTILE;
+
+		else if (m_renderEntity[m_currentSprite]->m_entity == ENTITY::PROJECTILE)
+			m_renderEntity[m_currentSprite]->m_entity = ENTITY::RENDER;
 
 		m_renderEntity[m_currentSprite]->m_origin = m_firstPos;
 		PrintDebugWithValue("enity:%f \t%f %f \n", (float)m_renderEntity[m_currentSprite]->m_entity, 0, 0);
@@ -193,6 +204,7 @@ void EditScene::ChoseTex()
 		if (m_renderEntity[m_currentSprite]->m_textureIndex < 0)
 			m_renderEntity[m_currentSprite]->m_textureIndex = m_totalTextures - 1;
 		m_renderEntity[m_currentSprite]->m_texture = m_texture[m_renderEntity[m_currentSprite]->m_textureIndex];
+		strcpy(m_renderEntity[m_currentSprite]->m_texturePath, m_texturePath[m_renderEntity[m_currentSprite]->m_textureIndex]);
 	}
 	else if (tab && !prevtab)
 	{
@@ -200,6 +212,7 @@ void EditScene::ChoseTex()
 		if (m_renderEntity[m_currentSprite]->m_textureIndex > m_totalTextures - 1)
 			m_renderEntity[m_currentSprite]->m_textureIndex = 0;
 		m_renderEntity[m_currentSprite]->m_texture = m_texture[m_renderEntity[m_currentSprite]->m_textureIndex];
+		strcpy(m_renderEntity[m_currentSprite]->m_texturePath, m_texturePath[m_renderEntity[m_currentSprite]->m_textureIndex]);
 	}
 }
 
@@ -259,7 +272,9 @@ void EditScene::EditRect(float p_mousePositionX, float p_mousePositionY, bool p_
 		float l_width = m_secondPos.x - m_firstPos.x;
 		float l_heigth = m_secondPos.y - m_firstPos.y;
 
-		m_renderEntity[m_currentSprite]->Initialize(Position(m_firstPos), "EditScreenButton.dds", l_width, l_heigth);
+		m_renderEntity[m_currentSprite]->m_position = m_firstPos;
+		m_renderEntity[m_currentSprite]->m_width = l_width;
+		m_renderEntity[m_currentSprite]->m_height = l_heigth;
 
 		editBox = false;
 	}
@@ -487,7 +502,6 @@ void EditScene::LoadCurrentSetup(char* p_fileName)
 		char lKey[8];
 
 		// Texture
-		RenderEntity* l_renderEntity;
 		sscanf_s(l_buffer, "%i ", lKey, sizeof(lKey));
 		CreateObject(lKey[0], l_buffer);
 	}
@@ -500,11 +514,11 @@ void EditScene::CreateObject(int l_entityType, char* l_data)
 
 	if (l_entityType == (int)ENTITY::RENDER)
 	{
-		l_entity = new EnemyEntity();
+		l_entity = new RenderEntity();
 	}
 	else if (l_entityType == (int)ENTITY::COLLISION)
 	{
-		l_entity = new PlayerEntity();
+		l_entity = new CollisionEntity();
 	}
 	else if (l_entityType == (int)ENTITY::ANIMATION)
 	{
@@ -512,11 +526,15 @@ void EditScene::CreateObject(int l_entityType, char* l_data)
 	}
 	else if (l_entityType == (int)ENTITY::ENENMY)
 	{
-		l_entity = new RenderEntity();
+		l_entity = new EnemyEntity();
 	}
 	else if (l_entityType == (int)ENTITY::PLAYER)
 	{
 		return; // l_entity = new RenderEntity(); // This should not happen
+	}
+	else if (l_entityType == (int)ENTITY::PROJECTILE)
+	{
+		l_entity = new ProjectileEntity();
 	}
 
 	l_entity->LoadClassFromData(l_data);

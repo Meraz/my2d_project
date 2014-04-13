@@ -41,16 +41,6 @@ public:
 	void AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Position p_numOfSubTextures);
 	virtual void Update(double p_deltaTime);
 private:
-	Position			m_moveDir;
-	Texture2DInterface* m_texture;
-	SpriteEffect		m_spriteEffect;
-	Position			m_position;
-	Position			m_origin;
-	Position			m_textureOffset;
-	float	m_width;
-	float	m_height;
-	float	m_depth;
-	float	m_rotation;
 	bool	hasJumped;
 	bool	onGround;
 	bool	m_hasWhaleJumped;

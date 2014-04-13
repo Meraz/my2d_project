@@ -40,6 +40,7 @@ public:
 private:
 	std::vector<RenderEntity*>	m_renderEntity;
 	std::vector<Jamgine::Texture2DInterface*>	m_texture;
+	std::vector<char*>	m_texturePath;
 
 	int m_currentSprite;
 	float m_depthStep;

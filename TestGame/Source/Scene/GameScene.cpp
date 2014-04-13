@@ -29,6 +29,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_camera = Jamgine::Camera(0,0);
 	player = new PlayerEntity();
+	LoadCurrentSetup("Level.lvl");
 	//player->Initialize(Jamgine::Position(200,200),Jamgine::Position(0,0),Jamgine::Position(0,0),"VAL_ANIMATION.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Position(5,5)); //funkar med valtexture
 	//player->AddAnimationTexture(50,50,"Anim2.dds", Jamgine::Position(3,3)); //test for multiple animations
 }
@@ -115,7 +116,11 @@ bool GameScene::InScreen(CollisionEntity* entity)
 
 void GameScene::Render()
 {
-	//player->Render(m_engine);
+	int max = m_renderEntities.size();
+	for (unsigned int i = 0; i < max; i++)
+	{
+		m_renderEntities[i]->Render(m_engine);
+	}
 	m_engine->PostRender(&m_camera);
 }
 
@@ -166,11 +171,11 @@ void GameScene::CreateObject(int l_entityType, char* l_data)
 
 	if (l_entityType == (int)ENTITY::RENDER)
 	{
-		l_entity = new EnemyEntity();
+		l_entity = new RenderEntity();
 	}
 	else if (l_entityType == (int)ENTITY::COLLISION)
 	{
-		l_entity = new PlayerEntity();
+		l_entity = new CollisionEntity();
 		m_collisionEntities.push_back(static_cast<CollisionEntity*>(l_entity));
 	}
 	else if (l_entityType == (int)ENTITY::ANIMATION)
@@ -180,13 +185,19 @@ void GameScene::CreateObject(int l_entityType, char* l_data)
 	}
 	else if (l_entityType == (int)ENTITY::ENENMY)
 	{
-		l_entity = new RenderEntity();
+		l_entity = new EnemyEntity();
 		m_enemyEntities.push_back(static_cast<EnemyEntity*>(l_entity));
 	}
 	else if (l_entityType == (int)ENTITY::PLAYER)
 	{
-		return; // l_entity = new RenderEntity(); // This should not happen
+		ExitProcess(0);//	return; // l_entity = new RenderEntity(); // This should not happen
 	}
+	else if (l_entityType == (int)ENTITY::PROJECTILE)
+	{
+		l_entity = new ProjectileEntity();
+		m_projectileEntities.push_back(static_cast<ProjectileEntity*>(l_entity));
+	}
+	
 	l_entity->LoadClassFromData(l_data);
 		
 	m_renderEntities.push_back(l_entity);

@@ -3,13 +3,14 @@
 
 EnemyEntity::EnemyEntity()
 {
-
+	m_entity = ENTITY::ENENMY;
 }
 
 EnemyEntity::EnemyEntity(Position* playerPos)
 {
 	m_playerPos = playerPos;
 	m_gravity = 0.05;
+	m_entity = ENTITY::ENENMY;
 }
 EnemyEntity::~EnemyEntity()
 {

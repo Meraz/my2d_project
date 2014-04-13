@@ -3,6 +3,7 @@
 
 AnimationEntity::AnimationEntity()
 {
+	m_entity = ENTITY::ANIMATION;
 }
 
 

@@ -4,7 +4,6 @@
 RenderEntity::RenderEntity()
 {
 	m_entity = ENTITY::RENDER;
-	
 }
 
 RenderEntity::~RenderEntity()
@@ -130,14 +129,17 @@ std::stringstream RenderEntity::ToFile()
 		m_width										<< ' ' <<	// float
 		m_height									<< ' ' <<	// float
 		m_depth										<< ' ' <<	// float
-		m_rotation;												// float
+		m_rotation									<< ' ' <<	// float
+		m_hasTransparent							<< ' ' <<
+		m_amountOfSubImages.x						<< ' ' <<
+		m_amountOfSubImages.y;										
 	return l_returnValue;
 }
 
 void RenderEntity::LoadClassFromData(char* p_data)
 {
 	int i = 0;
-	sscanf_s(p_data, "%i %f %f %f %f %i %i %s %i %f %f %f %f", 
+	sscanf_s(p_data, "%i %f %f %f %f %i %i %s %i %f %f %f %f %i %f %f", 
 		&m_entity,
 		&m_position.x, 
 		&m_position.y,
@@ -150,7 +152,10 @@ void RenderEntity::LoadClassFromData(char* p_data)
 		&m_width,
 		&m_height,
 		&m_depth,
-		&m_rotation
+		&m_rotation,
+		&m_hasTransparent,
+		&m_amountOfSubImages.x,
+		&m_amountOfSubImages.y
 		);
 
 	GetEngine();
