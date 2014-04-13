@@ -39,9 +39,9 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_camera = Jamgine::Camera(0,0);
 
-	m_texturePath.push_back("Box1.dds");
-	m_texturePath.push_back("Circle.dds");
-	m_texturePath.push_back("EditScreenButton.dds");
+
+	m_texturePath.push_back("dirt_texture.dds");
+	m_texturePath.push_back("tiled_grass_top.dds");
 
 	int max = m_texturePath.size();
 	m_texture.resize(max);
@@ -50,6 +50,60 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 		m_engine->LoadTexture(&m_texture[i], m_texturePath[i]);
 	}
 
+	float grassTile = 10;
+	float dirtTile = 15;
+	float firstSprint = 1500;
+
+	for (float y = 0 / dirtTile; y < 50 / dirtTile; y++)
+	{
+		for (float x = 0; x < firstSprint / dirtTile; x++)
+		{
+			m_renderEntity.push_back(new RenderEntity());
+			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
+		}
+	}
+	for (float y = (200 + grassTile) / dirtTile; y < 250 / dirtTile; y++)
+	{
+		for (float x = 0; x < firstSprint / dirtTile; x++)
+		{
+			m_renderEntity.push_back(new RenderEntity());
+			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
+		}
+	}
+	for (float y = (400 + grassTile - 5) / dirtTile; y < 450 / dirtTile; y++)
+	{
+		for (float x = 0; x < firstSprint / dirtTile; x++)
+		{
+			m_renderEntity.push_back(new RenderEntity());
+			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
+		}
+	}
+
+	for (unsigned int i = 0; i < firstSprint / grassTile; i++)
+	{
+		m_renderEntity.push_back(new RenderEntity());
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(grassTile * i, 55), "tiled_grass_top.dds", grassTile, grassTile); // Grass
+	}
+
+	for (unsigned int i = 0; i < firstSprint / grassTile; i++)
+	{
+		m_renderEntity.push_back(new RenderEntity());
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(grassTile * i, 205), "tiled_grass_top.dds", grassTile, grassTile); // Grass
+	}
+
+	for (unsigned int i = 0; i < firstSprint / grassTile; i++)
+	{
+		m_renderEntity.push_back(new RenderEntity());
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(grassTile * i, 250), "tiled_grass_top.dds", grassTile, grassTile); // Grass
+	}
+
+	for (unsigned int i = 0; i < firstSprint / grassTile; i++)
+	{
+		m_renderEntity.push_back(new RenderEntity());
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(grassTile * i, 400), "tiled_grass_top.dds", grassTile, grassTile); // Grass
+	}
+
+		
 	m_totalTextures = m_texture.size();
 }
 
@@ -162,7 +216,7 @@ void EditScene::NewRect(float p_mousePositionX, float p_mousePositionY, bool p_m
 		float l_heigth = m_secondPos.y - m_firstPos.y;
 
 		m_renderEntity.push_back(new RenderEntity());
-		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(m_firstPos), "EditScreenButton.dds", l_width, l_heigth);
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(m_firstPos), "dirt_texture.dds", l_width, l_heigth);
 
 		m_creatingBox = false;
 		m_currentSprite = m_renderEntity.size() - 1;
@@ -472,6 +526,19 @@ void EditScene::Render()
 	m_engine->PostRender(&m_camera);
 }
 
+void EditScene::CreateDirt(int yStart, int yEnd, int xStart, int xEnd)
+{
+	for (float y = yStart / dirtTile; y < yEnd / dirtTile; y++)
+	{
+		for (float x = xStart; x < xEnd / dirtTile; x++)
+		{
+			m_renderEntity.push_back(new RenderEntity());
+			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
+		}
+	}
+}
+
+
 void EditScene::SaveCurrentSetup(char* p_fileName)
 {
 	using namespace std;
@@ -541,7 +608,6 @@ void EditScene::CreateObject(int l_entityType, char* l_data)
 
 	m_renderEntity.push_back(l_entity);
 }
-
 
 void EditScene::PrintDebug(char* p_message)
 {
