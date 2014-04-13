@@ -3,8 +3,7 @@
 [maxvertexcount(6)]
 void GS(point VS_OUTPUT input[1], inout TriangleStream <GS_OUTPUT> triangle_stream)
 {
-//	float alpha = 3.1415/2.0;
-	float alpha = 0;
+	float alpha = input.rotation;
 	float2x2 rotationmatrix =
 	{
 		cos(alpha), -sin(alpha),

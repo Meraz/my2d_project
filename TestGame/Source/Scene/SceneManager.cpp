@@ -14,7 +14,7 @@ SceneManager::SceneManager()
 void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine, HWND p_handle)
 {
 	m_engine = p_engine;
-	SwapSceneState(SceneState::GAME);
+	SwapSceneState(SceneState::EDIT);
 	m_handle = p_handle;
 }
 

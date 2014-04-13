@@ -28,6 +28,7 @@ void RenderEntity::Initialize(Position p_position, Position p_origin, Position p
 	m_rotation = p_rotation;
 	m_hasTransparent = p_hasTransparent;
 	m_amountOfSubImages = p_amountOfSubImages;
+	m_textureIndex = 0;
 }
 
 void RenderEntity::Initialize(Position p_position, Position p_textureOffset, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Position p_amountOfSubImages)

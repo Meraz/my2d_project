@@ -8,6 +8,8 @@ class RenderEntity;
 #include <vector>
 #include <Windows.h>
 
+#define MAX_SUB_IMAGES 32
+
 enum class CURRENTTOOL
 {
 	NEWRECT,
@@ -20,7 +22,8 @@ enum class CURRENTTOOL
 	DEPTH,
 	ROTATION,
 	SUBIMG,
-	TRANSPARANT
+	TRANSPARANT,
+	SELECT
 };
 
 class EditScene : public BaseScene
@@ -36,11 +39,15 @@ public:
 
 
 private:
-	std::vector<RenderEntity*>		m_renderEntity;
-	std::vector<RenderEntity*>		m_editSpecific;
+	std::vector<RenderEntity*>	m_renderEntity;
 	std::vector<Jamgine::Texture2DInterface*>	m_texture;
 	HWND m_handle = nullptr;
 	int m_currentSprite;
+	float m_depthStep;
+	int m_totalTextures;
+	int m_selectedSpriteVibrateTimer;
+	bool m_newSpriteSelected;
+	Jamgine::Position m_originalSpritePosition;
 
 
 	Jamgine::Camera m_camera;
@@ -49,7 +56,7 @@ private:
 	void LoadCurrentSetup(char* p_filename);
 
 	bool m_prevMouseClick;
-	bool m_creatingBox;
+	bool m_creatingBox, editBox;
 	Jamgine::Position m_firstPos;
 	Jamgine::Position m_secondPos;
 
@@ -60,18 +67,18 @@ private:
 	void ChoseTex();
 	void SetOrigin(float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked);
 	void SetSpriteEffect();
-	void EditRect();
-	void SetDepth();
+	void EditRect(float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked);	
+	void SetDepth(bool p_mouseClicked);
 	void SetRotation();
-	void AmountSubImg();
+	void AmountSubImg(float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked);
 	void SetTransparant();
+	void SelectSprite();
 
-	bool Q, W, E, R, T, Y, U, I, O, P, S, L;
+	bool Q, W, E, R, T, Y, U, I, O, P, S, L, A;
 	bool tab, prevtab;
-	
+	bool m_changeXAmountSubImage;
 
 	void PrintDebug(char* p_message);
 	void PrintDebugWithValue(char* p_message, float p_value1, float p_value2, float p_value3);
 	void UpdateCurrentTool();
-
 };
