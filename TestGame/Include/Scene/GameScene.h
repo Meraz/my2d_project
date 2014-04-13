@@ -54,6 +54,6 @@ private:
 	bool VerticalCollision(Position playPos, Position objPos, float playWidth, float playHeight, float objHeight);
 
 	void CreateObject(int l_entity, char* l_data);
-	//SoundHandler* m_soundHandler;
+	SoundHandler* m_soundHandler;
 
 };

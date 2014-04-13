@@ -6,8 +6,8 @@
 #include <TestGame/Include/Entity/EnemyEntity.h>
 #include <TestGame/Include/Entity/ProjectileEntity.h>
 #include <TestGame/Include/Entity/AnimationEntity.h>
-//#include <TestGame/Include/Sound/FMODHandler.h>
-//#include <TestGame/Include/Sound/SoundHandler.h>
+#include <TestGame/Include/Sound/FMODHandler.h>
+#include <TestGame/Include/Sound/SoundHandler.h>
 
 // c++ includes
 #include <fstream>
@@ -31,17 +31,17 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 {
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 	
-	/*m_soundHandler = new SoundHandler();
-	m_soundHandler->AddSource("LionKing.wav");*/
-	//m_soundHandler->PlaySoundCustom();
+	m_soundHandler = new SoundHandler();
+	m_soundHandler->AddSource("LionKing.wav");
+	m_soundHandler->PlaySoundCustom();
 
 	m_camera = Jamgine::Camera(0,0);
 	playerEntities.push_back( new PlayerEntity(0));
 	playerEntities.push_back( new PlayerEntity(1));
 
 
-	playerEntities[0]->Initialize(Jamgine::Position(200,400),Jamgine::Position(0,0),Jamgine::Position(0,0),"VAL_ANIMATION.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Position(5,5)); //funkar med valtexture
-	playerEntities[1]->Initialize(Jamgine::Position(400,400),Jamgine::Position(0,0),Jamgine::Position(0,0),"VAL_ANIMATION.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Position(5,5)); //funkar med valtexture
+	playerEntities[0]->Initialize(Jamgine::Position(200,400),Jamgine::Position(0,0),Jamgine::Position(0,0),"ANIM_WHALE_JUMP.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Position(5,5)); //funkar med valtexture
+	playerEntities[1]->Initialize(Jamgine::Position(400,400),Jamgine::Position(0,0),Jamgine::Position(0,0),"ANIM_WHALE_JUMP.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Position(5,5)); //funkar med valtexture
 
 	for (int i = 0; i < 2; i++)
 	{
