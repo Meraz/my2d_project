@@ -41,7 +41,6 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	m_engine->LoadTexture(&m_texture[1], "Circle.dds");
 	m_engine->LoadTexture(&m_texture[2], "EditScreenButton.dds");
 	m_totalTextures = m_texture.size();
-
 }
 
 void EditScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked)
