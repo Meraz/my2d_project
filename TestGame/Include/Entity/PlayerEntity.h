@@ -46,7 +46,6 @@ public:
 	void Kill();
 
 private:
-	
 
 	bool	m_hasWhaleJumped;
 	bool	m_hasGoatBoost;

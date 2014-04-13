@@ -16,6 +16,7 @@ void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine, float width, flo
 	m_width = width;
 	m_height = height;
 	m_engine = p_engine;
+
 	SwapSceneState(SceneState::GAME);
 }
 

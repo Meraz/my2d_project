@@ -3,6 +3,7 @@
 
 ProjectileEntity::ProjectileEntity(void)
 {
+	m_entity = ENTITY::PROJECTILE;
 }
 
 

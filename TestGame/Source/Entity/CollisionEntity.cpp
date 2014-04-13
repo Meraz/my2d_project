@@ -3,8 +3,8 @@
 
 CollisionEntity::CollisionEntity()
 {
+	m_entity = ENTITY::COLLISION;
 }
-
 
 CollisionEntity::~CollisionEntity()
 {

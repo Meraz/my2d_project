@@ -17,7 +17,8 @@ enum class ENTITY
 	COLLISION,
 	ANIMATION,
 	ENENMY,
-	PLAYER
+	PLAYER,
+	PROJECTILE
 };
 #define GRAVITY -700.0
 
@@ -44,7 +45,7 @@ public:
 	virtual std::stringstream ToFile();
 	virtual void LoadClassFromData(char* p_data); // Return how many variables you read
 	
-
+	int m_textureIndex; // only used for editor
 	ENTITY m_entity;
 	char m_texturePath[50];
 	Jamgine::Texture2DInterface* m_texture;

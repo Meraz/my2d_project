@@ -10,6 +10,7 @@ class ProjectileEntity;
 class AnimationEntity;
 class PlayerEntity;
 class CollisionEntity;
+class SoundHandler;
 
 #include <vector>
 
@@ -19,8 +20,7 @@ class GameScene : public BaseScene
 public:
 	GameScene(float width, float height);
 	virtual ~GameScene();
-
-
+	
 	virtual void Initialize(SceneManagerInterface* p_sceneManagerInteface, Jamgine::JamgineEngine* p_engine);
 	void Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked);
 	void Render();
@@ -46,7 +46,12 @@ private:
 
 
 	void CheckCollision();
+
 	bool InScreen(CollisionEntity* entity);
 	int CollideBox(Jamgine::Position apos, float aWidth, float aHeight, Jamgine::Position bPos, float bWidth, float bHeight);
+
+
+	void CreateObject(int l_entity, char* l_data);
+	//SoundHandler* m_soundHandler;
 
 };

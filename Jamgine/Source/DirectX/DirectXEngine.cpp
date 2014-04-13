@@ -390,8 +390,8 @@ namespace Jamgine
 			D3D11_MAPPED_SUBRESOURCE mappedResource;
 			m_deviceContext->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 			memcpy(mappedResource.pData, a, (max+1) * sizeof(Vertex));
-			//*(Vertex*)mappedResource.pData = *a;
 			m_deviceContext->Unmap(m_vertexBuffer, 0);
+			delete[] a;
 			
 			
 			m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
