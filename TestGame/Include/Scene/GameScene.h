@@ -1,10 +1,15 @@
 #pragma once
 
 #include <TestGame/Include/Scene/BaseScene.h>
-#include <TestGame/Include/Entity/PlayerEntity.h>
 
-class GameEntity;
+
+
 class RenderEntity;
+class EnemyEntity;
+class ProjectileEntity;
+class AnimationEntity;
+class PlayerEntity;
+class CollisionEntity;
 
 #include <vector>
 
@@ -21,7 +26,12 @@ public:
 	void Render();
 
 private:
-	std::vector<RenderEntity*>		m_renderEntity;
+	std::vector<RenderEntity*>		m_renderEntities;
+	std::vector<EnemyEntity*>		m_enemyEntities;
+	std::vector<ProjectileEntity*>  m_projectileEntities;
+	std::vector<AnimationEntity*>	m_animationEntities;
+	std::vector<CollisionEntity*>	m_collisionEntities;
+
 
 	Jamgine::Camera m_camera;
 	Jamgine::Texture2DInterface* a;
@@ -30,4 +40,8 @@ private:
 	void LoadCurrentSetup(char* p_filename);
 
 	PlayerEntity* player;
+
+
+	void CheckCollision();
+	bool GameScene::InScreen(CollisionEntity* entity);
 };
