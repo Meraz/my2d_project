@@ -1,11 +1,11 @@
 #include <TestGame/Include/Entity/PlayerEntity.h>
 
 
-PlayerEntity::PlayerEntity()
+PlayerEntity::PlayerEntity(int num)
 {
 	m_entity = ENTITY::PLAYER;
-	m_playerOneController = new XBOXController(0);
-	m_playerTwoController = new XBOXController(1);
+	m_playerOneController = new XBOXController(num);
+
 	m_hasGoatBoost = false;
 	m_hasWhaleJumped = false;
 	m_goatDurationTimer = 0;
@@ -15,6 +15,10 @@ PlayerEntity::PlayerEntity()
 	m_isWhaleAnimating = false;
 	m_velocity = Position(0,0);
 	m_isAlive = true;
+	m_noControl = false;
+	IsReversedYaxis = false;
+	noControlTimer = NO_CONTROL_PENALTY;
+	playerNum = num;
 
 	AnimationSetup newSetup;
 	newSetup.numOfSubTextures = m_amountOfSubImages;
@@ -103,16 +107,28 @@ void PlayerEntity::CheckMovementInputs()
 		{
 			WhaleJump();
 		}
+		if (((m_playerOneController->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0))
+		{
+			GoatJump();
+		}
+		if (((m_playerOneController->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_Y) != 0))
+		{
+			/*if (IsReversedYaxis)
+			{
+				IsReversedYaxis = false;
+			}
+			else
+			{
+				IsReversedYaxis = true;
+			}*/
+		}
 		dir += m_playerOneController->CheckMovmentStickLeft();
 
 	}
 
-	if (m_playerTwoController->IsConnected())
+	/*if (m_playerTwoController->IsConnected())
 	{
-		if (((m_playerTwoController->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0))
-		{
-			GoatJump();
-		}
+		
 		else
 		{
 			m_hasGoatBoost = false;
@@ -120,7 +136,7 @@ void PlayerEntity::CheckMovementInputs()
 
 		dir += m_playerTwoController->CheckMovmentStickLeft();
 
-	}
+	}*/
 	MoveSideways(dir.x);
 	if (dir.x < 0)
 	{
@@ -139,7 +155,22 @@ void PlayerEntity::Update(double deltaTime)
 
 	if (m_isAlive)
 	{
-		CheckMovementInputs();
+		if (!m_noControl)
+		{
+			CheckMovementInputs();
+		}
+		else
+		{
+			noControlTimer += deltaTime;
+			if (noControlTimer >= NO_CONTROL_PENALTY)
+			{
+				m_noControl = false;
+				noControlTimer = NO_CONTROL_PENALTY;
+			}
+		}
+		
+		
+		
 
 		//move + save position
 		lastPos = m_position;
@@ -151,11 +182,11 @@ void PlayerEntity::Update(double deltaTime)
 			rocketHover = GOAT_JUMP_VELOCITY;
 		}
 
-		if (!m_onGround)
-		{
+		/*if (!m_onGround)
+		{*/
 			m_velocity.y += deltaTime*(double)(GRAVITY + rocketHover);
 			m_position += Position(m_velocity.x*deltaTime, m_velocity.y*deltaTime);
-		}
+		//}
 		
 		
 
@@ -227,7 +258,6 @@ void PlayerEntity::CollideStatic()
 		m_onGround = true;
 		
 	}
-	m_position = lastPos;
 }
 
 void PlayerEntity::AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Position p_numOfSubTextures)
@@ -257,3 +287,71 @@ void PlayerEntity:: UseAnimationSetup(int p_setupIndex)
 	ResetAnimation();
 }
 
+bool PlayerEntity::IsOnGround()
+{
+	return m_onGround;
+}
+
+void PlayerEntity::SetVelocityX(float amount)
+{
+	m_velocity.x = amount;
+}
+void PlayerEntity::SetVelocityY(float amount)
+{
+	m_velocity.y = amount;
+}
+void PlayerEntity::BackPosition()
+{
+	m_position = lastPos;
+}
+void PlayerEntity::SetOnGround()
+{
+	m_onGround =true;
+}
+
+void PlayerEntity::InverseCollide()
+{
+	/*if (m_velocity.y < 0.01)
+	{
+		m_velocity.y = 10;
+	}
+	else
+	{
+		m_velocity.x = m_velocity.x * -1;
+	}*/
+	
+	m_velocity.x = ( m_velocity.x) * (-0.5);
+	if (IsReversedYaxis)
+	{
+		m_velocity.y = -100;
+	}
+	else
+	{
+		m_velocity.y = 100;
+	}
+
+	m_position = lastPos;
+	m_hasWhaleJumped = false;
+	if (noControlTimer == NO_CONTROL_PENALTY)
+	{
+		noControlTimer = 0;
+		m_noControl = true;
+	}
+}
+
+void PlayerEntity::JawsCollide(int topLeft, int topRight, int botLeft, int botRight, float objTop, float objBot)
+{
+	//other stuff maybe
+	if (botLeft + botRight == 2) //bot collide
+	{
+		m_position.y = objTop ;
+		m_velocity.y = 0;
+		m_hasWhaleJumped = false;
+	}
+	if (botRight + topRight == 2|| botLeft + topLeft == 2)
+	{
+		m_position.x = objTop;
+		m_velocity.x = 0;
+	}
+	
+}

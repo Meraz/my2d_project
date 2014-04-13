@@ -13,7 +13,7 @@ class CollisionEntity;
 class SoundHandler;
 
 #include <vector>
-
+using namespace Jamgine;
 
 class GameScene : public BaseScene
 {
@@ -42,14 +42,16 @@ private:
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
 
-	PlayerEntity* player;
+	std::vector<PlayerEntity*> playerEntities;
+
 
 
 	void CheckCollision();
 
 	bool InScreen(CollisionEntity* entity);
 	int CollideBox(Jamgine::Position apos, float aWidth, float aHeight, Jamgine::Position bPos, float bWidth, float bHeight);
-
+	bool HorizontalCollision(Position playPos, Position objPos, float playWidth, float playHeight, float objWidth);
+	bool VerticalCollision(Position playPos, Position objPos, float playWidth, float playHeight, float objHeight);
 
 	void CreateObject(int l_entity, char* l_data);
 	//SoundHandler* m_soundHandler;

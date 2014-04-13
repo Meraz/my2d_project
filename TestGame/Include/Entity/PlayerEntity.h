@@ -7,16 +7,17 @@
 #include <TestGame/Include/XBOXController.h>
 #include <vector>
 
-#define WHALE_JUMP_VELOCITY 500
+#define WHALE_JUMP_VELOCITY 800
 #define GOAT_JUMP_VELOCITY 750
 #define MAX_X_VELOCITY 1600
-#define FRICTION_X_LINEAR_SUBTRACTER 300
+#define FRICTION_X_LINEAR_SUBTRACTER 100
 #define MAX_Y_VELOCITY WHALE_JUMP_VELOCITY + GOAT_JUMP_VELOCITY
-#define INPUT_X_DEVIDER 10
+#define INPUT_X_DEVIDER 1
 #define GOAT_HOVER_MAX_TIME 3
 #define GOAT_HOVER_COLDOWN_TIME 3
 
 #define WHALE_JUMP_ANIMATION_TIME 0.05
+#define NO_CONTROL_PENALTY 1.0
 
 struct AnimationSetup
 {
@@ -34,7 +35,7 @@ struct AnimationSetup
 class PlayerEntity : public AnimationEntity
 {
 public:
-	PlayerEntity();
+	PlayerEntity(int num);
 	virtual ~PlayerEntity();
 
 	virtual std::stringstream ToFile();
@@ -44,21 +45,32 @@ public:
 	virtual void Update(double p_deltaTime);
 	void CollideStatic();
 	void Kill();
+	bool IsOnGround();
+	bool IsReversedYaxis;
+	void SetVelocityX(float amount);
+	void SetVelocityY(float amount);
+	void BackPosition();
+	void SetOnGround();
+
+	void JawsCollide(int topLeft, int topRight, int botLeft, int botRight, float objTop, float objBot);
+	void InverseCollide();
+
 
 private:
+	int playerNum;
 
 	bool	m_hasWhaleJumped;
 	bool	m_hasGoatBoost;
 	bool	m_onGround;
 	bool	m_isWhaleAnimating;;
 	bool	m_isAlive;
+	bool	m_noControl;
 	double  m_goatDurationTimer;
 	double  m_goatJumpColdownTimer;
 	double  m_animationWhaleJumpTimer;
 	Jamgine::Position m_velocity;
 
 	XBOXController* m_playerOneController;
-	XBOXController* m_playerTwoController;
 	
 	std::vector<AnimationSetup> m_animations;
 
@@ -68,7 +80,7 @@ private:
 	void MoveSideways(float amount);
 	void WhaleJump();
 	void GoatJump();
-
+	double noControlTimer;
 
 	
 	void  UseAnimationSetup(int p_setupIndex);
