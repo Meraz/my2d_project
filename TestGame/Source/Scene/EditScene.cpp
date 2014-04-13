@@ -25,6 +25,7 @@ EditScene::EditScene(HWND p_handle)
 	m_totalTextures = 0;
 	m_selectedSpriteVibrateTimer = 0;
 	m_newSpriteSelected = false;
+	m_delete = false;
 }
 
 EditScene::~EditScene()
@@ -85,7 +86,34 @@ void EditScene::Update(double p_deltaTime, float p_mousePositionX, float p_mouse
 	}
 	else if (GetAsyncKeyState('L') & 0x8000 && !L)
 	{
-		SaveCurrentSetup("Level.lvl");
+		LoadCurrentSetup("Level.lvl");
+	}
+
+
+	if (GetAsyncKeyState(VK_DELETE) & 0x8000 && !m_delete)
+	{
+		delete m_renderEntity[m_currentSprite];
+		m_renderEntity.erase(m_renderEntity.begin() + m_currentSprite);
+		m_currentSprite--;
+		if (m_currentSprite < 0)
+			m_currentSprite = 0;
+	}
+
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	{
+		m_camera.position.x -= 0.7;
+	}
+	else if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	{
+		m_camera.position.x += 0.7;
+	}
+	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	{
+		m_camera.position.y += 0.7;
+	}
+	else if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	{
+		m_camera.position.y -= 0.7;
 	}
 
 	m_prevMouseClick = p_mouseClicked;
@@ -104,22 +132,9 @@ void EditScene::Update(double p_deltaTime, float p_mousePositionX, float p_mouse
 	S = GetAsyncKeyState('S') & 0x8000;
 	L = GetAsyncKeyState('L') & 0x8000;
 	A = GetAsyncKeyState('A') & 0x8000;
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-	{
-		m_camera.position.x -= 0.7;
-	}
-	else if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-	{
-		m_camera.position.x += 0.7;
-	}
-	if(GetAsyncKeyState(VK_UP) & 0x8000)
-	{
-		m_camera.position.y += 0.7;
-	}
-	else if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-	{
-		m_camera.position.y -= 0.7;
-	}
+	m_delete = GetAsyncKeyState(VK_DELETE) & 0x8000;
+
+
 }
 
 void EditScene::NewRect(float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked)

@@ -76,7 +76,9 @@ private:
 
 	bool Q, W, E, R, T, Y, U, I, O, P, S, L, A;
 	bool tab, prevtab;
+	bool m_delete;
 	bool m_changeXAmountSubImage;
+	
 
 	void PrintDebug(char* p_message);
 	void PrintDebugWithValue(char* p_message, float p_value1, float p_value2, float p_value3);
