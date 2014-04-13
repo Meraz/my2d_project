@@ -3,7 +3,9 @@
 // Definition of forward declaration
 #include <TestGame/Include/Entity/RenderEntity.h>
 #include <TestGame/Include/Entity/PlayerEntity.h>
-#include <TestGame/Include/Entity/EntityFactory.h>
+#include <TestGame/Include/Entity/EnemyEntity.h>
+#include <TestGame/Include/Entity/ProjectileEntity.h>
+#include <TestGame/Include/Entity/AnimationEntity.h>
 
 #include <fstream>
 
@@ -474,19 +476,11 @@ void EditScene::SaveCurrentSetup(char* p_fileName)
 void EditScene::LoadCurrentSetup(char* p_fileName)
 {
 	using namespace std;
-
-	EntityFactory* m_entityFactory;
-	m_entityFactory = new EntityFactory();
-
 	ifstream l_stream;
 	l_stream.open(p_fileName);
 
 	unsigned int l_totalObjects = m_renderEntity.size();
-	
-
 	char l_buffer[1024];
-
-	//float 
 
 	while (l_stream.getline(l_buffer, 1024))
 	{
@@ -495,13 +489,41 @@ void EditScene::LoadCurrentSetup(char* p_fileName)
 		// Texture
 		RenderEntity* l_renderEntity;
 		sscanf_s(l_buffer, "%i ", lKey, sizeof(lKey));
-		l_renderEntity = m_entityFactory->CreateObject(lKey[0], l_buffer);
-		m_renderEntity.push_back(l_renderEntity);
+		CreateObject(lKey[0], l_buffer);
+	}
+	l_stream.close();
+}
+
+void EditScene::CreateObject(int l_entityType, char* l_data)
+{
+	RenderEntity* l_entity;
+
+	if (l_entityType == (int)ENTITY::RENDER)
+	{
+		l_entity = new EnemyEntity();
+	}
+	else if (l_entityType == (int)ENTITY::COLLISION)
+	{
+		l_entity = new PlayerEntity();
+	}
+	else if (l_entityType == (int)ENTITY::ANIMATION)
+	{
+		l_entity = new AnimationEntity();
+	}
+	else if (l_entityType == (int)ENTITY::ENENMY)
+	{
+		l_entity = new RenderEntity();
+	}
+	else if (l_entityType == (int)ENTITY::PLAYER)
+	{
+		return; // l_entity = new RenderEntity(); // This should not happen
 	}
 
-	l_stream.close();
-	delete m_entityFactory;
+	l_entity->LoadClassFromData(l_data);
+
+	m_renderEntity.push_back(l_entity);
 }
+
 
 void EditScene::PrintDebug(char* p_message)
 {

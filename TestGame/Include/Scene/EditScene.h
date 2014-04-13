@@ -82,4 +82,5 @@ private:
 	void PrintDebug(char* p_message);
 	void PrintDebugWithValue(char* p_message, float p_value1, float p_value2, float p_value3);
 	void UpdateCurrentTool();
+	void CreateObject(int l_entityType, char* l_data);
 };

@@ -6,7 +6,6 @@
 #include <TestGame/Include/Entity/EnemyEntity.h>
 #include <TestGame/Include/Entity/ProjectileEntity.h>
 #include <TestGame/Include/Entity/AnimationEntity.h>
-#include <TestGame/Include/Entity/EntityFactory.h>
 
 // c++ includes
 #include <fstream>
@@ -141,9 +140,6 @@ void GameScene::LoadCurrentSetup(char* p_fileName)
 {
 	using namespace std;
 
-	EntityFactory* m_entityFactory;
-	m_entityFactory = new EntityFactory();
-
 	ifstream l_stream;
 	l_stream.open(p_fileName);
 
@@ -158,12 +154,10 @@ void GameScene::LoadCurrentSetup(char* p_fileName)
 		// Texture
 		RenderEntity* l_renderEntity;
 		sscanf_s(l_buffer, "%i ", lKey, sizeof(lKey));
-		l_renderEntity = m_entityFactory->CreateObject(lKey[0], l_buffer);
-		m_renderEntities.push_back(l_renderEntity);
+		CreateObject(lKey[0], l_buffer);
 	}
 
 	l_stream.close();
-	delete m_entityFactory;
 }
 
 void GameScene::CreateObject(int l_entityType, char* l_data)
@@ -193,15 +187,7 @@ void GameScene::CreateObject(int l_entityType, char* l_data)
 	{
 		return; // l_entity = new RenderEntity(); // This should not happen
 	}
-//	else if (l_entityType == (int)ENTITY::WALL)
-//	{
-//		l_entity = new CollisionEntity();
-//		m_collisionEntities.push_back(static_cast<CollisionEntity*>(l_entity));
-//	}
 	l_entity->LoadClassFromData(l_data);
-
-	
+		
 	m_renderEntities.push_back(l_entity);
-	
-
 }

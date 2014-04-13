@@ -15,7 +15,7 @@ void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine)
 {
 	m_engine = p_engine;
 
-	SwapSceneState(SceneState::GAME);
+	SwapSceneState(SceneState::EDIT);
 }
 
 void SceneManager::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked)
