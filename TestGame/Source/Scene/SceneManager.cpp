@@ -11,8 +11,10 @@ SceneManager::SceneManager()
 }
 
 
-void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine)
+void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine, float width, float height)
 {
+	m_width = width;
+	m_height = height;
 	m_engine = p_engine;
 	SwapSceneState(SceneState::GAME);
 }
@@ -53,7 +55,7 @@ void SceneManager::SwapSceneState(SceneState p_sceneState)
 	}
 	else if (p_sceneState == SceneState::GAME)
 	{
-		m_currentScene = new GameScene();
+		m_currentScene = new GameScene(m_width,m_height);
 	}
 	else if (p_sceneState == SceneState::EDIT)
 	{

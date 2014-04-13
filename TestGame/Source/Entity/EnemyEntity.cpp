@@ -51,8 +51,8 @@ bool EnemyEntity::horizontalCollision()
 {
 	bool intersection = false;
 
-	//if (!onGround && m_position.y < object.y && m_position.y + m_height < object.y &&
-	//	m_position.x + m_width > object.x || m_position.x < object.x + object.height)
+	//if (!onGround && m_position.y < object.y && m_position.y + m_height > object.y &&
+	//	m_position.x + m_width > object.x || m_position.x < object.x + object.width)
 	//{
 	//	intersection = true;
 	//}

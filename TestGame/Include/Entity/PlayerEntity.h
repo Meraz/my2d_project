@@ -9,12 +9,14 @@
 
 #define WHALE_JUMP_VELOCITY 500
 #define GOAT_JUMP_VELOCITY 750
-#define MAX_X_VELOCITY 800
+#define MAX_X_VELOCITY 1600
 #define FRICTION_X_LINEAR_SUBTRACTER 300
 #define MAX_Y_VELOCITY WHALE_JUMP_VELOCITY + GOAT_JUMP_VELOCITY
 #define INPUT_X_DEVIDER 10
 #define GOAT_HOVER_MAX_TIME 3
 #define GOAT_HOVER_COLDOWN_TIME 3
+
+#define WHALE_JUMP_ANIMATION_TIME 0.05
 
 struct AnimationSetup
 {
@@ -40,23 +42,17 @@ public:
 
 	void AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Position p_numOfSubTextures);
 	virtual void Update(double p_deltaTime);
+	void CollideStatic();
+	void Kill();
+
 private:
-	Position			m_moveDir;
-	Texture2DInterface* m_texture;
-	SpriteEffect		m_spriteEffect;
-	Position			m_position;
-	Position			m_origin;
-	Position			m_textureOffset;
-	float	m_width;
-	float	m_height;
-	float	m_depth;
-	float	m_rotation;
-	bool	hasJumped;
-	bool	onGround;
+	
+
 	bool	m_hasWhaleJumped;
 	bool	m_hasGoatBoost;
 	bool	m_onGround;
 	bool	m_isWhaleAnimating;;
+	bool	m_isAlive;
 	double  m_goatDurationTimer;
 	double  m_goatJumpColdownTimer;
 	double  m_animationWhaleJumpTimer;
@@ -66,6 +62,8 @@ private:
 	XBOXController* m_playerTwoController;
 	
 	std::vector<AnimationSetup> m_animations;
+
+	Position lastPos;
 
 	void CheckMovementInputs();
 	void MoveSideways(float amount);

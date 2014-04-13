@@ -17,7 +17,7 @@ class CollisionEntity;
 class GameScene : public BaseScene
 {
 public:
-	GameScene();
+	GameScene(float width, float height);
 	virtual ~GameScene();
 
 
@@ -26,6 +26,9 @@ public:
 	void Render();
 
 private:
+	float m_width;
+	float m_height;
+
 	std::vector<RenderEntity*>		m_renderEntities;
 	std::vector<EnemyEntity*>		m_enemyEntities;
 	std::vector<ProjectileEntity*>  m_projectileEntities;
@@ -43,5 +46,7 @@ private:
 
 
 	void CheckCollision();
-	bool GameScene::InScreen(CollisionEntity* entity);
+	bool InScreen(CollisionEntity* entity);
+	int CollideBox(Jamgine::Position apos, float aWidth, float aHeight, Jamgine::Position bPos, float bWidth, float bHeight);
+
 };

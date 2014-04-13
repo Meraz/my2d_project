@@ -11,9 +11,10 @@ PlayerEntity::PlayerEntity()
 	m_goatDurationTimer = 0;
 	m_goatJumpColdownTimer = 0;
 	m_animationWhaleJumpTimer = 0;
-	m_onGround = true;
+	m_onGround = false;
 	m_isWhaleAnimating = false;
 	m_velocity = Position(0,0);
+	m_isAlive = true;
 
 	AnimationSetup newSetup;
 	newSetup.numOfSubTextures = m_amountOfSubImages;
@@ -77,6 +78,7 @@ void PlayerEntity::WhaleJump()	//TODO: start animation?
 		}
 		m_hasWhaleJumped = true;
 		m_isWhaleAnimating = true;
+		m_onGround = false;
 	}
 }
 
@@ -132,84 +134,101 @@ void PlayerEntity::CheckMovementInputs()
 
 void PlayerEntity::Update(double deltaTime)
 {
-	if (hasJumped && !onGround)
+	//if (hasJumped && !onGround)
 	//check inputs
-	CheckMovementInputs();
 
-	//move + save position
-	Position lastPos = m_position;
-
-	float rocketHover = 0;
-
-
-	if (m_hasGoatBoost)
+	if (m_isAlive)
 	{
-		rocketHover = GOAT_JUMP_VELOCITY;
-	}
+		CheckMovementInputs();
 
-	m_velocity.y += deltaTime*(double)(GRAVITY + rocketHover);
-	m_position += Position(m_velocity.x*deltaTime, m_velocity.y*deltaTime);
+		//move + save position
+		lastPos = m_position;
 
-	if (m_position.y <= 0)
-	{
-		m_position.y = 0;
-		m_velocity.y = 0;
-		m_hasWhaleJumped = false;
-		m_isWhaleAnimating = false;
-		ResetAnimation();
-	}
+		float rocketHover = 0;
 
-	if (m_velocity.x > 0)
-	{
-		m_velocity.x -= FRICTION_X_LINEAR_SUBTRACTER*deltaTime;
-		if (m_velocity.x < 0)
+		if (m_hasGoatBoost)
 		{
-			m_velocity.x = 0;
+			rocketHover = GOAT_JUMP_VELOCITY;
 		}
-	}
-	else if (m_velocity.x < 0)
-	{
-		m_velocity.x += FRICTION_X_LINEAR_SUBTRACTER*deltaTime;
+
+		if (!m_onGround)
+		{
+			m_velocity.y += deltaTime*(double)(GRAVITY + rocketHover);
+			m_position += Position(m_velocity.x*deltaTime, m_velocity.y*deltaTime);
+		}
+		
+		
+
+		if (m_position.y <= 0)
+		{
+			m_position.y = 0;
+			m_velocity.y = 0;
+			m_hasWhaleJumped = false;
+			m_isWhaleAnimating = false;
+			ResetAnimation();
+		}
+
 		if (m_velocity.x > 0)
 		{
-			m_velocity.x = 0;
-		}
-	}
-
-	if (m_goatDurationTimer != GOAT_HOVER_MAX_TIME)
-	{
-		m_goatDurationTimer += deltaTime;
-		if (m_goatDurationTimer >= GOAT_HOVER_MAX_TIME)
-		{
-			m_hasGoatBoost = false;
-			m_goatDurationTimer = GOAT_HOVER_MAX_TIME;
-			m_goatJumpColdownTimer = GOAT_HOVER_COLDOWN_TIME;
-		}
-	}
-	else if (m_goatJumpColdownTimer != 0)
-	{
-		m_goatJumpColdownTimer -= deltaTime;
-		if (m_goatJumpColdownTimer <= 0)
-		{
-			m_goatJumpColdownTimer = 0;
-		}
-	}
-	if (m_isWhaleAnimating)
-	{
-		m_animationWhaleJumpTimer += deltaTime;
-		if (m_animationWhaleJumpTimer > 0.06)
-		{
-
-			m_animationWhaleJumpTimer = 0;
-			if (Animate())
+			m_velocity.x -= FRICTION_X_LINEAR_SUBTRACTER*deltaTime;
+			if (m_velocity.x < 0)
 			{
-				m_isWhaleAnimating = false;
+				m_velocity.x = 0;
+			}
+		}
+		else if (m_velocity.x < 0)
+		{
+			m_velocity.x += FRICTION_X_LINEAR_SUBTRACTER*deltaTime;
+			if (m_velocity.x > 0)
+			{
+				m_velocity.x = 0;
+			}
+		}
+
+		if (m_goatDurationTimer != GOAT_HOVER_MAX_TIME)
+		{
+			m_goatDurationTimer += deltaTime;
+			if (m_goatDurationTimer >= GOAT_HOVER_MAX_TIME)
+			{
+				m_hasGoatBoost = false;
+				m_goatDurationTimer = GOAT_HOVER_MAX_TIME;
+				m_goatJumpColdownTimer = GOAT_HOVER_COLDOWN_TIME;
+			}
+		}
+		else if (m_goatJumpColdownTimer != 0)
+		{
+			m_goatJumpColdownTimer -= deltaTime;
+			if (m_goatJumpColdownTimer <= 0)
+			{
+				m_goatJumpColdownTimer = 0;
+			}
+		}
+		if (m_isWhaleAnimating)
+		{
+			m_animationWhaleJumpTimer += deltaTime;
+			if (m_animationWhaleJumpTimer > WHALE_JUMP_ANIMATION_TIME)
+			{
+
+				m_animationWhaleJumpTimer = 0;
+				if (Animate())
+				{
+					m_isWhaleAnimating = false;
 				
+				}
 			}
 		}
 	}
 }
 
+void PlayerEntity::CollideStatic()
+{
+	if (m_position.y <= lastPos.y)
+	{
+		m_onGround = true;
+		
+	}
+	m_position = lastPos;
+}
 
 void PlayerEntity::AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Position p_numOfSubTextures)
 {
