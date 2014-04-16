@@ -8,7 +8,7 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 8.00.0595 */
+ /* File created by MIDL compiler version 8.00.0603 */
 /* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
@@ -2503,118 +2503,6 @@ EXTERN_C const IID IID_ID3D11DeviceContext1;
 
 
 
-void STDMETHODCALLTYPE ID3D11DeviceContext1_GSGetConstantBuffers1_Proxy( 
-    ID3D11DeviceContext1 * This,
-    /* [annotation] */ 
-    _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 )  UINT StartSlot,
-    /* [annotation] */ 
-    _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot )  UINT NumBuffers,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  ID3D11Buffer **ppConstantBuffers,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  UINT *pFirstConstant,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  UINT *pNumConstants);
-
-
-void __RPC_STUB ID3D11DeviceContext1_GSGetConstantBuffers1_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-void STDMETHODCALLTYPE ID3D11DeviceContext1_PSGetConstantBuffers1_Proxy( 
-    ID3D11DeviceContext1 * This,
-    /* [annotation] */ 
-    _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 )  UINT StartSlot,
-    /* [annotation] */ 
-    _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot )  UINT NumBuffers,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  ID3D11Buffer **ppConstantBuffers,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  UINT *pFirstConstant,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  UINT *pNumConstants);
-
-
-void __RPC_STUB ID3D11DeviceContext1_PSGetConstantBuffers1_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-void STDMETHODCALLTYPE ID3D11DeviceContext1_CSGetConstantBuffers1_Proxy( 
-    ID3D11DeviceContext1 * This,
-    /* [annotation] */ 
-    _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 )  UINT StartSlot,
-    /* [annotation] */ 
-    _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot )  UINT NumBuffers,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  ID3D11Buffer **ppConstantBuffers,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  UINT *pFirstConstant,
-    /* [annotation] */ 
-    _Out_writes_opt_(NumBuffers)  UINT *pNumConstants);
-
-
-void __RPC_STUB ID3D11DeviceContext1_CSGetConstantBuffers1_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-void STDMETHODCALLTYPE ID3D11DeviceContext1_SwapDeviceContextState_Proxy( 
-    ID3D11DeviceContext1 * This,
-    /* [annotation] */ 
-    _In_  ID3DDeviceContextState *pState,
-    /* [annotation] */ 
-    _Out_opt_  ID3DDeviceContextState **ppPreviousState);
-
-
-void __RPC_STUB ID3D11DeviceContext1_SwapDeviceContextState_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-void STDMETHODCALLTYPE ID3D11DeviceContext1_ClearView_Proxy( 
-    ID3D11DeviceContext1 * This,
-    /* [annotation] */ 
-    _In_  ID3D11View *pView,
-    /* [annotation] */ 
-    _In_  const FLOAT Color[ 4 ],
-    /* [annotation] */ 
-    _In_reads_opt_(NumRects)  const D3D11_RECT *pRect,
-    UINT NumRects);
-
-
-void __RPC_STUB ID3D11DeviceContext1_ClearView_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-void STDMETHODCALLTYPE ID3D11DeviceContext1_DiscardView1_Proxy( 
-    ID3D11DeviceContext1 * This,
-    /* [annotation] */ 
-    _In_  ID3D11View *pResourceView,
-    /* [annotation] */ 
-    _In_reads_opt_(NumRects)  const D3D11_RECT *pRects,
-    UINT NumRects);
-
-
-void __RPC_STUB ID3D11DeviceContext1_DiscardView1_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
 
 #endif 	/* __ID3D11DeviceContext1_INTERFACE_DEFINED__ */
 
@@ -2785,7 +2673,7 @@ EXTERN_C const IID IID_ID3D11Device1;
             /* [annotation] */ 
             _In_range_( 0, D3D11_IA_VERTEX_INPUT_STRUCTURE_ELEMENT_COUNT )  UINT NumElements,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecodeWithInputSignature,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecodeWithInputSignature,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -2794,7 +2682,7 @@ EXTERN_C const IID IID_ID3D11Device1;
         HRESULT ( STDMETHODCALLTYPE *CreateVertexShader )( 
             ID3D11Device1 * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -2805,7 +2693,7 @@ EXTERN_C const IID IID_ID3D11Device1;
         HRESULT ( STDMETHODCALLTYPE *CreateGeometryShader )( 
             ID3D11Device1 * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -2816,7 +2704,7 @@ EXTERN_C const IID IID_ID3D11Device1;
         HRESULT ( STDMETHODCALLTYPE *CreateGeometryShaderWithStreamOutput )( 
             ID3D11Device1 * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -2837,7 +2725,7 @@ EXTERN_C const IID IID_ID3D11Device1;
         HRESULT ( STDMETHODCALLTYPE *CreatePixelShader )( 
             ID3D11Device1 * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -2848,7 +2736,7 @@ EXTERN_C const IID IID_ID3D11Device1;
         HRESULT ( STDMETHODCALLTYPE *CreateHullShader )( 
             ID3D11Device1 * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -2859,7 +2747,7 @@ EXTERN_C const IID IID_ID3D11Device1;
         HRESULT ( STDMETHODCALLTYPE *CreateDomainShader )( 
             ID3D11Device1 * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -2870,7 +2758,7 @@ EXTERN_C const IID IID_ID3D11Device1;
         HRESULT ( STDMETHODCALLTYPE *CreateComputeShader )( 
             ID3D11Device1 * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 

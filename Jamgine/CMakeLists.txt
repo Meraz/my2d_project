@@ -10,10 +10,7 @@ file(GLOB_RECURSE HEADERS Include/*.h)
 file(GLOB_RECURSE SOURCES Source/*.cpp)
 
 # Set search paths
-include_directories(Include)
+#include_directories(Include)
 
 # Add the target
 add_library(${ENGINE_NAME} STATIC ${HEADERS} ${SOURCES})
-
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin})
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release})

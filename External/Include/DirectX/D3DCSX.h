@@ -21,8 +21,8 @@
 // Current name of the DLL shipped in the same SDK as this header.
 
 
-#define D3DCSX_DLL_W L"d3dcsx_46.dll"
-#define D3DCSX_DLL_A "d3dcsx_46.dll"
+#define D3DCSX_DLL_W L"d3dcsx_47.dll"
+#define D3DCSX_DLL_A "d3dcsx_47.dll"
 
 #ifdef UNICODE
     #define D3DCSX_DLL D3DCSX_DLL_W 

@@ -8,7 +8,7 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 8.00.0595 */
+ /* File created by MIDL compiler version 8.00.0603 */
 /* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
@@ -5368,7 +5368,7 @@ EXTERN_C const IID IID_ID3D10Device;
             /* [annotation] */ 
             _In_range_( 0, D3D10_1_IA_VERTEX_INPUT_STRUCTURE_ELEMENT_COUNT )  UINT NumElements,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecodeWithInputSignature,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecodeWithInputSignature,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -5376,7 +5376,7 @@ EXTERN_C const IID IID_ID3D10Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateVertexShader( 
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -5384,7 +5384,7 @@ EXTERN_C const IID IID_ID3D10Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateGeometryShader( 
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -5392,7 +5392,7 @@ EXTERN_C const IID IID_ID3D10Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateGeometryShaderWithStreamOutput( 
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -5406,7 +5406,7 @@ EXTERN_C const IID IID_ID3D10Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreatePixelShader( 
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -6142,7 +6142,7 @@ EXTERN_C const IID IID_ID3D10Device;
             /* [annotation] */ 
             _In_range_( 0, D3D10_1_IA_VERTEX_INPUT_STRUCTURE_ELEMENT_COUNT )  UINT NumElements,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecodeWithInputSignature,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecodeWithInputSignature,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -6151,7 +6151,7 @@ EXTERN_C const IID IID_ID3D10Device;
         HRESULT ( STDMETHODCALLTYPE *CreateVertexShader )( 
             ID3D10Device * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -6160,7 +6160,7 @@ EXTERN_C const IID IID_ID3D10Device;
         HRESULT ( STDMETHODCALLTYPE *CreateGeometryShader )( 
             ID3D10Device * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -6169,7 +6169,7 @@ EXTERN_C const IID IID_ID3D10Device;
         HRESULT ( STDMETHODCALLTYPE *CreateGeometryShaderWithStreamOutput )( 
             ID3D10Device * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -6184,7 +6184,7 @@ EXTERN_C const IID IID_ID3D10Device;
         HRESULT ( STDMETHODCALLTYPE *CreatePixelShader )( 
             ID3D10Device * This,
             /* [annotation] */ 
-            _In_  const void *pShaderBytecode,
+            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 

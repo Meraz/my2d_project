@@ -1504,6 +1504,7 @@ interface ID3D10Counter
     void GetDesc( [annotation("_Out_")] D3D10_COUNTER_DESC* pDesc );
 };
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Device
@@ -1781,26 +1782,26 @@ interface ID3D10Device
     HRESULT CreateInputLayout(
         [annotation("_In_reads_(NumElements)")] const D3D10_INPUT_ELEMENT_DESC* pInputElementDescs,
         [annotation("_In_range_( 0, D3D10_1_IA_VERTEX_INPUT_STRUCTURE_ELEMENT_COUNT )")] UINT NumElements,
-        [annotation("_In_")] const void* pShaderBytecodeWithInputSignature,
+        [annotation("_In_reads_(BytecodeLength)")] const void* pShaderBytecodeWithInputSignature,
         [annotation("_In_")] SIZE_T BytecodeLength,
         [annotation("_Out_opt_")] ID3D10InputLayout** ppInputLayout );
     HRESULT CreateVertexShader(
-        [annotation("_In_")] const void* pShaderBytecode,
+        [annotation("_In_reads_(BytecodeLength)")] const void* pShaderBytecode,
         [annotation("_In_")] SIZE_T BytecodeLength,
         [annotation("_Out_opt_")] ID3D10VertexShader** ppVertexShader );
     HRESULT CreateGeometryShader(
-        [annotation("_In_")] const void* pShaderBytecode,
+        [annotation("_In_reads_(BytecodeLength)")] const void* pShaderBytecode,
         [annotation("_In_")] SIZE_T BytecodeLength,
         [annotation("_Out_opt_")] ID3D10GeometryShader** ppGeometryShader );
     HRESULT CreateGeometryShaderWithStreamOutput(
-        [annotation("_In_")] const void* pShaderBytecode,
+        [annotation("_In_reads_(BytecodeLength)")] const void* pShaderBytecode,
         [annotation("_In_")] SIZE_T BytecodeLength,
         [annotation("_In_reads_opt_(NumEntries)")] const D3D10_SO_DECLARATION_ENTRY* pSODeclaration,
         [annotation("_In_range_( 0, D3D10_SO_SINGLE_BUFFER_COMPONENT_LIMIT )")] UINT NumEntries,
         [annotation("_In_")] UINT OutputStreamStride,
         [annotation("_Out_opt_")] ID3D10GeometryShader** ppGeometryShader );
     HRESULT CreatePixelShader(
-        [annotation("_In_")] const void* pShaderBytecode,
+        [annotation("_In_reads_(BytecodeLength)")] const void* pShaderBytecode,
         [annotation("_In_")] SIZE_T BytecodeLength,
         [annotation("_Out_opt_")] ID3D10PixelShader** ppPixelShader );
     HRESULT CreateBlendState(
@@ -1859,7 +1860,7 @@ interface ID3D10Device
 
 
 cpp_quote("#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */")
-#pragma endregion
+cpp_quote("#pragma endregion")
 
 #pragma region Application Family
 cpp_quote("#pragma region Application Family")

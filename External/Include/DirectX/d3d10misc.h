@@ -137,7 +137,7 @@ HRESULT WINAPI D3D10CreateDeviceAndSwapChain(
 // Creates a Buffer of n Bytes
 //////////////////////////////////////////////////////////////////////////
 
-HRESULT WINAPI D3D10CreateBlob(SIZE_T NumBytes, LPD3D10BLOB *ppBuffer);
+HRESULT WINAPI D3D10CreateBlob(SIZE_T NumBytes, _Out_ LPD3D10BLOB *ppBuffer);
 
 #endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion

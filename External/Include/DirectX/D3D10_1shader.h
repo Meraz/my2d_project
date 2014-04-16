@@ -14,8 +14,7 @@
 
 #include <winapifamily.h>
 
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
 
 //----------------------------------------------------------------------------
 // Shader debugging structures
@@ -250,6 +249,7 @@ typedef struct _D3D10_SHADER_DEBUG_INFO
 // Interface definitions
 //
 
+
 typedef interface ID3D10ShaderReflection1 ID3D10ShaderReflection1;
 typedef interface ID3D10ShaderReflection1 *LPD3D10SHADERREFLECTION1;
 
@@ -289,9 +289,6 @@ DECLARE_INTERFACE_(ID3D10ShaderReflection1, IUnknown)
     STDMETHOD(IsLevel9Shader)(THIS_ _Out_ BOOL* pbLevel9Shader) PURE;
     STDMETHOD(IsSampleFrequencyShader)(THIS_ _Out_ BOOL* pbSampleFrequency) PURE;
 };
-
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
-#pragma endregion
 
 //////////////////////////////////////////////////////////////////////////////
 // APIs //////////////////////////////////////////////////////////////////////

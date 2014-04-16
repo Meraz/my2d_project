@@ -12,18 +12,16 @@
 
 #include <winapifamily.h>
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
-
 // Current name of the DLL shipped in the same SDK as this header.
 
 
-#define D3DCOMPILER_DLL_W L"d3dcompiler_46.dll"
-#define D3DCOMPILER_DLL_A "d3dcompiler_46.dll"
+
+#define D3DCOMPILER_DLL_W L"d3dcompiler_47.dll"
+#define D3DCOMPILER_DLL_A "d3dcompiler_47.dll"
 
 // Current HLSL compiler version.
 
-#define D3D_COMPILER_VERSION 46
+#define D3D_COMPILER_VERSION 47
 
 #ifdef UNICODE
     #define D3DCOMPILER_DLL D3DCOMPILER_DLL_W 
@@ -37,15 +35,12 @@
 // APIs //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
-#pragma endregion
-
 #ifdef __cplusplus
 extern "C" {
 #endif //__cplusplus
 
-#pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 //----------------------------------------------------------------------------
 // D3DReadFileToBlob:
@@ -68,7 +63,13 @@ HRESULT WINAPI
 D3DWriteBlobToFile(_In_ ID3DBlob* pBlob,
                    _In_ LPCWSTR pFileName,
                    _In_ BOOL bOverwrite);
-    
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+
+#pragma region Application Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+
 //----------------------------------------------------------------------------
 // D3DCOMPILE flags:
 // -----------------
@@ -152,6 +153,7 @@ D3DWriteBlobToFile(_In_ ID3DBlob* pBlob,
 #define D3DCOMPILE_RESERVED16                     (1 << 16)
 #define D3DCOMPILE_RESERVED17                     (1 << 17)
 #define D3DCOMPILE_WARNINGS_ARE_ERRORS            (1 << 18)
+#define D3DCOMPILE_RESOURCES_MAY_ALIAS            (1 << 19)
 
 //----------------------------------------------------------------------------
 // D3DCOMPILE_EFFECT flags:
@@ -196,7 +198,7 @@ D3DCompile(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
            _In_opt_ LPCSTR pSourceName,
            _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL)) CONST D3D_SHADER_MACRO* pDefines,
            _In_opt_ ID3DInclude* pInclude,
-           _In_ LPCSTR pEntrypoint,
+           _In_opt_ LPCSTR pEntrypoint,
            _In_ LPCSTR pTarget,
            _In_ UINT Flags1,
            _In_ UINT Flags2,
@@ -236,6 +238,12 @@ D3DCompile2(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
             _Out_ ID3DBlob** ppCode,
             _Out_opt_ ID3DBlob** ppErrorMsgs);
 
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#pragma endregion
+
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
 HRESULT WINAPI
 D3DCompileFromFile(_In_ LPCWSTR pFileName,
                    _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL)) CONST D3D_SHADER_MACRO* pDefines,
@@ -246,6 +254,12 @@ D3DCompileFromFile(_In_ LPCWSTR pFileName,
                    _In_ UINT Flags2,
                    _Out_ ID3DBlob** ppCode,
                    _Out_opt_ ID3DBlob** ppErrorMsgs);
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+
+#pragma region Application Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 //----------------------------------------------------------------------------
 // D3DPreprocess:
@@ -279,10 +293,22 @@ typedef HRESULT (WINAPI *pD3DPreprocess)
 // embedded in the body of the shader.
 //----------------------------------------------------------------------------
 
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#pragma endregion
+
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
 HRESULT WINAPI
 D3DGetDebugInfo(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
                 _In_ SIZE_T SrcDataSize,
                 _Out_ ID3DBlob** ppDebugInfo);
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+
+#pragma region Application Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 //----------------------------------------------------------------------------
 // D3DReflect:
@@ -294,8 +320,21 @@ D3DGetDebugInfo(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
 HRESULT WINAPI
 D3DReflect(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
            _In_ SIZE_T SrcDataSize,
-	   _In_ REFIID pInterface,
+           _In_ REFIID pInterface,
            _Out_ void** ppReflector);
+
+//----------------------------------------------------------------------------
+// D3DReflectLibrary:
+// ----------
+// Library code contains metadata that can be inspected via the library
+// reflection APIs.
+//----------------------------------------------------------------------------
+
+HRESULT WINAPI
+D3DReflectLibrary(__in_bcount(SrcDataSize) LPCVOID pSrcData,
+                  __in SIZE_T SrcDataSize,
+	              __in REFIID riid,
+                  __out LPVOID * ppReflector);
 
 //----------------------------------------------------------------------------
 // D3DDisassemble:
@@ -310,6 +349,7 @@ D3DReflect(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
 #define D3D_DISASM_DISABLE_DEBUG_INFO           0x00000010
 #define D3D_DISASM_ENABLE_INSTRUCTION_OFFSET    0x00000020
 #define D3D_DISASM_INSTRUCTION_ONLY             0x00000040
+#define D3D_DISASM_PRINT_HEX_LITERALS           0x00000080
 
 HRESULT WINAPI
 D3DDisassemble(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
@@ -335,6 +375,22 @@ D3DDisassembleRegion(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
                      _Out_opt_ SIZE_T* pFinishByteOffset,
                      _Out_ ID3DBlob** ppDisassembly);
     
+//----------------------------------------------------------------------------
+// Shader linking and Function Linking Graph (FLG) APIs
+//----------------------------------------------------------------------------
+HRESULT WINAPI
+D3DCreateLinker(__out interface ID3D11Linker ** ppLinker);
+
+HRESULT WINAPI
+D3DLoadModule(_In_ LPCVOID pSrcData,
+              _In_ SIZE_T cbSrcDataSize,
+              _Out_ interface ID3D11Module ** ppModule);
+
+HRESULT WINAPI
+D3DCreateFunctionLinkingGraph(_In_ UINT uFlags,
+                              _Out_ interface ID3D11FunctionLinkingGraph ** ppFunctionLinkingGraph);
+
+
 #endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
@@ -378,6 +434,12 @@ D3DGetTraceInstructionOffsets(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
                               _Out_writes_to_opt_(NumInsts, min(NumInsts, *pTotalInsts)) SIZE_T* pOffsets,
                               _Out_opt_ SIZE_T* pTotalInsts);
 
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#pragma endregion
+
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
 //----------------------------------------------------------------------------
 // D3DGetInputSignatureBlob:
 // -----------------------
@@ -410,6 +472,12 @@ HRESULT WINAPI
 D3DGetInputAndOutputSignatureBlob(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
                                   _In_ SIZE_T SrcDataSize,
                                   _Out_ ID3DBlob** ppSignatureBlob);
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+
+#pragma region Application Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 //----------------------------------------------------------------------------
 // D3DStripShader:
@@ -478,9 +546,22 @@ D3DSetBlobPart(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
                _In_ SIZE_T SrcDataSize,
                _In_ D3D_BLOB_PART Part,
                _In_ UINT Flags,
-	       _In_reads_bytes_(PartSize) LPCVOID pPart,
+               _In_reads_bytes_(PartSize) LPCVOID pPart,
                _In_ SIZE_T PartSize,
                _Out_ ID3DBlob** ppNewShader);
+
+//----------------------------------------------------------------------------
+// D3DCreateBlob:
+// -----------------------
+// Create an ID3DBlob instance.
+//----------------------------------------------------------------------------
+
+HRESULT WINAPI
+D3DCreateBlob(_In_ SIZE_T Size,
+              _Out_ ID3DBlob** ppBlob);
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#pragma endregion
 
 //----------------------------------------------------------------------------
 // D3DCompressShaders:
@@ -495,6 +576,9 @@ typedef struct _D3D_SHADER_DATA
 } D3D_SHADER_DATA;
 
 #define D3D_COMPRESS_SHADER_KEEP_ALL_PARTS 0x00000001
+
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 HRESULT WINAPI
 D3DCompressShaders(_In_ UINT uNumShaders,
@@ -516,19 +600,9 @@ D3DDecompressShaders(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
                      _In_reads_opt_(uNumShaders) UINT* pIndices,
                      _In_ UINT uFlags,
                      _Out_writes_(uNumShaders) ID3DBlob** ppShaders,
-		     _Out_opt_ UINT* pTotalShaders);
+                     _Out_opt_ UINT* pTotalShaders);
 
-//----------------------------------------------------------------------------
-// D3DCreateBlob:
-// -----------------------
-// Create an ID3DBlob instance.
-//----------------------------------------------------------------------------
-
-HRESULT WINAPI
-D3DCreateBlob(_In_ SIZE_T Size,
-              _Out_ ID3DBlob** ppBlob);
-
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #ifdef __cplusplus

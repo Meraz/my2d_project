@@ -8,7 +8,7 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 8.00.0595 */
+ /* File created by MIDL compiler version 8.00.0603 */
 /* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
@@ -883,18 +883,22 @@ typedef struct D3D10_MESSAGE
     D3D10_MESSAGE_CATEGORY Category;
     D3D10_MESSAGE_SEVERITY Severity;
     D3D10_MESSAGE_ID ID;
-    const char *pDescription;
+    /* [annotation] */ 
+    _Field_size_(DescriptionByteLength)  const char *pDescription;
     SIZE_T DescriptionByteLength;
     } 	D3D10_MESSAGE;
 
 typedef struct D3D10_INFO_QUEUE_FILTER_DESC
     {
     UINT NumCategories;
-    D3D10_MESSAGE_CATEGORY *pCategoryList;
+    /* [annotation] */ 
+    _Field_size_(NumCategories)  D3D10_MESSAGE_CATEGORY *pCategoryList;
     UINT NumSeverities;
-    D3D10_MESSAGE_SEVERITY *pSeverityList;
+    /* [annotation] */ 
+    _Field_size_(NumSeverities)  D3D10_MESSAGE_SEVERITY *pSeverityList;
     UINT NumIDs;
-    D3D10_MESSAGE_ID *pIDList;
+    /* [annotation] */ 
+    _Field_size_(NumIDs)  D3D10_MESSAGE_ID *pIDList;
     } 	D3D10_INFO_QUEUE_FILTER_DESC;
 
 typedef struct D3D10_INFO_QUEUE_FILTER

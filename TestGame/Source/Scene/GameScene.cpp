@@ -95,10 +95,10 @@ void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mouse
 
 void GameScene::CheckCollision()
 {
-	for (int i = 0; i < playerEntities.size(); i++)
+	for (unsigned int i = 0; i < playerEntities.size(); i++)
 	{
 		int projCount = m_projectileEntities.size();
-		for (int i = 0; i < projCount; i++)
+		for (unsigned int i = 0; i < projCount; i++)
 		{
 			if (InScreen(m_projectileEntities[i]))
 			{
@@ -110,7 +110,7 @@ void GameScene::CheckCollision()
 		}
 
 		int enemyCount = m_enemyEntities.size();
-		for (int i = 0; i < enemyCount; i++)
+		for (unsigned int i = 0; i < enemyCount; i++)
 		{
 			if (InScreen(m_enemyEntities[i]))
 			{
@@ -122,7 +122,7 @@ void GameScene::CheckCollision()
 		}
 
 		int collCount = m_collisionEntities.size();
-		for (int i = 0; i < collCount; i++)
+		for (unsigned int i = 0; i < collCount; i++)
 		{
 			if (InScreen(m_collisionEntities[i]))
 			{
@@ -360,9 +360,6 @@ void GameScene::LoadCurrentSetup(char* p_fileName)
 	while (l_stream.getline(l_buffer, 1024))
 	{
 		char lKey[8];
-
-		// Texture
-		RenderEntity* l_renderEntity;
 		sscanf_s(l_buffer, "%i ", lKey, sizeof(lKey));
 		CreateObject(lKey[0], l_buffer);
 	}

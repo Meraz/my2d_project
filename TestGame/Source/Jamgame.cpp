@@ -1,4 +1,4 @@
-#include "Jamgame.h"
+#include <TestGame/Include/Jamgame.h>
 
 #include <Windowsx.h>
 #include <Jamgine/Include/DirectX/DirectXShared.h>

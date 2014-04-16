@@ -9,13 +9,9 @@ project(${PROJECT_NAME_TESTGAME})
 file(GLOB_RECURSE SOURCES Source/*.cpp)
 file(GLOB_RECURSE HEADERS Include/*.h)
 
-set(LIBRARIES ${EXTERNAL_LIBRARIES}) # No idea what this is
-
-# Set search paths
-include_directories(Include)		 # No idea what this is
-
 # Set library search path
-link_directories(${CMAKE_BINARY_DIR}/Jamgine/Debug)
+link_directories(${EXTERNAL_LIBRARIES})
+link_directories(${OUTPUT_DIRECTORY}/Debug)
 
 # Add the target
 add_executable(${PROJECT_NAME_TESTGAME} ${HEADERS} ${SOURCES})
@@ -26,19 +22,16 @@ target_link_libraries(${PROJECT_NAME_TESTGAME} d3d11.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} d3dcompiler.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} dxguid.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} Xinput9_1_0.lib)
-
+target_link_libraries(${PROJECT_NAME_TESTGAME} fmod_vc.lib)
 
 # Set SUBSYSTEM:WINDOWS
 set_target_properties(${PROJECT_NAME_TESTGAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin})
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release})
 
 # Copy game resources
 add_custom_target(_resourceCopy ALL 
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources ${CMAKE_BINARY_DIR}/bin/Resources
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources ${CMAKE_BINARY_DIR}/build/Resources
 )
 
-# Copy dependencies
 add_custom_target(_dependencies ALL 
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/External/Lib ${CMAKE_BINARY_DIR}/bin/External
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/ ${OUTPUT_DIRECTORY}/Debug
 )

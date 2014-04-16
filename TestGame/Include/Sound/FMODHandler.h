@@ -1,7 +1,7 @@
 #ifndef FMODHANBDLER_H
 #define FMODHANBDLER_H
 
-#include "fmod.hpp" //fmod c++ header
+#include <Fmod/fmod.hpp> //fmod c++ header
 #pragma comment( lib, "fmod_vc.lib" ) // fmod library
 
 //http://glasnost.itcarlow.ie/~powerk/audio/AddFMODtoaproject.html

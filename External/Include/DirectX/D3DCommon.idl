@@ -789,6 +789,18 @@ typedef enum D3D_MIN_PRECISION
     D3D_MIN_PRECISION_ANY_10     = 0xf1,
 } D3D_MIN_PRECISION;
 
+typedef enum D3D_INTERPOLATION_MODE
+{
+    D3D_INTERPOLATION_UNDEFINED = 0,
+    D3D_INTERPOLATION_CONSTANT = 1,
+    D3D_INTERPOLATION_LINEAR = 2,
+    D3D_INTERPOLATION_LINEAR_CENTROID = 3,
+    D3D_INTERPOLATION_LINEAR_NOPERSPECTIVE = 4,
+    D3D_INTERPOLATION_LINEAR_NOPERSPECTIVE_CENTROID = 5,
+    D3D_INTERPOLATION_LINEAR_SAMPLE = 6,
+    D3D_INTERPOLATION_LINEAR_NOPERSPECTIVE_SAMPLE = 7,
+} D3D_INTERPOLATION_MODE;
+
 // Well-Known Private Data IDs (WKPDID_*):
 
 // WKPDID_D3DDebugObjectName provides a unique name to objects in order to assist the developer during debugging.
@@ -799,3 +811,8 @@ cpp_quote( "DEFINE_GUID(WKPDID_D3DDebugObjectName,0x429b8c22,0x9188,0x4b0c,0x87,
 
 cpp_quote("#define D3D_SET_OBJECT_NAME_N_A(pObject, Chars, pName) (pObject)->SetPrivateData(WKPDID_D3DDebugObjectName, Chars, pName)")
 cpp_quote("#define D3D_SET_OBJECT_NAME_A(pObject, pName) D3D_SET_OBJECT_NAME_N_A(pObject, lstrlenA(pName), pName)")
+
+cpp_quote("#define D3D_COMPONENT_MASK_X   1")
+cpp_quote("#define D3D_COMPONENT_MASK_Y   2")
+cpp_quote("#define D3D_COMPONENT_MASK_Z   4")
+cpp_quote("#define D3D_COMPONENT_MASK_W   8")

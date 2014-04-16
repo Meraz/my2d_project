@@ -10,6 +10,7 @@
 #ifndef __D3D10SHADER_H__
 #define __D3D10SHADER_H__
 
+
 #include "d3d10.h"
 
 #include <winapifamily.h>
@@ -104,6 +105,7 @@
 #define D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY (1 << 12)
 #define D3D10_SHADER_IEEE_STRICTNESS                (1 << 13)
 #define D3D10_SHADER_WARNINGS_ARE_ERRORS            (1 << 18)
+#define D3D10_SHADER_RESOURCES_MAY_ALIAS            (1 << 19)
 
 
 // optimization level flags
@@ -259,10 +261,14 @@ typedef struct _D3D10_SIGNATURE_PARAMETER_DESC
 // Interface definitions
 //
 
+
+
+
 typedef interface ID3D10ShaderReflectionType ID3D10ShaderReflectionType;
 typedef interface ID3D10ShaderReflectionType *LPD3D10SHADERREFLECTIONTYPE;
 
 // {C530AD7D-9B16-4395-A979-BA2ECFF83ADD}
+interface DECLSPEC_UUID("C530AD7D-9B16-4395-A979-BA2ECFF83ADD") ID3D10ShaderReflectionType;
 DEFINE_GUID(IID_ID3D10ShaderReflectionType, 
 0xc530ad7d, 0x9b16, 0x4395, 0xa9, 0x79, 0xba, 0x2e, 0xcf, 0xf8, 0x3a, 0xdd);
 
@@ -282,6 +288,7 @@ typedef interface ID3D10ShaderReflectionVariable ID3D10ShaderReflectionVariable;
 typedef interface ID3D10ShaderReflectionVariable *LPD3D10SHADERREFLECTIONVARIABLE;
 
 // {1BF63C95-2650-405d-99C1-3636BD1DA0A1}
+interface DECLSPEC_UUID("1BF63C95-2650-405d-99C1-3636BD1DA0A1") ID3D10ShaderReflectionVariable;
 DEFINE_GUID(IID_ID3D10ShaderReflectionVariable, 
 0x1bf63c95, 0x2650, 0x405d, 0x99, 0xc1, 0x36, 0x36, 0xbd, 0x1d, 0xa0, 0xa1);
 
@@ -299,6 +306,7 @@ typedef interface ID3D10ShaderReflectionConstantBuffer ID3D10ShaderReflectionCon
 typedef interface ID3D10ShaderReflectionConstantBuffer *LPD3D10SHADERREFLECTIONCONSTANTBUFFER;
 
 // {66C66A94-DDDD-4b62-A66A-F0DA33C2B4D0}
+interface DECLSPEC_UUID("66C66A94-DDDD-4b62-A66A-F0DA33C2B4D0") ID3D10ShaderReflectionConstantBuffer;
 DEFINE_GUID(IID_ID3D10ShaderReflectionConstantBuffer, 
 0x66c66a94, 0xdddd, 0x4b62, 0xa6, 0x6a, 0xf0, 0xda, 0x33, 0xc2, 0xb4, 0xd0);
 
@@ -317,6 +325,7 @@ typedef interface ID3D10ShaderReflection ID3D10ShaderReflection;
 typedef interface ID3D10ShaderReflection *LPD3D10SHADERREFLECTION;
 
 // {D40E20B6-F8F7-42ad-AB20-4BAF8F15DFAA}
+interface DECLSPEC_UUID("D40E20B6-F8F7-42ad-AB20-4BAF8F15DFAA") ID3D10ShaderReflection;
 DEFINE_GUID(IID_ID3D10ShaderReflection, 
 0xd40e20b6, 0xf8f7, 0x42ad, 0xab, 0x20, 0x4b, 0xaf, 0x8f, 0x15, 0xdf, 0xaa);
 
@@ -341,9 +350,6 @@ DECLARE_INTERFACE_(ID3D10ShaderReflection, IUnknown)
     
 };
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
-#pragma endregion
-
 //////////////////////////////////////////////////////////////////////////////
 // APIs //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -351,9 +357,6 @@ DECLARE_INTERFACE_(ID3D10ShaderReflection, IUnknown)
 #ifdef __cplusplus
 extern "C" {
 #endif //__cplusplus
-
-#pragma region Desktop Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 //----------------------------------------------------------------------------
 // D3D10CompileShader:
@@ -536,12 +539,12 @@ HRESULT WINAPI D3D10GetInputAndOutputSignatureBlob(_In_reads_bytes_(BytecodeLeng
 
 HRESULT WINAPI D3D10GetShaderDebugInfo(_In_reads_bytes_(BytecodeLength) CONST void *pShaderBytecode, SIZE_T BytecodeLength, _Out_ ID3D10Blob** ppDebugInfo);
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
-#pragma endregion
-
 #ifdef __cplusplus
 }
 #endif //__cplusplus
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
     
 #endif //__D3D10SHADER_H__
 

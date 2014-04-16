@@ -3,7 +3,7 @@
 //***************************************************************************************
 
 #include <windows.h>
-#include "GameTimer.h"
+#include <TestGame/Include/GameTimer.h>
 
 GameTimer::GameTimer()
 : m_secondsPerCount(0.0), m_deltaTime(-1.0), m_baseTime(0), 

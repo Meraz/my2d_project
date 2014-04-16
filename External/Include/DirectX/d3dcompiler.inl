@@ -29,4 +29,13 @@ D3D11Reflect(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
                       IID_ID3D11ShaderReflection, (void**)ppReflector);
 }
 
+FORCEINLINE HRESULT
+D3D11ReflectLibrary(_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+                    _In_ SIZE_T SrcDataSize,
+                    _Out_ ID3D11LibraryReflection ** ppReflector)
+{
+    return D3DReflectLibrary(pSrcData, SrcDataSize,
+                             IID_ID3D11LibraryReflection, (void**)ppReflector);
+}
+
 #endif // #ifndef __D3DCOMPILER_INL__
