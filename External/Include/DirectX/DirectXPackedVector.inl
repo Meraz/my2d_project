@@ -31,12 +31,8 @@ inline float PackedVector::XMConvertHalfToFloat
 
     uint32_t Mantissa = (uint32_t)(Value & 0x03FF);
 
-    uint32_t Exponent = (Value & 0x7C00);
-    if ( Exponent == 0x7C00 ) // INF/NAN
-    {
-        Exponent = (uint32_t)0x8f;
-    }
-    else if (Exponent != 0)  // The value is normalized
+    uint32_t Exponent;
+    if ((Value & 0x7C00) != 0)  // The value is normalized
     {
         Exponent = (uint32_t)((Value >> 10) & 0x1F);
     }
@@ -112,17 +108,10 @@ inline PackedVector::HALF PackedVector::XMConvertFloatToHalf
     uint32_t Sign = (IValue & 0x80000000U) >> 16U;
     IValue = IValue & 0x7FFFFFFFU;      // Hack off the sign
 
-    if (IValue > 0x477FE000U)
+    if (IValue > 0x47FFEFFFU)
     {
         // The number is too large to be represented as a half.  Saturate to infinity.
-        if (((IValue & 0x7F800000) == 0x7F800000) && ((IValue & 0x7FFFFF ) != 0))
-        {
-            Result = 0x7FFF; // NAN
-        }
-        else
-        {
-            Result = 0x7C00U; // INF
-        }
+        Result = 0x7FFFU;
     }
     else
     {
@@ -182,7 +171,7 @@ inline PackedVector::HALF* PackedVector::XMConvertFloatToHalfStream
  *
  ****************************************************************************/
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadColor
+inline XMVECTOR PackedVector::XMLoadColor
 (
     const XMCOLOR* pSource
 )
@@ -218,7 +207,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadColor
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadHalf2
+inline XMVECTOR PackedVector::XMLoadHalf2
 (
     const XMHALF2* pSource
 )
@@ -238,7 +227,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadHalf2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShortN2
+inline XMVECTOR PackedVector::XMLoadShortN2
 (
     const XMSHORTN2* pSource
 )
@@ -274,7 +263,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShortN2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShort2
+inline XMVECTOR PackedVector::XMLoadShort2
 (
     const XMSHORT2* pSource
 )
@@ -308,7 +297,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShort2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShortN2
+inline XMVECTOR PackedVector::XMLoadUShortN2
 (
     const XMUSHORTN2* pSource
 )
@@ -345,7 +334,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShortN2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShort2
+inline XMVECTOR PackedVector::XMLoadUShort2
 (
     const XMUSHORT2* pSource
 )
@@ -381,7 +370,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShort2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadByteN2
+inline XMVECTOR PackedVector::XMLoadByteN2
 (
     const XMBYTEN2* pSource
 )
@@ -398,7 +387,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadByteN2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadByte2
+inline XMVECTOR PackedVector::XMLoadByte2
 (
     const XMBYTE2* pSource
 )
@@ -415,7 +404,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadByte2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUByteN2
+inline XMVECTOR PackedVector::XMLoadUByteN2
 (
     const XMUBYTEN2* pSource
 )
@@ -432,7 +421,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUByteN2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUByte2
+inline XMVECTOR PackedVector::XMLoadUByte2
 (
     const XMUBYTE2* pSource
 )
@@ -449,7 +438,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUByte2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadU565
+inline XMVECTOR PackedVector::XMLoadU565
 (
     const XMU565* pSource
 )
@@ -480,7 +469,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadU565
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadFloat3PK
+inline XMVECTOR PackedVector::XMLoadFloat3PK
 (
     const XMFLOAT3PK* pSource
 )
@@ -598,28 +587,116 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadFloat3PK
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadFloat3SE
+inline XMVECTOR PackedVector::XMLoadFloat3SE
 (
     const XMFLOAT3SE* pSource
 )
 {
     assert(pSource);
 
-    union { float f; int32_t i; } fi;
-    fi.i = 0x33800000 + (pSource->e << 23);
-    float Scale = fi.f;
+    __declspec(align(16)) uint32_t Result[4];
+    uint32_t Mantissa;
+    uint32_t Exponent, ExpBits;
 
-    XMVECTORF32 v = {
-        Scale * float( pSource->xm ),
-        Scale * float( pSource->ym ),
-        Scale * float( pSource->zm ),
-        1.0f };
-    return v;
+    if ( pSource->e == 0x1f ) // INF or NAN
+    {
+        Result[0] = 0x7f800000 | (pSource->xm << 14);
+        Result[1] = 0x7f800000 | (pSource->ym << 14);
+        Result[2] = 0x7f800000 | (pSource->zm << 14);
+    }
+    else if ( pSource->e != 0 ) // The values are all normalized
+    {
+        Exponent = pSource->e;
+
+        ExpBits = (Exponent + 112) << 23;
+
+        Mantissa = pSource->xm;
+        Result[0] = ExpBits | (Mantissa << 14);
+
+        Mantissa = pSource->ym;
+        Result[1] = ExpBits | (Mantissa << 14);
+
+        Mantissa = pSource->zm;
+        Result[2] = ExpBits | (Mantissa << 14);
+    }
+    else
+    {
+        // X Channel
+        Mantissa = pSource->xm;
+
+        if (Mantissa != 0) // The value is denormalized
+        {
+            // Normalize the value in the resulting float
+            Exponent = 1;
+
+            do
+            {
+                Exponent--;
+                Mantissa <<= 1;
+            } while ((Mantissa & 0x200) == 0);
+
+            Mantissa &= 0x1FF;
+        }
+        else // The value is zero
+        {
+            Exponent = (uint32_t)-112;
+        }
+
+        Result[0] = ((Exponent + 112) << 23) | (Mantissa << 14);
+
+        // Y Channel
+        Mantissa = pSource->ym;
+
+        if (Mantissa != 0) // The value is denormalized
+        {
+            // Normalize the value in the resulting float
+            Exponent = 1;
+
+            do
+            {
+                Exponent--;
+                Mantissa <<= 1;
+            } while ((Mantissa & 0x200) == 0);
+
+            Mantissa &= 0x1FF;
+        }
+        else // The value is zero
+        {
+            Exponent = (uint32_t)-112;
+        }
+
+        Result[1] = ((Exponent + 112) << 23) | (Mantissa << 14);
+
+        // Z Channel
+        Mantissa = pSource->zm;
+
+        if (Mantissa != 0) // The value is denormalized
+        {
+            // Normalize the value in the resulting float
+            Exponent = 1;
+
+            do
+            {
+                Exponent--;
+                Mantissa <<= 1;
+            } while ((Mantissa & 0x200) == 0);
+
+            Mantissa &= 0x1FF;
+        }
+        else // The value is zero
+        {
+            Exponent = (uint32_t)-112;
+        }
+
+        Result[2] = ((Exponent + 112) << 23) | (Mantissa << 14);
+    }
+
+    return XMLoadFloat3A( reinterpret_cast<const XMFLOAT3A*>(&Result) );
 }
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadHalf4
+inline XMVECTOR PackedVector::XMLoadHalf4
 (
     const XMHALF4* pSource
 )
@@ -639,7 +716,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadHalf4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShortN4
+inline XMVECTOR PackedVector::XMLoadShortN4
 (
     const XMSHORTN4* pSource
 )
@@ -654,10 +731,11 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShortN4
     };
     return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-    int16x4_t vInt = vld1_s16( (const int16_t*)pSource );
-    int32x4_t V = vmovl_s16( vInt );
+    __n64 vInt = vld1_s16( (const int16_t*)pSource );
+    __n128 V = vmovl_s16( vInt );
     V = vcvtq_f32_s32( V );
-    V = XM_VMULQ_N_F32( V,  1.0f/32767.0f );
+    const __n128 Scale = vdupq_n_f32( 1.0f/32767.0f );
+    V = vmulq_f32( V, Scale );
     return vmaxq_f32( V, g_XMNegativeOne );
 #elif defined(_XM_SSE_INTRINSICS_)
     // Splat the color in all four entries (x,z,y,w)
@@ -682,7 +760,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShortN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShort4
+inline XMVECTOR PackedVector::XMLoadShort4
 (
     const XMSHORT4* pSource
 )
@@ -697,8 +775,8 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShort4
     };
     return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-    int16x4_t vInt = vld1_s16( (const int16_t*)pSource );
-    int32x4_t V = vmovl_s16( vInt );
+    __n64 vInt = vld1_s16( (const int16_t*)pSource );
+    __n128 V = vmovl_s16( vInt );
     return vcvtq_f32_s32( V );
 #elif defined(_XM_SSE_INTRINSICS_)
     // Splat the color in all four entries (x,z,y,w)
@@ -721,7 +799,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadShort4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShortN4
+inline XMVECTOR PackedVector::XMLoadUShortN4
 (
     const XMUSHORTN4* pSource
 )
@@ -736,10 +814,11 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShortN4
     };
     return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-    uint16x4_t vInt = vld1_u16( (const uint16_t*)pSource );
-    uint32x4_t V = vmovl_u16( vInt );
+    __n64 vInt = vld1_u16( (const uint16_t*)pSource );
+    __n128 V = vmovl_u16( vInt );
     V = vcvtq_f32_u32( V );
-    return XM_VMULQ_N_F32( V, 1.0f/65535.0f );
+    const __n128 Scale = vdupq_n_f32( 1.0f/65535.0f );
+    return vmulq_f32( V, Scale );
 #elif defined(_XM_SSE_INTRINSICS_)
     static const XMVECTORF32 FixupY16W16 = {1.0f/65535.0f,1.0f/65535.0f,1.0f/(65535.0f*65536.0f),1.0f/(65535.0f*65536.0f)};
     static const XMVECTORF32 FixaddY16W16  = {0,0,32768.0f*65536.0f,32768.0f*65536.0f};
@@ -763,7 +842,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShortN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShort4
+inline XMVECTOR PackedVector::XMLoadUShort4
 (
     const XMUSHORT4* pSource
 )
@@ -778,8 +857,8 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShort4
     };
     return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-    uint16x4_t vInt = vld1_u16( (const uint16_t*)pSource );
-    uint32x4_t V = vmovl_u16( vInt );
+    __n64 vInt = vld1_u16( (const uint16_t*)pSource );
+    __n128 V = vmovl_u16( vInt );
     return vcvtq_f32_u32( V );
 #elif defined(_XM_SSE_INTRINSICS_)
     static const XMVECTORF32 FixaddY16W16  = {0,0,32768.0f,32768.0f};
@@ -803,7 +882,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUShort4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadXDecN4
+inline XMVECTOR PackedVector::XMLoadXDecN4
 (
     const XMXDECN4* pSource
 )
@@ -844,7 +923,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadXDecN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadXDec4
+inline XMVECTOR PackedVector::XMLoadXDec4
 (
     const XMXDEC4* pSource
 )
@@ -886,7 +965,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadXDec4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUDecN4
+inline XMVECTOR PackedVector::XMLoadUDecN4
 (
     const XMUDECN4* pSource
 )
@@ -924,34 +1003,9 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUDecN4
 #endif // _XM_VMX128_INTRINSICS_
 }
 
-
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUDecN4_XR
-(
-    const XMUDECN4* pSource
-)
-{
-    assert(pSource);
-
-    int32_t ElementX = pSource->v & 0x3FF;
-    int32_t ElementY = (pSource->v >> 10) & 0x3FF;
-    int32_t ElementZ = (pSource->v >> 20) & 0x3FF;
-
-    XMVECTORF32 vResult = {
-        (float)(ElementX - 0x180) / 510.0f,
-        (float)(ElementY - 0x180) / 510.0f,
-        (float)(ElementZ - 0x180) / 510.0f,
-        (float)(pSource->v >> 30) / 3.0f
-    };
-
-    return vResult.v;
-}
-
-
-//------------------------------------------------------------------------------
-_Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUDec4
+inline XMVECTOR PackedVector::XMLoadUDec4
 (
     const XMUDEC4* pSource
 )
@@ -989,7 +1043,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUDec4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadDecN4
+inline XMVECTOR PackedVector::XMLoadDecN4
 (
     const XMDECN4* pSource
 )
@@ -1033,7 +1087,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadDecN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadDec4
+inline XMVECTOR PackedVector::XMLoadDec4
 (
     const XMDEC4* pSource
 )
@@ -1075,7 +1129,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadDec4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUByteN4
+inline XMVECTOR PackedVector::XMLoadUByteN4
 (
     const XMUBYTEN4* pSource
 )
@@ -1110,7 +1164,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUByteN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUByte4
+inline XMVECTOR PackedVector::XMLoadUByte4
 (
     const XMUBYTE4* pSource
 )
@@ -1145,7 +1199,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUByte4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadByteN4
+inline XMVECTOR PackedVector::XMLoadByteN4
 (
     const XMBYTEN4* pSource
 )
@@ -1181,7 +1235,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadByteN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadByte4
+inline XMVECTOR PackedVector::XMLoadByte4
 (
     const XMBYTE4* pSource
 )
@@ -1216,7 +1270,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadByte4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUNibble4
+inline XMVECTOR PackedVector::XMLoadUNibble4
 (
      const XMUNIBBLE4* pSource
 )
@@ -1247,7 +1301,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadUNibble4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMVECTOR XM_CALLCONV PackedVector::XMLoadU555
+inline XMVECTOR PackedVector::XMLoadU555
 (
      const XMU555* pSource
 )
@@ -1283,7 +1337,7 @@ inline XMVECTOR XM_CALLCONV PackedVector::XMLoadU555
  *
  ****************************************************************************/
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreColor
+inline void PackedVector::XMStoreColor
 (
     XMCOLOR* pDestination, 
     FXMVECTOR V
@@ -1323,14 +1377,14 @@ inline void XM_CALLCONV PackedVector::XMStoreColor
     // Mash to bytes
     vInt = _mm_packus_epi16(vInt,vInt);
     // Store the color
-    _mm_store_ss(reinterpret_cast<float *>(&pDestination->c),_mm_castsi128_ps(vInt));
+    _mm_store_ss(reinterpret_cast<float *>(&pDestination->c),reinterpret_cast<__m128 *>(&vInt)[0]);
 #else // _XM_VMX128_INTRINSICS_
 #endif // _XM_VMX128_INTRINSICS_
 }
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreHalf2
+inline void PackedVector::XMStoreHalf2
 (
     XMHALF2* pDestination, 
     FXMVECTOR V
@@ -1348,7 +1402,7 @@ inline void XM_CALLCONV PackedVector::XMStoreHalf2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreShortN2
+inline void PackedVector::XMStoreShortN2
 (
     XMSHORTN2* pDestination, 
     FXMVECTOR V
@@ -1384,7 +1438,7 @@ inline void XM_CALLCONV PackedVector::XMStoreShortN2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreShort2
+inline void PackedVector::XMStoreShort2
 (
     XMSHORT2* pDestination, 
     FXMVECTOR V
@@ -1422,7 +1476,7 @@ inline void XM_CALLCONV PackedVector::XMStoreShort2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUShortN2
+inline void PackedVector::XMStoreUShortN2
 (
     XMUSHORTN2* pDestination, 
     FXMVECTOR V
@@ -1461,7 +1515,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUShortN2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUShort2
+inline void PackedVector::XMStoreUShort2
 (
     XMUSHORT2* pDestination, 
     FXMVECTOR V
@@ -1498,7 +1552,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUShort2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreByteN2
+inline void PackedVector::XMStoreByteN2
 (
     XMBYTEN2* pDestination, 
     FXMVECTOR V
@@ -1521,7 +1575,7 @@ inline void XM_CALLCONV PackedVector::XMStoreByteN2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreByte2
+inline void PackedVector::XMStoreByte2
 (
     XMBYTE2* pDestination, 
     FXMVECTOR V
@@ -1544,7 +1598,7 @@ inline void XM_CALLCONV PackedVector::XMStoreByte2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUByteN2
+inline void PackedVector::XMStoreUByteN2
 (
     XMUBYTEN2* pDestination, 
     FXMVECTOR V
@@ -1567,7 +1621,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUByteN2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUByte2
+inline void PackedVector::XMStoreUByte2
 (
     XMUBYTE2* pDestination, 
     FXMVECTOR V
@@ -1589,7 +1643,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUByte2
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreU565
+inline void PackedVector::XMStoreU565
 (
     XMU565* pDestination,
     FXMVECTOR V
@@ -1627,7 +1681,7 @@ inline void XM_CALLCONV PackedVector::XMStoreU565
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreFloat3PK
+inline void PackedVector::XMStoreFloat3PK
 (
     XMFLOAT3PK* pDestination,
     FXMVECTOR V
@@ -1652,7 +1706,7 @@ inline void XM_CALLCONV PackedVector::XMStoreFloat3PK
             Result[j] = 0x7c0;
             if (( I & 0x7FFFFF ) != 0)
             {
-                Result[j] = 0x7c0 | (((I>>17)|(I>>11)|(I>>6)|(I))&0x3f);
+                Result[j] = 0x7c0 | (((I>>17)|(I>11)|(I>>6)|(I))&0x3f);
             }
             else if ( Sign )
             {
@@ -1699,7 +1753,7 @@ inline void XM_CALLCONV PackedVector::XMStoreFloat3PK
         Result[2] = 0x3e0;
         if ( I & 0x7FFFFF )
         {
-            Result[2] = 0x3e0 | (((I>>18)|(I>>13)|(I>>3)|(I))&0x1f);
+            Result[2] = 0x3e0 | (((I>>18)|(I>13)|(I>>3)|(I))&0x1f);
         }
         else if ( Sign )
         {
@@ -1743,7 +1797,7 @@ inline void XM_CALLCONV PackedVector::XMStoreFloat3PK
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreFloat3SE
+inline void PackedVector::XMStoreFloat3SE
 (
     XMFLOAT3SE* pDestination,
     FXMVECTOR V
@@ -1751,38 +1805,82 @@ inline void XM_CALLCONV PackedVector::XMStoreFloat3SE
 {
     assert(pDestination);
 
-    XMFLOAT3A tmp;
-    XMStoreFloat3A( &tmp, V );
+    __declspec(align(16)) uint32_t IValue[4];
+    XMStoreFloat3A( reinterpret_cast<XMFLOAT3A*>(&IValue), V );
 
-    static const float maxf9 = float(0x1FF << 7);
-    static const float minf9 = float(1.f / (1 << 16));
+    uint32_t Exp[3];
+    uint32_t Frac[3];
 
-    float x = (tmp.x >= 0.f) ? ( (tmp.x > maxf9) ? maxf9 : tmp.x ) : 0.f;
-    float y = (tmp.y >= 0.f) ? ( (tmp.y > maxf9) ? maxf9 : tmp.y ) : 0.f;
-    float z = (tmp.z >= 0.f) ? ( (tmp.z > maxf9) ? maxf9 : tmp.z ) : 0.f;
+    // X, Y, Z Channels (5-bit exponent, 9-bit mantissa)
+    for(uint32_t j=0; j < 3; ++j)
+    {
+        uint32_t Sign = IValue[j] & 0x80000000;
+        uint32_t I = IValue[j] & 0x7FFFFFFF;
 
-    const float max_xy = (x > y) ? x : y;
-    const float max_xyz = (max_xy > z) ? max_xy : z;
+        if ((I & 0x7F800000) == 0x7F800000)
+        {
+            // INF or NAN
+            Exp[j] = 0x1f;
+            if (( I & 0x7FFFFF ) != 0)
+            {
+                Frac[j] = ((I>>14)|(I>5)|(I))&0x1ff;
+            }
+            else if ( Sign )
+            {
+                // -INF is clamped to 0 since 3SE is positive only
+                Exp[j] = Frac[j] = 0;
+            }
+        }
+        else if ( Sign )
+        {
+            // 3SE is positive only, so clamp to zero
+            Exp[j] = Frac[j] = 0;
+        }
+        else if (I > 0x477FC000U)
+        {
+            // The number is too large, set to max
+            Exp[j] = 0x1e;
+            Frac[j] = 0x1ff;
+        }
+        else
+        {
+            if (I < 0x38800000U)
+            {
+                // The number is too small to be represented as a normalized float11
+                // Convert it to a denormalized value.
+                uint32_t Shift = 113U - (I >> 23U);
+                I = (0x800000U | (I & 0x7FFFFFU)) >> Shift;
+            }
+            else
+            {
+                // Rebias the exponent to represent the value as a normalized float11
+                I += 0xC8000000U;
+            }
+     
+            uint32_t T = ((I + 0x1FFFU + ((I >> 14U) & 1U)) >> 14U)&0x3fffU;
 
-    const float maxColor = (max_xyz > minf9) ? max_xyz : minf9;
+            Exp[j] = (T & 0x3E00) >> 9;
+            Frac[j] = T & 0x1ff;
+        }
+    }
 
-    union { float f; int32_t i; } fi;
-    fi.f = maxColor;
-    fi.i &= 0xFF800000; // cut off fraction
+    // Adjust to a shared exponent
+    uint32_t T = XMMax( Exp[0], XMMax( Exp[1], Exp[2] ) );
 
-    pDestination->e = (fi.i - 0x37800000) >> 23;
+    Frac[0] = Frac[0] >> (T - Exp[0]);
+    Frac[1] = Frac[1] >> (T - Exp[1]);
+    Frac[2] = Frac[2] >> (T - Exp[2]);
 
-    fi.i = 0x83000000 - fi.i;
-    float ScaleR = fi.f;
-
-    pDestination->xm = static_cast<uint32_t>( Internal::round_to_nearest(x * ScaleR) );
-    pDestination->ym = static_cast<uint32_t>( Internal::round_to_nearest(y * ScaleR) );
-    pDestination->zm = static_cast<uint32_t>( Internal::round_to_nearest(z * ScaleR) );
+    // Store packed into memory
+    pDestination->xm = Frac[0];
+    pDestination->ym = Frac[1];
+    pDestination->zm = Frac[2];
+    pDestination->e = T;
 }
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreHalf4
+inline void PackedVector::XMStoreHalf4
 (
     XMHALF4* pDestination, 
     FXMVECTOR V
@@ -1805,7 +1903,7 @@ inline void XM_CALLCONV PackedVector::XMStoreHalf4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreShortN4
+inline void PackedVector::XMStoreShortN4
 (
     XMSHORTN4* pDestination, 
     FXMVECTOR V
@@ -1829,11 +1927,12 @@ inline void XM_CALLCONV PackedVector::XMStoreShortN4
     pDestination->w = (int16_t)tmp.w;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-    float32x4_t vResult = vmaxq_f32( V, g_XMNegativeOne );
+    __n128 vResult = vmaxq_f32( V, g_XMNegativeOne );
     vResult = vminq_f32( vResult, g_XMOne );
-    vResult = XM_VMULQ_N_F32( vResult, 32767.0f );
+    const __n128 Scale = vdupq_n_f32( 32767.0f );
+    vResult = vmulq_f32( vResult, Scale );
     vResult = vcvtq_s32_f32( vResult );
-    int16x4_t vInt = vmovn_s32( vResult );
+    __n64 vInt = vmovn_s32( vResult );
     vst1_s16( (int16_t*)pDestination, vInt );
 #elif defined(_XM_SSE_INTRINSICS_)
     static const XMVECTORF32 Scale = {32767.0f, 32767.0f, 32767.0f, 32767.0f};
@@ -1850,7 +1949,7 @@ inline void XM_CALLCONV PackedVector::XMStoreShortN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreShort4
+inline void PackedVector::XMStoreShort4
 (
     XMSHORT4* pDestination, 
     FXMVECTOR V
@@ -1877,10 +1976,10 @@ inline void XM_CALLCONV PackedVector::XMStoreShort4
     static const XMVECTORF32 Min = {-32767.0f, -32767.0f, -32767.0f, -32767.0f};
     static const XMVECTORF32 Max = {32767.0f, 32767.0f, 32767.0f, 32767.0f};
 
-    float32x4_t vResult = vmaxq_f32( V, Min );
+    __n128 vResult = vmaxq_f32( V, Min );
     vResult = vminq_f32( vResult, Max );
     vResult = vcvtq_s32_f32( vResult );
-    int16x4_t vInt = vmovn_s32( vResult );
+    __n64 vInt = vmovn_s32( vResult );
     vst1_s16( (int16_t*)pDestination, vInt );
 #elif defined(_XM_SSE_INTRINSICS_)
     static const XMVECTORF32 Min = {-32767.0f, -32767.0f, -32767.0f, -32767.0f};
@@ -1899,7 +1998,7 @@ inline void XM_CALLCONV PackedVector::XMStoreShort4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUShortN4
+inline void PackedVector::XMStoreUShortN4
 (
     XMUSHORTN4* pDestination, 
     FXMVECTOR V
@@ -1923,11 +2022,12 @@ inline void XM_CALLCONV PackedVector::XMStoreUShortN4
     pDestination->w = (int16_t)tmp.w;
 
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
-    float32x4_t vResult = vmaxq_f32( V, g_XMZero );
+    __n128 vResult = vmaxq_f32( V, g_XMZero );
     vResult = vminq_f32( vResult, g_XMOne );
-    vResult = XM_VMULQ_N_F32( vResult, 65535.0f );
+    const __n128 Scale = vdupq_n_f32( 65535.0f );
+    vResult = vmulq_f32( vResult, Scale );
     vResult = vcvtq_u32_f32( vResult );
-    uint16x4_t vInt = vmovn_u32( vResult );
+    __n64 vInt = vmovn_u32( vResult );
     vst1_u16( (uint16_t*)pDestination, vInt );
 #elif defined(_XM_SSE_INTRINSICS_)
     static const XMVECTORF32 Scale = {65535.0f, 65535.0f, 65535.0f, 65535.0f};
@@ -1949,7 +2049,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUShortN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUShort4
+inline void PackedVector::XMStoreUShort4
 (
     XMUSHORT4* pDestination, 
     FXMVECTOR V
@@ -1974,10 +2074,10 @@ inline void XM_CALLCONV PackedVector::XMStoreUShort4
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
     static const XMVECTORF32 Max = {65535.0f, 65535.0f, 65535.0f, 65535.0f};
 
-    float32x4_t vResult = vmaxq_f32( V, g_XMZero );
+    __n128 vResult = vmaxq_f32( V, g_XMZero );
     vResult = vminq_f32( vResult, Max );
     vResult = vcvtq_u32_f32( vResult );
-    uint16x4_t vInt = vmovn_u32( vResult );
+    __n64 vInt = vmovn_u32( vResult );
     vst1_u16( (uint16_t*)pDestination, vInt );
 #elif defined(_XM_SSE_INTRINSICS_)
     static const XMVECTORF32 Max = {65535.0f, 65535.0f, 65535.0f, 65535.0f};
@@ -1998,7 +2098,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUShort4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreXDecN4
+inline void PackedVector::XMStoreXDecN4
 (
     XMXDECN4* pDestination, 
     FXMVECTOR V
@@ -2051,7 +2151,7 @@ inline void XM_CALLCONV PackedVector::XMStoreXDecN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreXDec4
+inline void PackedVector::XMStoreXDec4
 (
     XMXDEC4* pDestination, 
     FXMVECTOR V
@@ -2104,7 +2204,7 @@ inline void XM_CALLCONV PackedVector::XMStoreXDec4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUDecN4
+inline void PackedVector::XMStoreUDecN4
 (
     XMUDECN4* pDestination, 
     FXMVECTOR V
@@ -2155,33 +2255,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUDecN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUDecN4_XR
-(
-    XMUDECN4* pDestination, 
-    FXMVECTOR V
-)
-{
-    assert(pDestination);
-
-    static const XMVECTORF32  Scale = { 510.0f, 510.0f, 510.0f, 3.0f };
-    static const XMVECTORF32  Bias  = { 384.0f, 384.0f, 384.0f, 0.0f };
-    static const XMVECTORF32  C     = { 1023.f, 1023.f, 1023.f, 3.f };
-
-    XMVECTOR N = XMVectorMultiplyAdd( V, Scale, Bias );
-    N = XMVectorClamp( N, g_XMZero, C );
-
-    XMFLOAT4A tmp;
-    XMStoreFloat4A(&tmp, N );
-
-    pDestination->v = ((uint32_t)tmp.w << 30)
-                      | (((uint32_t)tmp.z & 0x3FF) << 20)
-                      | (((uint32_t)tmp.y & 0x3FF) << 10)
-                      | (((uint32_t)tmp.x & 0x3FF));
-}
-
-//------------------------------------------------------------------------------
-_Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUDec4
+inline void PackedVector::XMStoreUDec4
 (
     XMUDEC4* pDestination, 
     FXMVECTOR V
@@ -2232,7 +2306,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUDec4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreDecN4
+inline void PackedVector::XMStoreDecN4
 (
     XMDECN4* pDestination, 
     FXMVECTOR V
@@ -2281,7 +2355,7 @@ inline void XM_CALLCONV PackedVector::XMStoreDecN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreDec4
+inline void PackedVector::XMStoreDec4
 (
     XMDEC4*  pDestination, 
     FXMVECTOR V
@@ -2332,7 +2406,7 @@ inline void XM_CALLCONV PackedVector::XMStoreDec4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUByteN4
+inline void PackedVector::XMStoreUByteN4
 (
     XMUBYTEN4* pDestination, 
     FXMVECTOR V
@@ -2384,7 +2458,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUByteN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUByte4
+inline void PackedVector::XMStoreUByte4
 (
     XMUBYTE4* pDestination, 
     FXMVECTOR V
@@ -2436,7 +2510,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUByte4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreByteN4
+inline void PackedVector::XMStoreByteN4
 (
     XMBYTEN4* pDestination, 
     FXMVECTOR V
@@ -2486,7 +2560,7 @@ inline void XM_CALLCONV PackedVector::XMStoreByteN4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreByte4
+inline void PackedVector::XMStoreByte4
 (
     XMBYTE4*  pDestination, 
     FXMVECTOR V
@@ -2538,7 +2612,7 @@ inline void XM_CALLCONV PackedVector::XMStoreByte4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreUNibble4
+inline void PackedVector::XMStoreUNibble4
 (
      XMUNIBBLE4* pDestination,
      FXMVECTOR V
@@ -2579,7 +2653,7 @@ inline void XM_CALLCONV PackedVector::XMStoreUNibble4
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV PackedVector::XMStoreU555
+inline void PackedVector::XMStoreU555
 (
      XMU555* pDestination,
      FXMVECTOR V

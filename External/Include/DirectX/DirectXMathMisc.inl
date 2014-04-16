@@ -25,7 +25,7 @@
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMQuaternionEqual
+inline bool XMQuaternionEqual
 (
     FXMVECTOR Q1,
     FXMVECTOR Q2
@@ -36,7 +36,7 @@ inline bool XM_CALLCONV XMQuaternionEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMQuaternionNotEqual
+inline bool XMQuaternionNotEqual
 (
     FXMVECTOR Q1,
     FXMVECTOR Q2
@@ -47,7 +47,7 @@ inline bool XM_CALLCONV XMQuaternionNotEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMQuaternionIsNaN
+inline bool XMQuaternionIsNaN
 (
     FXMVECTOR Q
 )
@@ -57,7 +57,7 @@ inline bool XM_CALLCONV XMQuaternionIsNaN
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMQuaternionIsInfinite
+inline bool XMQuaternionIsInfinite
 (
     FXMVECTOR Q
 )
@@ -67,7 +67,7 @@ inline bool XM_CALLCONV XMQuaternionIsInfinite
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMQuaternionIsIdentity
+inline bool XMQuaternionIsIdentity
 (
     FXMVECTOR Q
 )
@@ -84,7 +84,7 @@ inline bool XM_CALLCONV XMQuaternionIsIdentity
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionDot
+inline XMVECTOR XMQuaternionDot
 (
     FXMVECTOR Q1,
     FXMVECTOR Q2
@@ -95,7 +95,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionDot
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionMultiply
+inline XMVECTOR XMQuaternionMultiply
 (
     FXMVECTOR Q1,
     FXMVECTOR Q2
@@ -120,16 +120,17 @@ inline XMVECTOR XM_CALLCONV XMQuaternionMultiply
     static const XMVECTORF32 ControlZWXY = { 1.0f, 1.0f,-1.0f,-1.0f};
     static const XMVECTORF32 ControlYXWZ = {-1.0f, 1.0f, 1.0f,-1.0f};
 
-    float32x2_t Q2L = vget_low_f32(Q2);
-    float32x2_t Q2H = vget_high_f32(Q2);
+    __n64 Q2L = vget_low_f32(Q2);
+    __n64 Q2H = vget_high_f32(Q2);
 
-    float32x4_t Q2X = vdupq_lane_f32( Q2L, 0 );
-    float32x4_t Q2Y = vdupq_lane_f32( Q2L, 1 );
-    float32x4_t Q2Z = vdupq_lane_f32( Q2H, 0 );
-    XMVECTOR vResult = XM_VMULQ_LANE_F32(Q1, Q2H, 1);
+    __n128 Q2X = vdupq_lane_f32( Q2L, 0 );
+    __n128 Q2Y = vdupq_lane_f32( Q2L, 1 );
+    __n128 Q2Z = vdupq_lane_f32( Q2H, 0 );
+    __n128 vResult = vdupq_lane_f32( Q2H, 1 );
+    vResult = vmulq_f32(vResult,Q1);
 
     // Mul by Q1WZYX
-    float32x4_t vTemp = vrev64q_f32(Q1);
+    __n128 vTemp = vrev64q_u32(Q1);
     vTemp = vcombine_f32( vget_high_f32(vTemp), vget_low_f32(vTemp) );
     Q2X = vmulq_f32(Q2X,vTemp);
     vResult = vmlaq_f32( vResult, Q2X, ControlWZYX );
@@ -188,7 +189,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionMultiply
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionLengthSq
+inline XMVECTOR XMQuaternionLengthSq
 (
     FXMVECTOR Q
 )
@@ -198,7 +199,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionLengthSq
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionReciprocalLength
+inline XMVECTOR XMQuaternionReciprocalLength
 (
     FXMVECTOR Q
 )
@@ -208,7 +209,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionReciprocalLength
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionLength
+inline XMVECTOR XMQuaternionLength
 (
     FXMVECTOR Q
 )
@@ -218,7 +219,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionLength
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionNormalizeEst
+inline XMVECTOR XMQuaternionNormalizeEst
 (
     FXMVECTOR Q
 )
@@ -228,7 +229,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionNormalizeEst
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionNormalize
+inline XMVECTOR XMQuaternionNormalize
 (
     FXMVECTOR Q
 )
@@ -238,7 +239,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionNormalize
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionConjugate
+inline XMVECTOR XMQuaternionConjugate
 (
     FXMVECTOR Q
 )
@@ -263,7 +264,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionConjugate
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionInverse
+inline XMVECTOR XMQuaternionInverse
 (
     FXMVECTOR Q
 )
@@ -289,7 +290,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionInverse
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionLn
+inline XMVECTOR XMQuaternionLn
 (
     FXMVECTOR Q
 )
@@ -319,7 +320,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionLn
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionExp
+inline XMVECTOR XMQuaternionExp
 (
     FXMVECTOR Q
 )
@@ -349,7 +350,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionExp
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionSlerp
+inline XMVECTOR XMQuaternionSlerp
 (
     FXMVECTOR Q0,
     FXMVECTOR Q1,
@@ -362,7 +363,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionSlerp
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionSlerpV
+inline XMVECTOR XMQuaternionSlerpV
 (
     FXMVECTOR Q0,
     FXMVECTOR Q1,
@@ -462,7 +463,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionSlerpV
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionSquad
+inline XMVECTOR XMQuaternionSquad
 (
     FXMVECTOR Q0,
     FXMVECTOR Q1,
@@ -477,13 +478,13 @@ inline XMVECTOR XM_CALLCONV XMQuaternionSquad
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionSquadV
+inline XMVECTOR XMQuaternionSquadV
 (
     FXMVECTOR Q0,
     FXMVECTOR Q1,
     FXMVECTOR Q2,
     GXMVECTOR Q3,
-    HXMVECTOR T
+    CXMVECTOR T
 )
 {
     assert( (XMVectorGetY(T) == XMVectorGetX(T)) && (XMVectorGetZ(T) == XMVectorGetX(T)) && (XMVectorGetW(T) == XMVectorGetX(T)) );
@@ -504,7 +505,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionSquadV
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV XMQuaternionSquadSetup
+inline void XMQuaternionSquadSetup
 (
     XMVECTOR* pA,
     XMVECTOR* pB,
@@ -562,7 +563,7 @@ inline void XM_CALLCONV XMQuaternionSquadSetup
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionBaryCentric
+inline XMVECTOR XMQuaternionBaryCentric
 (
     FXMVECTOR Q0,
     FXMVECTOR Q1,
@@ -591,13 +592,13 @@ inline XMVECTOR XM_CALLCONV XMQuaternionBaryCentric
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionBaryCentricV
+inline XMVECTOR XMQuaternionBaryCentricV
 (
     FXMVECTOR Q0,
     FXMVECTOR Q1,
     FXMVECTOR Q2,
     GXMVECTOR F,
-    HXMVECTOR G
+    CXMVECTOR G
 )
 {
     assert( (XMVectorGetY(F) == XMVectorGetX(F)) && (XMVectorGetZ(F) == XMVectorGetX(F)) && (XMVectorGetW(F) == XMVectorGetX(F)) );
@@ -631,7 +632,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionBaryCentricV
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionIdentity()
+inline XMVECTOR XMQuaternionIdentity()
 {
 #if defined(_XM_NO_INTRINSICS_) || defined(_XM_SSE_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
     return g_XMIdentityR3.v;
@@ -641,7 +642,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionIdentity()
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionRotationRollPitchYaw
+inline XMVECTOR XMQuaternionRotationRollPitchYaw
 (
     float Pitch,
     float Yaw,
@@ -655,7 +656,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionRotationRollPitchYaw
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionRotationRollPitchYawFromVector
+inline XMVECTOR XMQuaternionRotationRollPitchYawFromVector
 (
     FXMVECTOR Angles // <Pitch, Yaw, Roll, 0>
 )
@@ -690,7 +691,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionRotationRollPitchYawFromVector
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionRotationNormal
+inline XMVECTOR XMQuaternionRotationNormal
 (
     FXMVECTOR NormalAxis,
     float    Angle
@@ -723,7 +724,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionRotationNormal
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionRotationAxis
+inline XMVECTOR XMQuaternionRotationAxis
 (
     FXMVECTOR Axis,
     float    Angle
@@ -742,9 +743,9 @@ inline XMVECTOR XM_CALLCONV XMQuaternionRotationAxis
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMQuaternionRotationMatrix
+inline XMVECTOR XMQuaternionRotationMatrix
 (
-    FXMMATRIX M
+    CXMMATRIX M
 )
 {
 #if defined(_XM_NO_INTRINSICS_)
@@ -991,7 +992,7 @@ inline XMVECTOR XM_CALLCONV XMQuaternionRotationMatrix
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV XMQuaternionToAxisAngle
+inline void XMQuaternionToAxisAngle
 (
     XMVECTOR* pAxis,
     float*    pAngle,
@@ -1018,7 +1019,7 @@ inline void XM_CALLCONV XMQuaternionToAxisAngle
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMPlaneEqual
+inline bool XMPlaneEqual
 (
     FXMVECTOR P1,
     FXMVECTOR P2
@@ -1029,7 +1030,7 @@ inline bool XM_CALLCONV XMPlaneEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMPlaneNearEqual
+inline bool XMPlaneNearEqual
 (
     FXMVECTOR P1,
     FXMVECTOR P2,
@@ -1043,7 +1044,7 @@ inline bool XM_CALLCONV XMPlaneNearEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMPlaneNotEqual
+inline bool XMPlaneNotEqual
 (
     FXMVECTOR P1,
     FXMVECTOR P2
@@ -1054,7 +1055,7 @@ inline bool XM_CALLCONV XMPlaneNotEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMPlaneIsNaN
+inline bool XMPlaneIsNaN
 (
     FXMVECTOR P
 )
@@ -1064,7 +1065,7 @@ inline bool XM_CALLCONV XMPlaneIsNaN
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMPlaneIsInfinite
+inline bool XMPlaneIsInfinite
 (
     FXMVECTOR P
 )
@@ -1078,7 +1079,7 @@ inline bool XM_CALLCONV XMPlaneIsInfinite
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMPlaneDot
+inline XMVECTOR XMPlaneDot
 (
     FXMVECTOR P,
     FXMVECTOR V
@@ -1089,7 +1090,7 @@ inline XMVECTOR XM_CALLCONV XMPlaneDot
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMPlaneDotCoord
+inline XMVECTOR XMPlaneDotCoord
 (
     FXMVECTOR P,
     FXMVECTOR V
@@ -1109,7 +1110,7 @@ inline XMVECTOR XM_CALLCONV XMPlaneDotCoord
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMPlaneDotNormal
+inline XMVECTOR XMPlaneDotNormal
 (
     FXMVECTOR P,
     FXMVECTOR V
@@ -1122,7 +1123,7 @@ inline XMVECTOR XM_CALLCONV XMPlaneDotNormal
 // XMPlaneNormalizeEst uses a reciprocal estimate and
 // returns QNaN on zero and infinite vectors.
 
-inline XMVECTOR XM_CALLCONV XMPlaneNormalizeEst
+inline XMVECTOR XMPlaneNormalizeEst
 (
     FXMVECTOR P
 )
@@ -1156,7 +1157,7 @@ inline XMVECTOR XM_CALLCONV XMPlaneNormalizeEst
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMPlaneNormalize
+inline XMVECTOR XMPlaneNormalize
 (
     FXMVECTOR P
 )
@@ -1203,7 +1204,7 @@ inline XMVECTOR XM_CALLCONV XMPlaneNormalize
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMPlaneIntersectLine
+inline XMVECTOR XMPlaneIntersectLine
 (
     FXMVECTOR P,
     FXMVECTOR LinePoint1,
@@ -1233,7 +1234,7 @@ inline XMVECTOR XM_CALLCONV XMPlaneIntersectLine
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline void XM_CALLCONV XMPlaneIntersectPlane
+inline void XMPlaneIntersectPlane
 (
     XMVECTOR* pLinePoint1,
     XMVECTOR* pLinePoint2,
@@ -1273,10 +1274,10 @@ inline void XM_CALLCONV XMPlaneIntersectPlane
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMPlaneTransform
+inline XMVECTOR XMPlaneTransform
 (
     FXMVECTOR P,
-    FXMMATRIX M
+    CXMMATRIX M
 )
 {
 #if defined(_XM_NO_INTRINSICS_) || defined(_XM_SSE_INTRINSICS_) || defined(_XM_ARM_NEON_INTRINSICS_)
@@ -1298,14 +1299,14 @@ inline XMVECTOR XM_CALLCONV XMPlaneTransform
 
 //------------------------------------------------------------------------------
 _Use_decl_annotations_
-inline XMFLOAT4* XM_CALLCONV XMPlaneTransformStream
+inline XMFLOAT4* XMPlaneTransformStream
 (
     XMFLOAT4*       pOutputStream,
     size_t          OutputStride,
     const XMFLOAT4* pInputStream,    
     size_t          InputStride,
     size_t          PlaneCount,
-    FXMMATRIX       M
+    CXMMATRIX       M
 )
 {
     return XMVector4TransformStream(pOutputStream,
@@ -1322,7 +1323,7 @@ inline XMFLOAT4* XM_CALLCONV XMPlaneTransformStream
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMPlaneFromPointNormal
+inline XMVECTOR XMPlaneFromPointNormal
 (
     FXMVECTOR Point,
     FXMVECTOR Normal
@@ -1335,7 +1336,7 @@ inline XMVECTOR XM_CALLCONV XMPlaneFromPointNormal
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMPlaneFromPoints
+inline XMVECTOR XMPlaneFromPoints
 (
     FXMVECTOR Point1,
     FXMVECTOR Point2,
@@ -1373,7 +1374,7 @@ inline XMVECTOR XM_CALLCONV XMPlaneFromPoints
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMColorEqual
+inline bool XMColorEqual
 (
     FXMVECTOR C1,
     FXMVECTOR C2
@@ -1384,7 +1385,7 @@ inline bool XM_CALLCONV XMColorEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMColorNotEqual
+inline bool XMColorNotEqual
 (
     FXMVECTOR C1,
     FXMVECTOR C2
@@ -1395,7 +1396,7 @@ inline bool XM_CALLCONV XMColorNotEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMColorGreater
+inline bool XMColorGreater
 (
     FXMVECTOR C1,
     FXMVECTOR C2
@@ -1406,7 +1407,7 @@ inline bool XM_CALLCONV XMColorGreater
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMColorGreaterOrEqual
+inline bool XMColorGreaterOrEqual
 (
     FXMVECTOR C1,
     FXMVECTOR C2
@@ -1417,7 +1418,7 @@ inline bool XM_CALLCONV XMColorGreaterOrEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMColorLess
+inline bool XMColorLess
 (
     FXMVECTOR C1,
     FXMVECTOR C2
@@ -1428,7 +1429,7 @@ inline bool XM_CALLCONV XMColorLess
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMColorLessOrEqual
+inline bool XMColorLessOrEqual
 (
     FXMVECTOR C1,
     FXMVECTOR C2
@@ -1439,7 +1440,7 @@ inline bool XM_CALLCONV XMColorLessOrEqual
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMColorIsNaN
+inline bool XMColorIsNaN
 (
     FXMVECTOR C
 )
@@ -1449,7 +1450,7 @@ inline bool XM_CALLCONV XMColorIsNaN
 
 //------------------------------------------------------------------------------
 
-inline bool XM_CALLCONV XMColorIsInfinite
+inline bool XMColorIsInfinite
 (
     FXMVECTOR C
 )
@@ -1463,7 +1464,7 @@ inline bool XM_CALLCONV XMColorIsInfinite
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorNegative
+inline XMVECTOR XMColorNegative
 (
     FXMVECTOR vColor
 )
@@ -1490,7 +1491,7 @@ inline XMVECTOR XM_CALLCONV XMColorNegative
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorModulate
+inline XMVECTOR XMColorModulate
 (
     FXMVECTOR C1,
     FXMVECTOR C2
@@ -1501,7 +1502,7 @@ inline XMVECTOR XM_CALLCONV XMColorModulate
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorAdjustSaturation
+inline XMVECTOR XMColorAdjustSaturation
 (
     FXMVECTOR vColor,
     float    fSaturation
@@ -1525,7 +1526,8 @@ inline XMVECTOR XM_CALLCONV XMColorAdjustSaturation
     static const XMVECTORF32 gvLuminance = {0.2125f, 0.7154f, 0.0721f, 0.0f};
     XMVECTOR vLuminance = XMVector3Dot( vColor, gvLuminance );
     XMVECTOR vResult = vsubq_f32(vColor, vLuminance);
-    vResult = XM_VMLAQ_N_F32( vLuminance, vResult, fSaturation );
+    XMVECTOR vSaturation = vdupq_n_f32(fSaturation);
+    vResult = vmlaq_f32( vLuminance, vResult, vSaturation );
     return vbslq_f32( g_XMSelect1110, vResult, vColor );
 #elif defined(_XM_SSE_INTRINSICS_)
     static const XMVECTORF32 gvLuminance = {0.2125f, 0.7154f, 0.0721f, 0.0f};
@@ -1546,7 +1548,7 @@ inline XMVECTOR XM_CALLCONV XMColorAdjustSaturation
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorAdjustContrast
+inline XMVECTOR XMColorAdjustContrast
 (
     FXMVECTOR vColor,
     float    fContrast
@@ -1564,7 +1566,8 @@ inline XMVECTOR XM_CALLCONV XMColorAdjustContrast
     return vResult.v;
 #elif defined(_XM_ARM_NEON_INTRINSICS_)
     XMVECTOR vResult = vsubq_f32(vColor, g_XMOneHalf.v);
-    vResult = XM_VMLAQ_N_F32( g_XMOneHalf.v, vResult, fContrast );
+    XMVECTOR vContrast = vdupq_n_f32(fContrast);
+    vResult = vmlaq_f32( g_XMOneHalf.v, vResult, vContrast );
     return vbslq_f32( g_XMSelect1110, vResult, vColor );
 #elif defined(_XM_SSE_INTRINSICS_)
     XMVECTOR vScale = _mm_set_ps1(fContrast);           // Splat the scale
@@ -1581,7 +1584,7 @@ inline XMVECTOR XM_CALLCONV XMColorAdjustContrast
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorRGBToHSL( FXMVECTOR rgb )
+inline XMVECTOR XMColorRGBToHSL( FXMVECTOR rgb )
 {
     XMVECTOR r = XMVectorSplatX( rgb );
     XMVECTOR g = XMVectorSplatY( rgb );
@@ -1651,7 +1654,7 @@ inline XMVECTOR XM_CALLCONV XMColorRGBToHSL( FXMVECTOR rgb )
 namespace Internal
 {
 
-inline XMVECTOR XM_CALLCONV XMColorHue2Clr( FXMVECTOR p, FXMVECTOR q, FXMVECTOR h )
+inline XMVECTOR XMColorHue2Clr( FXMVECTOR p, FXMVECTOR q, FXMVECTOR h )
 {
     static const XMVECTORF32 oneSixth  = { 1.0f/6.0f, 1.0f/6.0f, 1.0f/6.0f, 1.0f/6.0f };
     static const XMVECTORF32 twoThirds = { 2.0f/3.0f, 2.0f/3.0f, 2.0f/3.0f, 2.0f/3.0f };
@@ -1688,7 +1691,7 @@ inline XMVECTOR XM_CALLCONV XMColorHue2Clr( FXMVECTOR p, FXMVECTOR q, FXMVECTOR 
 
 }; // namespace Internal
 
-inline XMVECTOR XM_CALLCONV XMColorHSLToRGB( FXMVECTOR hsl )
+inline XMVECTOR XMColorHSLToRGB( FXMVECTOR hsl )
 {
     static const XMVECTORF32 oneThird = { 1.0f/3.0f, 1.0f/3.0f, 1.0f/3.0f, 1.0f/3.0f };
 
@@ -1729,7 +1732,7 @@ inline XMVECTOR XM_CALLCONV XMColorHSLToRGB( FXMVECTOR hsl )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorRGBToHSV( FXMVECTOR rgb )
+inline XMVECTOR XMColorRGBToHSV( FXMVECTOR rgb )
 {
     XMVECTOR r = XMVectorSplatX( rgb );
     XMVECTOR g = XMVectorSplatY( rgb );
@@ -1784,7 +1787,7 @@ inline XMVECTOR XM_CALLCONV XMColorRGBToHSV( FXMVECTOR rgb )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorHSVToRGB( FXMVECTOR hsv )
+inline XMVECTOR XMColorHSVToRGB( FXMVECTOR hsv )
 {
     XMVECTOR h = XMVectorSplatX( hsv );
     XMVECTOR s = XMVectorSplatY( hsv );
@@ -1853,7 +1856,7 @@ inline XMVECTOR XM_CALLCONV XMColorHSVToRGB( FXMVECTOR hsv )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorRGBToYUV( FXMVECTOR rgb )
+inline XMVECTOR XMColorRGBToYUV( FXMVECTOR rgb )
 {
     static const XMVECTORF32 Scale0 = {  0.299f, -0.147f,  0.615f, 0.0f }; 
     static const XMVECTORF32 Scale1 = {  0.587f, -0.289f, -0.515f, 0.0f };
@@ -1867,7 +1870,7 @@ inline XMVECTOR XM_CALLCONV XMColorRGBToYUV( FXMVECTOR rgb )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorYUVToRGB( FXMVECTOR yuv )
+inline XMVECTOR XMColorYUVToRGB( FXMVECTOR yuv )
 {
     static const XMVECTORF32 Scale1 = {   0.0f, -0.395f, 2.032f, 0.0f };
     static const XMVECTORF32 Scale2 = { 1.140f, -0.581f,   0.0f, 0.0f };
@@ -1880,7 +1883,7 @@ inline XMVECTOR XM_CALLCONV XMColorYUVToRGB( FXMVECTOR yuv )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorRGBToYUV_HD( FXMVECTOR rgb )
+inline XMVECTOR XMColorRGBToYUV_HD( FXMVECTOR rgb )
 {
     static const XMVECTORF32 Scale0 = { 0.2126f, -0.0997f,  0.6150f, 0.0f };
     static const XMVECTORF32 Scale1 = { 0.7152f, -0.3354f, -0.5586f, 0.0f };
@@ -1894,7 +1897,7 @@ inline XMVECTOR XM_CALLCONV XMColorRGBToYUV_HD( FXMVECTOR rgb )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorYUVToRGB_HD( FXMVECTOR yuv )
+inline XMVECTOR XMColorYUVToRGB_HD( FXMVECTOR yuv )
 {
     static const XMVECTORF32 Scale1 = {    0.0f, -0.2153f, 2.1324f, 0.0f };
     static const XMVECTORF32 Scale2 = { 1.2803f, -0.3806f,    0.0f, 0.0f };
@@ -1907,7 +1910,7 @@ inline XMVECTOR XM_CALLCONV XMColorYUVToRGB_HD( FXMVECTOR yuv )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorRGBToXYZ( FXMVECTOR rgb )
+inline XMVECTOR XMColorRGBToXYZ( FXMVECTOR rgb )
 {
     static const XMVECTORF32 Scale0 = { 0.4887180f, 0.1762044f, 0.0000000f, 0.0f };
     static const XMVECTORF32 Scale1 = { 0.3106803f, 0.8129847f, 0.0102048f, 0.0f };
@@ -1920,7 +1923,7 @@ inline XMVECTOR XM_CALLCONV XMColorRGBToXYZ( FXMVECTOR rgb )
     return XMVectorSelect( rgb, clr, g_XMSelect1110 );
 }
 
-inline XMVECTOR XM_CALLCONV XMColorXYZToRGB( FXMVECTOR xyz )
+inline XMVECTOR XMColorXYZToRGB( FXMVECTOR xyz )
 {
     static const XMVECTORF32 Scale0 = {  2.3706743f, -0.5138850f,  0.0052982f, 0.0f };
     static const XMVECTORF32 Scale1 = { -0.9000405f,  1.4253036f, -0.0146949f, 0.0f };
@@ -1935,7 +1938,7 @@ inline XMVECTOR XM_CALLCONV XMColorXYZToRGB( FXMVECTOR xyz )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorXYZToSRGB( FXMVECTOR xyz )
+inline XMVECTOR XMColorXYZToSRGB( FXMVECTOR xyz )
 {
     static const XMVECTORF32 Scale0 = {  3.2406f, -0.9689f,  0.0557f, 0.0f };
     static const XMVECTORF32 Scale1 = { -1.5372f,  1.8758f, -0.2040f, 0.0f };
@@ -1961,7 +1964,7 @@ inline XMVECTOR XM_CALLCONV XMColorXYZToSRGB( FXMVECTOR xyz )
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMColorSRGBToXYZ( FXMVECTOR srgb )
+inline XMVECTOR XMColorSRGBToXYZ( FXMVECTOR srgb )
 {
     static const XMVECTORF32 Scale0 = { 0.4124f, 0.2126f, 0.0193f, 0.0f };
     static const XMVECTORF32 Scale1 = { 0.3576f, 0.7152f, 0.1192f, 0.0f };
@@ -1985,42 +1988,6 @@ inline XMVECTOR XM_CALLCONV XMColorSRGBToXYZ( FXMVECTOR srgb )
     return XMVectorSelect( srgb, clr, g_XMSelect1110 );
 }
 
-//------------------------------------------------------------------------------
-
-inline XMVECTOR XM_CALLCONV XMColorRGBToSRGB( FXMVECTOR rgb )
-{
-    static const XMVECTORF32 Cutoff = { 0.0031308f, 0.0031308f, 0.0031308f, 1.f };
-    static const XMVECTORF32 Linear = { 12.92f, 12.92f, 12.92f, 1.f };
-    static const XMVECTORF32 Scale = { 1.055f, 1.055f, 1.055f, 1.f };
-    static const XMVECTORF32 Bias = { 0.055f, 0.055f, 0.055f, 0.f };
-    static const XMVECTORF32 InvGamma = { 1.0f/2.4f, 1.0f/2.4f, 1.0f/2.4f, 1.f };
-
-    XMVECTOR V = XMVectorSaturate(rgb);
-    XMVECTOR V0 = XMVectorMultiply( V, Linear );
-    XMVECTOR V1 = Scale * XMVectorPow( V, InvGamma ) - Bias;
-    XMVECTOR select = XMVectorLess( V, Cutoff );
-    V = XMVectorSelect( V1, V0, select );
-    return XMVectorSelect( rgb, V, g_XMSelect1110 );
-}
-
-//------------------------------------------------------------------------------
-
-inline XMVECTOR XM_CALLCONV XMColorSRGBToRGB( FXMVECTOR srgb )
-{
-    static const XMVECTORF32 Cutoff = { 0.04045f, 0.04045f, 0.04045f, 1.f };
-    static const XMVECTORF32 ILinear = { 1.f/12.92f, 1.f/12.92f, 1.f/12.92f, 1.f };
-    static const XMVECTORF32 Scale = { 1.f/1.055f, 1.f/1.055f, 1.f/1.055f, 1.f };
-    static const XMVECTORF32 Bias = { 0.055f, 0.055f, 0.055f, 0.f };
-    static const XMVECTORF32 Gamma = { 2.4f, 2.4f, 2.4f, 1.f };
-
-    XMVECTOR V = XMVectorSaturate(srgb);
-    XMVECTOR V0 = XMVectorMultiply( V, ILinear );
-    XMVECTOR V1 = XMVectorPow( (V + Bias) * Scale, Gamma );
-    XMVECTOR select = XMVectorGreater( V, Cutoff );
-    V = XMVectorSelect( V0, V1, select );
-    return XMVectorSelect( srgb, V, g_XMSelect1110 );
-}
-
 /****************************************************************************
  *
  * Miscellaneous
@@ -2032,7 +1999,7 @@ inline XMVECTOR XM_CALLCONV XMColorSRGBToRGB( FXMVECTOR srgb )
 inline bool XMVerifyCPUSupport()
 {
 #if defined(_XM_SSE_INTRINSICS_) && !defined(_XM_NO_INTRINSICS_)
-#if defined(_M_X64)
+#if defined(_M_AMD64)
     // The X64 processor model requires SSE2 support
     return true;
 #elif defined(PF_XMMI_INSTRUCTIONS_AVAILABLE)
@@ -2057,7 +2024,7 @@ inline bool XMVerifyCPUSupport()
 
 //------------------------------------------------------------------------------
 
-inline XMVECTOR XM_CALLCONV XMFresnelTerm
+inline XMVECTOR XMFresnelTerm
 (
     FXMVECTOR CosIncidentAngle,
     FXMVECTOR RefractionIndex

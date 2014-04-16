@@ -895,40 +895,39 @@ HALF*           XMConvertFloatToHalfStream(_Out_writes_bytes_(sizeof(HALF)+Outpu
  *
  ****************************************************************************/
 
-XMVECTOR    XM_CALLCONV     XMLoadColor(_In_ const XMCOLOR* pSource);
+XMVECTOR        XMLoadColor(_In_ const XMCOLOR* pSource);
 
-XMVECTOR    XM_CALLCONV     XMLoadHalf2(_In_ const XMHALF2* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadShortN2(_In_ const XMSHORTN2* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadShort2(_In_ const XMSHORT2* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUShortN2(_In_ const XMUSHORTN2* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUShort2(_In_ const XMUSHORT2* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadByteN2(_In_ const XMBYTEN2* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadByte2(_In_ const XMBYTE2* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUByteN2(_In_ const XMUBYTEN2* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUByte2(_In_ const XMUBYTE2* pSource);
+XMVECTOR        XMLoadHalf2(_In_ const XMHALF2* pSource);
+XMVECTOR        XMLoadShortN2(_In_ const XMSHORTN2* pSource);
+XMVECTOR        XMLoadShort2(_In_ const XMSHORT2* pSource);
+XMVECTOR        XMLoadUShortN2(_In_ const XMUSHORTN2* pSource);
+XMVECTOR        XMLoadUShort2(_In_ const XMUSHORT2* pSource);
+XMVECTOR        XMLoadByteN2(_In_ const XMBYTEN2* pSource);
+XMVECTOR        XMLoadByte2(_In_ const XMBYTE2* pSource);
+XMVECTOR        XMLoadUByteN2(_In_ const XMUBYTEN2* pSource);
+XMVECTOR        XMLoadUByte2(_In_ const XMUBYTE2* pSource);
 
-XMVECTOR    XM_CALLCONV     XMLoadU565(_In_ const XMU565* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadFloat3PK(_In_ const XMFLOAT3PK* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadFloat3SE(_In_ const XMFLOAT3SE* pSource);
+XMVECTOR        XMLoadU565(_In_ const XMU565* pSource);
+XMVECTOR        XMLoadFloat3PK(_In_ const XMFLOAT3PK* pSource);
+XMVECTOR        XMLoadFloat3SE(_In_ const XMFLOAT3SE* pSource);
 
-XMVECTOR    XM_CALLCONV     XMLoadHalf4(_In_ const XMHALF4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadShortN4(_In_ const XMSHORTN4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadShort4(_In_ const XMSHORT4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUShortN4(_In_ const XMUSHORTN4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUShort4(_In_ const XMUSHORT4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadXDecN4(_In_ const XMXDECN4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadXDec4(_In_ const XMXDEC4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadDecN4(_In_ const XMDECN4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadDec4(_In_ const XMDEC4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUDecN4(_In_ const XMUDECN4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUDecN4_XR(_In_ const XMUDECN4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUDec4(_In_ const XMUDEC4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadByteN4(_In_ const XMBYTEN4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadByte4(_In_ const XMBYTE4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUByteN4(_In_ const XMUBYTEN4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUByte4(_In_ const XMUBYTE4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadUNibble4(_In_ const XMUNIBBLE4* pSource);
-XMVECTOR    XM_CALLCONV     XMLoadU555(_In_ const XMU555* pSource);
+XMVECTOR        XMLoadHalf4(_In_ const XMHALF4* pSource);
+XMVECTOR        XMLoadShortN4(_In_ const XMSHORTN4* pSource);
+XMVECTOR        XMLoadShort4(_In_ const XMSHORT4* pSource);
+XMVECTOR        XMLoadUShortN4(_In_ const XMUSHORTN4* pSource);
+XMVECTOR        XMLoadUShort4(_In_ const XMUSHORT4* pSource);
+XMVECTOR        XMLoadXDecN4(_In_ const XMXDECN4* pSource);
+XMVECTOR        XMLoadXDec4(_In_ const XMXDEC4* pSource);
+XMVECTOR        XMLoadDecN4(_In_ const XMDECN4* pSource);
+XMVECTOR        XMLoadDec4(_In_ const XMDEC4* pSource);
+XMVECTOR        XMLoadUDecN4(_In_ const XMUDECN4* pSource);
+XMVECTOR        XMLoadUDec4(_In_ const XMUDEC4* pSource);
+XMVECTOR        XMLoadByteN4(_In_ const XMBYTEN4* pSource);
+XMVECTOR        XMLoadByte4(_In_ const XMBYTE4* pSource);
+XMVECTOR        XMLoadUByteN4(_In_ const XMUBYTEN4* pSource);
+XMVECTOR        XMLoadUByte4(_In_ const XMUBYTE4* pSource);
+XMVECTOR        XMLoadUNibble4(_In_ const XMUNIBBLE4* pSource);
+XMVECTOR        XMLoadU555(_In_ const XMU555* pSource);
 
 
 /****************************************************************************
@@ -937,40 +936,39 @@ XMVECTOR    XM_CALLCONV     XMLoadU555(_In_ const XMU555* pSource);
  *
  ****************************************************************************/
 
-void    XM_CALLCONV     XMStoreColor(_Out_ XMCOLOR* pDestination, _In_ FXMVECTOR V);
+void            XMStoreColor(_Out_ XMCOLOR* pDestination, _In_ FXMVECTOR V);
 
-void    XM_CALLCONV     XMStoreHalf2(_Out_ XMHALF2* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreShortN2(_Out_ XMSHORTN2* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreShort2(_Out_ XMSHORT2* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUShortN2(_Out_ XMUSHORTN2* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUShort2(_Out_ XMUSHORT2* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreByteN2(_Out_ XMBYTEN2* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreByte2(_Out_ XMBYTE2* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUByteN2(_Out_ XMUBYTEN2* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUByte2(_Out_ XMUBYTE2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreHalf2(_Out_ XMHALF2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreShortN2(_Out_ XMSHORTN2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreShort2(_Out_ XMSHORT2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUShortN2(_Out_ XMUSHORTN2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUShort2(_Out_ XMUSHORT2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreByteN2(_Out_ XMBYTEN2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreByte2(_Out_ XMBYTE2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUByteN2(_Out_ XMUBYTEN2* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUByte2(_Out_ XMUBYTE2* pDestination, _In_ FXMVECTOR V);
 
-void    XM_CALLCONV     XMStoreU565(_Out_ XMU565* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreFloat3PK(_Out_ XMFLOAT3PK* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreFloat3SE(_Out_ XMFLOAT3SE* pDestination, _In_ FXMVECTOR V);
+void            XMStoreU565(_Out_ XMU565* pDestination, _In_ FXMVECTOR V);
+void            XMStoreFloat3PK(_Out_ XMFLOAT3PK* pDestination, _In_ FXMVECTOR V);
+void            XMStoreFloat3SE(_Out_ XMFLOAT3SE* pDestination, _In_ FXMVECTOR V);
 
-void    XM_CALLCONV     XMStoreHalf4(_Out_ XMHALF4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreShortN4(_Out_ XMSHORTN4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreShort4(_Out_ XMSHORT4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUShortN4(_Out_ XMUSHORTN4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUShort4(_Out_ XMUSHORT4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreXDecN4(_Out_ XMXDECN4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreXDec4(_Out_ XMXDEC4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreDecN4(_Out_ XMDECN4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreDec4(_Out_ XMDEC4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUDecN4(_Out_ XMUDECN4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUDecN4_XR(_Out_ XMUDECN4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUDec4(_Out_ XMUDEC4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreByteN4(_Out_ XMBYTEN4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreByte4(_Out_ XMBYTE4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUByteN4(_Out_ XMUBYTEN4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUByte4(_Out_ XMUBYTE4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreUNibble4(_Out_ XMUNIBBLE4* pDestination, _In_ FXMVECTOR V);
-void    XM_CALLCONV     XMStoreU555(_Out_ XMU555* pDestination, _In_ FXMVECTOR V);
+void            XMStoreHalf4(_Out_ XMHALF4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreShortN4(_Out_ XMSHORTN4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreShort4(_Out_ XMSHORT4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUShortN4(_Out_ XMUSHORTN4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUShort4(_Out_ XMUSHORT4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreXDecN4(_Out_ XMXDECN4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreXDec4(_Out_ XMXDEC4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreDecN4(_Out_ XMDECN4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreDec4(_Out_ XMDEC4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUDecN4(_Out_ XMUDECN4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUDec4(_Out_ XMUDEC4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreByteN4(_Out_ XMBYTEN4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreByte4(_Out_ XMBYTE4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUByteN4(_Out_ XMUBYTEN4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUByte4(_Out_ XMUBYTE4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreUNibble4(_Out_ XMUNIBBLE4* pDestination, _In_ FXMVECTOR V);
+void            XMStoreU555(_Out_ XMU555* pDestination, _In_ FXMVECTOR V);
 
 
 /****************************************************************************

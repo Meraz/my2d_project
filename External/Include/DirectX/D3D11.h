@@ -8,7 +8,7 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 8.00.0603 */
+ /* File created by MIDL compiler version 8.00.0595 */
 /* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
@@ -1047,11 +1047,6 @@ extern "C"{
 #define	D3D11_1_UAV_SLOT_COUNT	( 64 )
 
 #endif
-#ifndef _D3D11_2_CONSTANTS
-#define _D3D11_2_CONSTANTS
-#define	D3D11_2_TILED_RESOURCE_TILE_SIZE_IN_BYTES	( 65536 )
-
-#endif
 #define	_FACD3D11	( 0x87c )
 
 #define	_FACD3D11DEBUG	( ( _FACD3D11 + 1 )  )
@@ -1232,9 +1227,7 @@ enum D3D11_RESOURCE_MISC_FLAG
         D3D11_RESOURCE_MISC_RESTRICTED_CONTENT	= 0x1000L,
         D3D11_RESOURCE_MISC_RESTRICT_SHARED_RESOURCE	= 0x2000L,
         D3D11_RESOURCE_MISC_RESTRICT_SHARED_RESOURCE_DRIVER	= 0x4000L,
-        D3D11_RESOURCE_MISC_GUARDED	= 0x8000L,
-        D3D11_RESOURCE_MISC_TILE_POOL	= 0x20000L,
-        D3D11_RESOURCE_MISC_TILED	= 0x40000L
+        D3D11_RESOURCE_MISC_GUARDED	= 0x8000L
     } 	D3D11_RESOURCE_MISC_FLAG;
 
 typedef 
@@ -5751,25 +5744,7 @@ enum D3D11_FILTER
         D3D11_FILTER_COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR	= 0x91,
         D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT	= 0x94,
         D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR	= 0x95,
-        D3D11_FILTER_COMPARISON_ANISOTROPIC	= 0xd5,
-        D3D11_FILTER_MINIMUM_MIN_MAG_MIP_POINT	= 0x100,
-        D3D11_FILTER_MINIMUM_MIN_MAG_POINT_MIP_LINEAR	= 0x101,
-        D3D11_FILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT	= 0x104,
-        D3D11_FILTER_MINIMUM_MIN_POINT_MAG_MIP_LINEAR	= 0x105,
-        D3D11_FILTER_MINIMUM_MIN_LINEAR_MAG_MIP_POINT	= 0x110,
-        D3D11_FILTER_MINIMUM_MIN_LINEAR_MAG_POINT_MIP_LINEAR	= 0x111,
-        D3D11_FILTER_MINIMUM_MIN_MAG_LINEAR_MIP_POINT	= 0x114,
-        D3D11_FILTER_MINIMUM_MIN_MAG_MIP_LINEAR	= 0x115,
-        D3D11_FILTER_MINIMUM_ANISOTROPIC	= 0x155,
-        D3D11_FILTER_MAXIMUM_MIN_MAG_MIP_POINT	= 0x180,
-        D3D11_FILTER_MAXIMUM_MIN_MAG_POINT_MIP_LINEAR	= 0x181,
-        D3D11_FILTER_MAXIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT	= 0x184,
-        D3D11_FILTER_MAXIMUM_MIN_POINT_MAG_MIP_LINEAR	= 0x185,
-        D3D11_FILTER_MAXIMUM_MIN_LINEAR_MAG_MIP_POINT	= 0x190,
-        D3D11_FILTER_MAXIMUM_MIN_LINEAR_MAG_POINT_MIP_LINEAR	= 0x191,
-        D3D11_FILTER_MAXIMUM_MIN_MAG_LINEAR_MIP_POINT	= 0x194,
-        D3D11_FILTER_MAXIMUM_MIN_MAG_MIP_LINEAR	= 0x195,
-        D3D11_FILTER_MAXIMUM_ANISOTROPIC	= 0x1d5
+        D3D11_FILTER_COMPARISON_ANISOTROPIC	= 0xd5
     } 	D3D11_FILTER;
 
 typedef 
@@ -5779,19 +5754,6 @@ enum D3D11_FILTER_TYPE
         D3D11_FILTER_TYPE_LINEAR	= 1
     } 	D3D11_FILTER_TYPE;
 
-typedef 
-enum D3D11_FILTER_REDUCTION_TYPE
-    {
-        D3D11_FILTER_REDUCTION_TYPE_STANDARD	= 0,
-        D3D11_FILTER_REDUCTION_TYPE_COMPARISON	= 1,
-        D3D11_FILTER_REDUCTION_TYPE_MINIMUM	= 2,
-        D3D11_FILTER_REDUCTION_TYPE_MAXIMUM	= 3
-    } 	D3D11_FILTER_REDUCTION_TYPE;
-
-#define	D3D11_FILTER_REDUCTION_TYPE_MASK	( 0x3 )
-
-#define	D3D11_FILTER_REDUCTION_TYPE_SHIFT	( 7 )
-
 #define	D3D11_FILTER_TYPE_MASK	( 0x3 )
 
 #define	D3D11_MIN_FILTER_SHIFT	( 4 )
@@ -5800,26 +5762,23 @@ enum D3D11_FILTER_REDUCTION_TYPE
 
 #define	D3D11_MIP_FILTER_SHIFT	( 0 )
 
-// D3D11_COMPARISON_FILTERING_BIT is no longer used / meaningless.  The D3D11_FILTER_REDUCTION_TYPE enum replaced it. 
-// Old code that uses D3D11_COMPARISON_FILTERING_BIT and would never use D3D11_FILTER_MINIMUM_* or D3D11_FILTER_MAXIMUM_* 
-// will still work fine though, so the define is left to avoid breaks. 
 #define	D3D11_COMPARISON_FILTERING_BIT	( 0x80 )
 
 #define	D3D11_ANISOTROPIC_FILTERING_BIT	( 0x40 )
 
-#define D3D11_ENCODE_BASIC_FILTER( min, mag, mip, reduction )                                                     \
-                                   ( ( D3D11_FILTER ) (                                                           \
-                                   ( ( ( min ) & D3D11_FILTER_TYPE_MASK ) << D3D11_MIN_FILTER_SHIFT ) |           \
-                                   ( ( ( mag ) & D3D11_FILTER_TYPE_MASK ) << D3D11_MAG_FILTER_SHIFT ) |           \
-                                   ( ( ( mip ) & D3D11_FILTER_TYPE_MASK ) << D3D11_MIP_FILTER_SHIFT ) |           \
-                                   ( ( ( reduction ) & D3D11_FILTER_REDUCTION_TYPE_MASK ) << D3D11_FILTER_REDUCTION_TYPE_SHIFT ) ) ) 
-#define D3D11_ENCODE_ANISOTROPIC_FILTER( reduction )                                                  \
+#define D3D11_ENCODE_BASIC_FILTER( min, mag, mip, bComparison )                                           \
+                                   ( ( D3D11_FILTER ) (                                                   \
+                                   ( ( bComparison ) ? D3D11_COMPARISON_FILTERING_BIT : 0 ) |             \
+                                   ( ( ( min ) & D3D11_FILTER_TYPE_MASK ) << D3D11_MIN_FILTER_SHIFT ) |   \
+                                   ( ( ( mag ) & D3D11_FILTER_TYPE_MASK ) << D3D11_MAG_FILTER_SHIFT ) |   \
+                                   ( ( ( mip ) & D3D11_FILTER_TYPE_MASK ) << D3D11_MIP_FILTER_SHIFT ) ) )   
+#define D3D11_ENCODE_ANISOTROPIC_FILTER( bComparison )                                                \
                                          ( ( D3D11_FILTER ) (                                         \
                                          D3D11_ANISOTROPIC_FILTERING_BIT |                            \
                                          D3D11_ENCODE_BASIC_FILTER( D3D11_FILTER_TYPE_LINEAR,         \
                                                                     D3D11_FILTER_TYPE_LINEAR,         \
                                                                     D3D11_FILTER_TYPE_LINEAR,         \
-                                                                    reduction ) ) )                     
+                                                                    bComparison ) ) )                   
 #define D3D11_DECODE_MIN_FILTER( d3d11Filter )                                                              \
                                  ( ( D3D11_FILTER_TYPE )                                                    \
                                  ( ( ( d3d11Filter ) >> D3D11_MIN_FILTER_SHIFT ) & D3D11_FILTER_TYPE_MASK ) ) 
@@ -5829,11 +5788,8 @@ enum D3D11_FILTER_REDUCTION_TYPE
 #define D3D11_DECODE_MIP_FILTER( d3d11Filter )                                                              \
                                  ( ( D3D11_FILTER_TYPE )                                                    \
                                  ( ( ( d3d11Filter ) >> D3D11_MIP_FILTER_SHIFT ) & D3D11_FILTER_TYPE_MASK ) ) 
-#define D3D11_DECODE_FILTER_REDUCTION( d3d11Filter )                                                        \
-                                 ( ( D3D11_FILTER_REDUCTION_TYPE )                                                      \
-                                 ( ( ( d3d11Filter ) >> D3D11_FILTER_REDUCTION_TYPE_SHIFT ) & D3D11_FILTER_REDUCTION_TYPE_MASK ) ) 
 #define D3D11_DECODE_IS_COMPARISON_FILTER( d3d11Filter )                                                    \
-                                 ( D3D11_DECODE_FILTER_REDUCTION( d3d11Filter ) == D3D11_FILTER_REDUCTION_TYPE_COMPARISON ) 
+                                 ( ( d3d11Filter ) & D3D11_COMPARISON_FILTERING_BIT )                         
 #define D3D11_DECODE_IS_ANISOTROPIC_FILTER( d3d11Filter )                                               \
                             ( ( ( d3d11Filter ) & D3D11_ANISOTROPIC_FILTERING_BIT ) &&                  \
                             ( D3D11_FILTER_TYPE_LINEAR == D3D11_DECODE_MIN_FILTER( d3d11Filter ) ) &&   \
@@ -6101,9 +6057,7 @@ enum D3D11_FORMAT_SUPPORT2
         D3D11_FORMAT_SUPPORT2_UAV_ATOMIC_UNSIGNED_MIN_OR_MAX	= 0x20,
         D3D11_FORMAT_SUPPORT2_UAV_TYPED_LOAD	= 0x40,
         D3D11_FORMAT_SUPPORT2_UAV_TYPED_STORE	= 0x80,
-        D3D11_FORMAT_SUPPORT2_OUTPUT_MERGER_LOGIC_OP	= 0x100,
-        D3D11_FORMAT_SUPPORT2_TILED	= 0x200,
-        D3D11_FORMAT_SUPPORT2_SHAREABLE	= 0x400
+        D3D11_FORMAT_SUPPORT2_OUTPUT_MERGER_LOGIC_OP	= 0x100
     } 	D3D11_FORMAT_SUPPORT2;
 
 
@@ -7281,11 +7235,7 @@ enum D3D11_FEATURE
         D3D11_FEATURE_ARCHITECTURE_INFO	= ( D3D11_FEATURE_D3D11_OPTIONS + 1 ) ,
         D3D11_FEATURE_D3D9_OPTIONS	= ( D3D11_FEATURE_ARCHITECTURE_INFO + 1 ) ,
         D3D11_FEATURE_SHADER_MIN_PRECISION_SUPPORT	= ( D3D11_FEATURE_D3D9_OPTIONS + 1 ) ,
-        D3D11_FEATURE_D3D9_SHADOW_SUPPORT	= ( D3D11_FEATURE_SHADER_MIN_PRECISION_SUPPORT + 1 ) ,
-        D3D11_FEATURE_D3D11_OPTIONS1	= ( D3D11_FEATURE_D3D9_SHADOW_SUPPORT + 1 ) ,
-        D3D11_FEATURE_D3D9_SIMPLE_INSTANCING_SUPPORT	= ( D3D11_FEATURE_D3D11_OPTIONS1 + 1 ) ,
-        D3D11_FEATURE_MARKER_SUPPORT	= ( D3D11_FEATURE_D3D9_SIMPLE_INSTANCING_SUPPORT + 1 ) ,
-        D3D11_FEATURE_D3D9_OPTIONS1	= ( D3D11_FEATURE_MARKER_SUPPORT + 1 ) 
+        D3D11_FEATURE_D3D9_SHADOW_SUPPORT	= ( D3D11_FEATURE_SHADER_MIN_PRECISION_SUPPORT + 1 ) 
     } 	D3D11_FEATURE;
 
 typedef struct D3D11_FEATURE_DATA_THREADING
@@ -7374,40 +7324,6 @@ typedef struct D3D11_FEATURE_DATA_SHADER_MIN_PRECISION_SUPPORT
     UINT PixelShaderMinPrecision;
     UINT AllOtherShaderStagesMinPrecision;
     } 	D3D11_FEATURE_DATA_SHADER_MIN_PRECISION_SUPPORT;
-
-typedef 
-enum D3D11_TILED_RESOURCES_TIER
-    {
-        D3D11_TILED_RESOURCES_NOT_SUPPORTED	= 0,
-        D3D11_TILED_RESOURCES_TIER_1	= 1,
-        D3D11_TILED_RESOURCES_TIER_2	= 2
-    } 	D3D11_TILED_RESOURCES_TIER;
-
-typedef struct D3D11_FEATURE_DATA_D3D11_OPTIONS1
-    {
-    D3D11_TILED_RESOURCES_TIER TiledResourcesTier;
-    BOOL MinMaxFiltering;
-    BOOL ClearViewAlsoSupportsDepthOnlyFormats;
-    BOOL MapOnDefaultBuffers;
-    } 	D3D11_FEATURE_DATA_D3D11_OPTIONS1;
-
-typedef struct D3D11_FEATURE_DATA_D3D9_SIMPLE_INSTANCING_SUPPORT
-    {
-    BOOL SimpleInstancingSupported;
-    } 	D3D11_FEATURE_DATA_D3D9_SIMPLE_INSTANCING_SUPPORT;
-
-typedef struct D3D11_FEATURE_DATA_MARKER_SUPPORT
-    {
-    BOOL Profile;
-    } 	D3D11_FEATURE_DATA_MARKER_SUPPORT;
-
-typedef struct D3D11_FEATURE_DATA_D3D9_OPTIONS1
-    {
-    BOOL FullNonPow2TextureSupported;
-    BOOL DepthAsTextureWithLessEqualComparisonFilterSupported;
-    BOOL SimpleInstancingSupported;
-    BOOL TextureCubeFaceRenderTargetWithNonCubeDepthStencilSupported;
-    } 	D3D11_FEATURE_DATA_D3D9_OPTIONS1;
 
 
 
@@ -9572,11 +9488,6 @@ extern "C"{
 #endif
 
 
-#if !defined(APP_DEPRECATED_HRESULT) && !defined(APP_DEPRECATED_HRESULT_TYPEDEF)
-#define APP_DEPRECATED_HRESULT_TYPEDEF
-typedef HRESULT APP_DEPRECATED_HRESULT;
-
-#endif
 DEFINE_GUID(D3D11_DECODER_PROFILE_MPEG2_MOCOMP,      0xe6a9f44b, 0x61b0, 0x4563,0x9e,0xa4,0x63,0xd2,0xa3,0xc6,0xfe,0x66);
 DEFINE_GUID(D3D11_DECODER_PROFILE_MPEG2_IDCT,        0xbf22ad00, 0x03ea, 0x4690,0x80,0x77,0x47,0x33,0x46,0x20,0x9b,0x7e);
 DEFINE_GUID(D3D11_DECODER_PROFILE_MPEG2_VLD,         0xee27417f, 0x5e28, 0x4e65,0xbe,0xea,0x1d,0x26,0xb5,0x08,0xad,0xc9);
@@ -9605,8 +9516,6 @@ DEFINE_GUID(D3D11_DECODER_PROFILE_VC1_D2010,         0x1b81beA4, 0xa0c7,0x11d3,0
 DEFINE_GUID(D3D11_DECODER_PROFILE_MPEG4PT2_VLD_SIMPLE,           0xefd64d74, 0xc9e8,0x41d7,0xa5,0xe9,0xe9,0xb0,0xe3,0x9f,0xa3,0x19);
 DEFINE_GUID(D3D11_DECODER_PROFILE_MPEG4PT2_VLD_ADVSIMPLE_NOGMC,  0xed418a9f, 0x010d,0x4eda,0x9a,0xe3,0x9a,0x65,0x35,0x8d,0x8d,0x2e);
 DEFINE_GUID(D3D11_DECODER_PROFILE_MPEG4PT2_VLD_ADVSIMPLE_GMC,    0xab998b5b, 0x4258,0x44a9,0x9f,0xeb,0x94,0xe5,0x97,0xa6,0xba,0xae);
-DEFINE_GUID(D3D11_DECODER_PROFILE_HEVC_VLD_MAIN,     0x5b11d51b, 0x2f4c,0x4452,0xbc,0xc3,0x09,0xf2,0xa1,0x16,0x0c,0xc0);
-DEFINE_GUID(D3D11_DECODER_PROFILE_HEVC_VLD_MAIN10,   0x107af0e0, 0xef1a,0x4d19,0xab,0xa8,0x67,0xa1,0x63,0x07,0x3d,0x13);
 typedef struct D3D11_VIDEO_DECODER_DESC
     {
     GUID Guid;
@@ -9675,8 +9584,7 @@ typedef struct D3D11_VIDEO_DECODER_BUFFER_DESC
     UINT Height;
     UINT Stride;
     UINT ReservedBits;
-    /* [annotation] */ 
-    _Field_size_opt_(IVSize)  void *pIV;
+    void *pIV;
     UINT IVSize;
     BOOL PartialEncryption;
     D3D11_ENCRYPTED_BLOCK_INFO EncryptedBlockInfo;
@@ -9685,15 +9593,12 @@ typedef struct D3D11_VIDEO_DECODER_BUFFER_DESC
 typedef struct D3D11_VIDEO_DECODER_EXTENSION
     {
     UINT Function;
-    /* [annotation] */ 
-    _Field_size_(PrivateInputDataSize)  void *pPrivateInputData;
+    void *pPrivateInputData;
     UINT PrivateInputDataSize;
-    /* [annotation] */ 
-    _Field_size_(PrivateOutputDataSize)  void *pPrivateOutputData;
+    void *pPrivateOutputData;
     UINT PrivateOutputDataSize;
     UINT ResourceCount;
-    /* [annotation] */ 
-    _Field_size_opt_(ResourceCount)  ID3D11Resource **ppResourceList;
+    ID3D11Resource **ppResourceList;
     } 	D3D11_VIDEO_DECODER_EXTENSION;
 
 
@@ -9858,8 +9763,7 @@ enum D3D11_VIDEO_PROCESSOR_DEVICE_CAPS
         D3D11_VIDEO_PROCESSOR_DEVICE_CAPS_LINEAR_SPACE	= 0x1,
         D3D11_VIDEO_PROCESSOR_DEVICE_CAPS_xvYCC	= 0x2,
         D3D11_VIDEO_PROCESSOR_DEVICE_CAPS_RGB_RANGE_CONVERSION	= 0x4,
-        D3D11_VIDEO_PROCESSOR_DEVICE_CAPS_YCbCr_MATRIX_CONVERSION	= 0x8,
-        D3D11_VIDEO_PROCESSOR_DEVICE_CAPS_NOMINAL_RANGE	= 0x10
+        D3D11_VIDEO_PROCESSOR_DEVICE_CAPS_YCbCr_MATRIX_CONVERSION	= 0x8
     } 	D3D11_VIDEO_PROCESSOR_DEVICE_CAPS;
 
 typedef 
@@ -10289,22 +10193,13 @@ typedef struct D3D11_VIDEO_COLOR
         } 	;
     } 	D3D11_VIDEO_COLOR;
 
-typedef 
-enum D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE
-    {
-        D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_UNDEFINED	= 0,
-        D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_16_235	= 1,
-        D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE_0_255	= 2
-    } 	D3D11_VIDEO_PROCESSOR_NOMINAL_RANGE;
-
 typedef struct D3D11_VIDEO_PROCESSOR_COLOR_SPACE
     {
     UINT Usage	: 1;
     UINT RGB_Range	: 1;
     UINT YCbCr_Matrix	: 1;
     UINT YCbCr_xvYCC	: 1;
-    UINT Nominal_Range	: 2;
-    UINT Reserved	: 26;
+    UINT Reserved	: 28;
     } 	D3D11_VIDEO_PROCESSOR_COLOR_SPACE;
 
 typedef 
@@ -10361,16 +10256,12 @@ typedef struct D3D11_VIDEO_PROCESSOR_STREAM
     UINT InputFrameOrField;
     UINT PastFrames;
     UINT FutureFrames;
-    /* [annotation] */ 
-    _Field_size_(PastFrames)  ID3D11VideoProcessorInputView **ppPastSurfaces;
+    ID3D11VideoProcessorInputView **ppPastSurfaces;
     ID3D11VideoProcessorInputView *pInputSurface;
-    /* [annotation] */ 
-    _Field_size_(FutureFrames)  ID3D11VideoProcessorInputView **ppFutureSurfaces;
-    /* [annotation] */ 
-    _Field_size_opt_(PastFrames)  ID3D11VideoProcessorInputView **ppPastSurfacesRight;
+    ID3D11VideoProcessorInputView **ppFutureSurfaces;
+    ID3D11VideoProcessorInputView **ppPastSurfacesRight;
     ID3D11VideoProcessorInputView *pInputSurfaceRight;
-    /* [annotation] */ 
-    _Field_size_(FutureFrames)  ID3D11VideoProcessorInputView **ppFutureSurfacesRight;
+    ID3D11VideoProcessorInputView **ppFutureSurfacesRight;
     } 	D3D11_VIDEO_PROCESSOR_STREAM;
 
 
@@ -11638,11 +11529,12 @@ EXTERN_C const IID IID_ID3D11VideoContext;
         virtual HRESULT STDMETHODCALLTYPE GetDecoderBuffer( 
             /* [annotation] */ 
             _In_  ID3D11VideoDecoder *pDecoder,
-            D3D11_VIDEO_DECODER_BUFFER_TYPE Type,
+            /* [annotation] */ 
+            _In_  D3D11_VIDEO_DECODER_BUFFER_TYPE Type,
             /* [annotation] */ 
             _Out_  UINT *pBufferSize,
             /* [annotation] */ 
-            _Outptr_result_bytebuffer_(*pBufferSize)  void **ppBuffer) = 0;
+            _Out_writes_bytes_opt_(*pBufferSize)  void **ppBuffer) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE ReleaseDecoderBuffer( 
             /* [annotation] */ 
@@ -11655,7 +11547,8 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             _In_  ID3D11VideoDecoder *pDecoder,
             /* [annotation] */ 
             _In_  ID3D11VideoDecoderOutputView *pView,
-            UINT ContentKeySize,
+            /* [annotation] */ 
+            _In_  UINT ContentKeySize,
             /* [annotation] */ 
             _In_reads_bytes_opt_(ContentKeySize)  const void *pContentKey) = 0;
         
@@ -11671,7 +11564,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_reads_(NumBuffers)  const D3D11_VIDEO_DECODER_BUFFER_DESC *pBufferDesc) = 0;
         
-        virtual APP_DEPRECATED_HRESULT STDMETHODCALLTYPE DecoderExtension( 
+        virtual HRESULT STDMETHODCALLTYPE DecoderExtension( 
             /* [annotation] */ 
             _In_  ID3D11VideoDecoder *pDecoder,
             /* [annotation] */ 
@@ -11721,7 +11614,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  BOOL Enable) = 0;
         
-        virtual APP_DEPRECATED_HRESULT STDMETHODCALLTYPE VideoProcessorSetOutputExtension( 
+        virtual HRESULT STDMETHODCALLTYPE VideoProcessorSetOutputExtension( 
             /* [annotation] */ 
             _In_  ID3D11VideoProcessor *pVideoProcessor,
             /* [annotation] */ 
@@ -11775,7 +11668,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _Out_  BOOL *pEnabled) = 0;
         
-        virtual APP_DEPRECATED_HRESULT STDMETHODCALLTYPE VideoProcessorGetOutputExtension( 
+        virtual HRESULT STDMETHODCALLTYPE VideoProcessorGetOutputExtension( 
             /* [annotation] */ 
             _In_  ID3D11VideoProcessor *pVideoProcessor,
             /* [annotation] */ 
@@ -11783,7 +11676,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  UINT DataSize,
             /* [annotation] */ 
-            _Out_writes_bytes_(DataSize)  void *pData) = 0;
+            _Out_  void *pData) = 0;
         
         virtual void STDMETHODCALLTYPE VideoProcessorSetStreamFrameFormat( 
             /* [annotation] */ 
@@ -11915,7 +11808,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  int Level) = 0;
         
-        virtual APP_DEPRECATED_HRESULT STDMETHODCALLTYPE VideoProcessorSetStreamExtension( 
+        virtual HRESULT STDMETHODCALLTYPE VideoProcessorSetStreamExtension( 
             /* [annotation] */ 
             _In_  ID3D11VideoProcessor *pVideoProcessor,
             /* [annotation] */ 
@@ -12057,7 +11950,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _Out_  int *pLevel) = 0;
         
-        virtual APP_DEPRECATED_HRESULT STDMETHODCALLTYPE VideoProcessorGetStreamExtension( 
+        virtual HRESULT STDMETHODCALLTYPE VideoProcessorGetStreamExtension( 
             /* [annotation] */ 
             _In_  ID3D11VideoProcessor *pVideoProcessor,
             /* [annotation] */ 
@@ -12067,7 +11960,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  UINT DataSize,
             /* [annotation] */ 
-            _Out_writes_bytes_(DataSize)  void *pData) = 0;
+            _Out_  void *pData) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE VideoProcessorBlt( 
             /* [annotation] */ 
@@ -12099,7 +11992,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  UINT IVSize,
             /* [annotation] */ 
-            _Inout_opt_bytecount_(IVSize)  void *pIV) = 0;
+            _In_reads_bytes_opt_(IVSize)  void *pIV) = 0;
         
         virtual void STDMETHODCALLTYPE DecryptionBlt( 
             /* [annotation] */ 
@@ -12117,7 +12010,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  UINT IVSize,
             /* [annotation] */ 
-            _Inout_opt_bytecount_(IVSize)  void *pIV) = 0;
+            _In_reads_bytes_opt_(IVSize)  void *pIV) = 0;
         
         virtual void STDMETHODCALLTYPE StartSessionKeyRefresh( 
             /* [annotation] */ 
@@ -12244,11 +12137,12 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             ID3D11VideoContext * This,
             /* [annotation] */ 
             _In_  ID3D11VideoDecoder *pDecoder,
-            D3D11_VIDEO_DECODER_BUFFER_TYPE Type,
+            /* [annotation] */ 
+            _In_  D3D11_VIDEO_DECODER_BUFFER_TYPE Type,
             /* [annotation] */ 
             _Out_  UINT *pBufferSize,
             /* [annotation] */ 
-            _Outptr_result_bytebuffer_(*pBufferSize)  void **ppBuffer);
+            _Out_writes_bytes_opt_(*pBufferSize)  void **ppBuffer);
         
         HRESULT ( STDMETHODCALLTYPE *ReleaseDecoderBuffer )( 
             ID3D11VideoContext * This,
@@ -12263,7 +12157,8 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             _In_  ID3D11VideoDecoder *pDecoder,
             /* [annotation] */ 
             _In_  ID3D11VideoDecoderOutputView *pView,
-            UINT ContentKeySize,
+            /* [annotation] */ 
+            _In_  UINT ContentKeySize,
             /* [annotation] */ 
             _In_reads_bytes_opt_(ContentKeySize)  const void *pContentKey);
         
@@ -12281,7 +12176,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_reads_(NumBuffers)  const D3D11_VIDEO_DECODER_BUFFER_DESC *pBufferDesc);
         
-        APP_DEPRECATED_HRESULT ( STDMETHODCALLTYPE *DecoderExtension )( 
+        HRESULT ( STDMETHODCALLTYPE *DecoderExtension )( 
             ID3D11VideoContext * This,
             /* [annotation] */ 
             _In_  ID3D11VideoDecoder *pDecoder,
@@ -12338,7 +12233,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  BOOL Enable);
         
-        APP_DEPRECATED_HRESULT ( STDMETHODCALLTYPE *VideoProcessorSetOutputExtension )( 
+        HRESULT ( STDMETHODCALLTYPE *VideoProcessorSetOutputExtension )( 
             ID3D11VideoContext * This,
             /* [annotation] */ 
             _In_  ID3D11VideoProcessor *pVideoProcessor,
@@ -12399,7 +12294,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _Out_  BOOL *pEnabled);
         
-        APP_DEPRECATED_HRESULT ( STDMETHODCALLTYPE *VideoProcessorGetOutputExtension )( 
+        HRESULT ( STDMETHODCALLTYPE *VideoProcessorGetOutputExtension )( 
             ID3D11VideoContext * This,
             /* [annotation] */ 
             _In_  ID3D11VideoProcessor *pVideoProcessor,
@@ -12408,7 +12303,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  UINT DataSize,
             /* [annotation] */ 
-            _Out_writes_bytes_(DataSize)  void *pData);
+            _Out_  void *pData);
         
         void ( STDMETHODCALLTYPE *VideoProcessorSetStreamFrameFormat )( 
             ID3D11VideoContext * This,
@@ -12552,7 +12447,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  int Level);
         
-        APP_DEPRECATED_HRESULT ( STDMETHODCALLTYPE *VideoProcessorSetStreamExtension )( 
+        HRESULT ( STDMETHODCALLTYPE *VideoProcessorSetStreamExtension )( 
             ID3D11VideoContext * This,
             /* [annotation] */ 
             _In_  ID3D11VideoProcessor *pVideoProcessor,
@@ -12707,7 +12602,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _Out_  int *pLevel);
         
-        APP_DEPRECATED_HRESULT ( STDMETHODCALLTYPE *VideoProcessorGetStreamExtension )( 
+        HRESULT ( STDMETHODCALLTYPE *VideoProcessorGetStreamExtension )( 
             ID3D11VideoContext * This,
             /* [annotation] */ 
             _In_  ID3D11VideoProcessor *pVideoProcessor,
@@ -12718,7 +12613,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  UINT DataSize,
             /* [annotation] */ 
-            _Out_writes_bytes_(DataSize)  void *pData);
+            _Out_  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *VideoProcessorBlt )( 
             ID3D11VideoContext * This,
@@ -12753,7 +12648,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  UINT IVSize,
             /* [annotation] */ 
-            _Inout_opt_bytecount_(IVSize)  void *pIV);
+            _In_reads_bytes_opt_(IVSize)  void *pIV);
         
         void ( STDMETHODCALLTYPE *DecryptionBlt )( 
             ID3D11VideoContext * This,
@@ -12772,7 +12667,7 @@ EXTERN_C const IID IID_ID3D11VideoContext;
             /* [annotation] */ 
             _In_  UINT IVSize,
             /* [annotation] */ 
-            _Inout_opt_bytecount_(IVSize)  void *pIV);
+            _In_reads_bytes_opt_(IVSize)  void *pIV);
         
         void ( STDMETHODCALLTYPE *StartSessionKeyRefresh )( 
             ID3D11VideoContext * This,
@@ -13561,7 +13456,7 @@ EXTERN_C const IID IID_ID3D11Device;
             /* [annotation] */ 
             _In_range_( 0, D3D11_IA_VERTEX_INPUT_STRUCTURE_ELEMENT_COUNT )  UINT NumElements,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecodeWithInputSignature,
+            _In_  const void *pShaderBytecodeWithInputSignature,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13569,7 +13464,7 @@ EXTERN_C const IID IID_ID3D11Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateVertexShader( 
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13579,7 +13474,7 @@ EXTERN_C const IID IID_ID3D11Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateGeometryShader( 
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13589,7 +13484,7 @@ EXTERN_C const IID IID_ID3D11Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateGeometryShaderWithStreamOutput( 
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13609,7 +13504,7 @@ EXTERN_C const IID IID_ID3D11Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreatePixelShader( 
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13619,7 +13514,7 @@ EXTERN_C const IID IID_ID3D11Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateHullShader( 
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13629,7 +13524,7 @@ EXTERN_C const IID IID_ID3D11Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateDomainShader( 
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13639,7 +13534,7 @@ EXTERN_C const IID IID_ID3D11Device;
         
         virtual HRESULT STDMETHODCALLTYPE CreateComputeShader( 
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13887,7 +13782,7 @@ EXTERN_C const IID IID_ID3D11Device;
             /* [annotation] */ 
             _In_range_( 0, D3D11_IA_VERTEX_INPUT_STRUCTURE_ELEMENT_COUNT )  UINT NumElements,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecodeWithInputSignature,
+            _In_  const void *pShaderBytecodeWithInputSignature,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13896,7 +13791,7 @@ EXTERN_C const IID IID_ID3D11Device;
         HRESULT ( STDMETHODCALLTYPE *CreateVertexShader )( 
             ID3D11Device * This,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13907,7 +13802,7 @@ EXTERN_C const IID IID_ID3D11Device;
         HRESULT ( STDMETHODCALLTYPE *CreateGeometryShader )( 
             ID3D11Device * This,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13918,7 +13813,7 @@ EXTERN_C const IID IID_ID3D11Device;
         HRESULT ( STDMETHODCALLTYPE *CreateGeometryShaderWithStreamOutput )( 
             ID3D11Device * This,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13939,7 +13834,7 @@ EXTERN_C const IID IID_ID3D11Device;
         HRESULT ( STDMETHODCALLTYPE *CreatePixelShader )( 
             ID3D11Device * This,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13950,7 +13845,7 @@ EXTERN_C const IID IID_ID3D11Device;
         HRESULT ( STDMETHODCALLTYPE *CreateHullShader )( 
             ID3D11Device * This,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13961,7 +13856,7 @@ EXTERN_C const IID IID_ID3D11Device;
         HRESULT ( STDMETHODCALLTYPE *CreateDomainShader )( 
             ID3D11Device * This,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -13972,7 +13867,7 @@ EXTERN_C const IID IID_ID3D11Device;
         HRESULT ( STDMETHODCALLTYPE *CreateComputeShader )( 
             ID3D11Device * This,
             /* [annotation] */ 
-            _In_reads_(BytecodeLength)  const void *pShaderBytecode,
+            _In_  const void *pShaderBytecode,
             /* [annotation] */ 
             _In_  SIZE_T BytecodeLength,
             /* [annotation] */ 
@@ -14323,10 +14218,10 @@ enum D3D11_CREATE_DEVICE_FLAG
 #include "d3d10_1.h"
 #pragma region Desktop Family
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-#include "d3d10shader.h" 
-#include "d3d10_1shader.h" 
 #include "d3d10misc.h" 
+#include "d3d10shader.h" 
 #include "d3d10effect.h" 
+#include "d3d10_1shader.h" 
 #endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
