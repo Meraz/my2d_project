@@ -32,7 +32,7 @@
 #include <d3d11_1.h>
 #endif
 */
-#include <d3d11_1.h>
+#include <DirectX/d3d11_1.h>
 
 #pragma warning(push)
 #pragma warning(disable : 4005)
