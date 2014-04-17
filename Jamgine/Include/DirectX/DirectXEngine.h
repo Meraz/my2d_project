@@ -26,8 +26,6 @@ namespace Jamgine
 			virtual ErrorMessage Initialize(void* p_data);			
 			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data);
 			virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath);
-			void InitializeRenderTarget();
-			void CreateDepthBuffer();
 
 			virtual void Render(Position p_position,
 				Position p_origin,
@@ -63,24 +61,26 @@ namespace Jamgine
 				float p_height,
 				float p_depth
 				);
-
-		/*
-						Position p_position,
-				Position p_origin,
-				Position p_textureOffset,
-				Texture2D* p_texture,
-				SpriteEffect p_spriteEffect,
-				float p_width,
-				float p_height,
-				float p_depth,
-				float p_rotation
-		*/
-
-
 			virtual void PostRender(Camera* p_camera);
-
 		
 		private:
+			///////////
+			// Variables
+
+			// Windows and window specific
+			HWND		m_handle;
+			HINSTANCE	m_hInstance;
+			int			m_clientWidth;
+			int			m_clientHeight;
+
+			std::vector<SpriteData> m_renderData;
+			DirectX::XMFLOAT4X4 m_view;
+
+
+			///////////
+			// Pointers
+			
+			// DirectX pointers
 			ID3D11Device*				m_device;
 			ID3D11DeviceContext*		m_deviceContext;
 			IDXGISwapChain*				m_swapChain;
@@ -97,11 +97,7 @@ namespace Jamgine
 			ID3D11RasterizerState*		m_rasterizerState;
 			ID3D11BlendState*			m_blendState;
 
-			HWND					m_handle;
-			HINSTANCE				m_hInstance;
-			int						m_clientWidth;
-			int						m_clientHeight;
-
+			// User defined pointers
 			Texture2DManager*	m_texture2DManager;
 			ShaderLoader*		m_shaderLoader;
 			ID3D11VertexShader*	m_vertexShader;
@@ -110,20 +106,24 @@ namespace Jamgine
 			ID3D11InputLayout*	m_inputLayout;
 
 
-			std::vector<SpriteData> m_renderData;
+			///////////
+			// Functions
 
-			DirectX::XMFLOAT4X4 m_view;
+			// Initialize functions
+			HRESULT RegisterWindow(Jamgine::Data_Send p_data);
+			HRESULT InitializeSwapChain();
+			void	SetViewport();
+			HRESULT CreateDepthBuffer();
+			HRESULT InitializeRenderTarget();
+			
+			HRESULT CreateRasterizers();			
+			HRESULT SetBlendState();		
 
-			void LoadShaders();
+			HRESULT CreateBuffer();
+			HRESULT LoadShaders();
+
+			// Other functions
 			void SortSprites();
-			void CreateBuffer();
-			HRESULT CreateRasterizers();
-			void SetViewport();
-			void SetBlendState();
-
-			ErrorMessage RegisterWindow(Jamgine::Data_Send p_data);
-			ErrorMessage InitializeSwapChain();
-
 		};
 	}
 }

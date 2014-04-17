@@ -31,7 +31,7 @@ namespace Jamgine
 			{
 				position = DirectX::XMFLOAT3(input.position.x, input.position.y, input.depth);
 				origin	 = DirectX::XMFLOAT2(input.origin.x, input.origin.y);
-				offset	 = DirectX::XMFLOAT2(input.width, input.height); //HARD CODEDDDED : TODO
+				offset	 = DirectX::XMFLOAT2(input.width, input.height);
 				texture_offset = DirectX::XMFLOAT2(input.textureOffset.x, input.textureOffset.y);
 				rotation = input.rotation;
 				TextureDeltaUVSize = DirectX::XMFLOAT2(1/input.textureDelta.x, 1/input.textureDelta.y);
@@ -40,7 +40,12 @@ namespace Jamgine
 		};
 
 		DirectXEngine::DirectXEngine()
-			: m_device(nullptr), m_deviceContext(nullptr), m_texture2DManager(nullptr)
+			: m_device(nullptr), m_deviceContext(nullptr), m_swapChain(nullptr), 
+			  m_backBuffer_RTV(nullptr), m_backBuffer_UAV(nullptr), m_depthStencil(nullptr), m_depthStencilState(nullptr),
+			  m_depthStencilView(nullptr), m_perFrameBuffer(nullptr), m_perTextureBuffer(nullptr), m_perWindowChangeBuffer(nullptr),
+			  m_vertexBuffer(nullptr), m_samplerState(nullptr), m_rasterizerState(nullptr), m_blendState(nullptr),
+			  m_texture2DManager(nullptr), 	m_shaderLoader(nullptr), m_vertexShader(nullptr), m_pixelShader(nullptr), m_geometryShader(nullptr),
+			  m_inputLayout(nullptr)
 		{
 			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
 		}
@@ -95,130 +100,128 @@ namespace Jamgine
 			if(l_errorMessage != J_OK)
 				return J_FAIL; 
 
+			SetViewport();
 			CreateDepthBuffer();
 			InitializeRenderTarget();
-			LoadShaders();
+			
+			CreateRasterizers();			
+			SetBlendState();		
+
 			CreateBuffer();
-			SetViewport();
-			CreateRasterizers();
-			SetBlendState();
+			LoadShaders();
 
 			return l_errorMessage;
 		}
 
+		HRESULT DirectXEngine::RegisterWindow(Jamgine::Data_Send p_data)
+		{
+			HRESULT l_hr = S_OK;
+
+			WNDCLASS l_wndClass;
+			l_wndClass.style         = CS_HREDRAW | CS_VREDRAW;
+			l_wndClass.lpfnWndProc   = p_data.messageProc; 
+			l_wndClass.cbClsExtra    = 0;
+			l_wndClass.cbWndExtra    = 0;
+			l_wndClass.hInstance     = m_hInstance;
+			l_wndClass.hIcon         = LoadIcon(0, IDI_APPLICATION);
+			l_wndClass.hCursor       = LoadCursor(0, IDC_ARROW);
+			l_wndClass.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
+			l_wndClass.lpszMenuName  = 0;
+			l_wndClass.lpszClassName = L"Testgame";
+			
+			if (!RegisterClass(&l_wndClass))
+			{
+				return S_FALSE;
+			}
+							
+			// Create window
+			RECT rc = { 0, 0, m_clientHeight, m_clientWidth};
+
+			m_handle = CreateWindow(
+				L"TestGame",
+				L"Welcome to this window",
+				WS_OVERLAPPEDWINDOW,
+				CW_USEDEFAULT, CW_USEDEFAULT,
+				rc.right - rc.left,
+				rc.bottom - rc.top,
+				NULL,
+				NULL, 
+				p_data.hInstance, 
+				NULL);
+
+			if(!m_handle)
+			{
+				return S_FALSE;
+			}
+
+			ShowWindow( m_handle, SW_SHOW);
+
+			return l_hr;
+		}	
+
+		HRESULT DirectXEngine::InitializeSwapChain()
+		{
+			HRESULT l_hr = S_OK;
+
+			DXGI_SWAP_CHAIN_DESC l_swapChainDesc;
+			ZeroMemory( &l_swapChainDesc, sizeof( l_swapChainDesc ) );
+
+			l_swapChainDesc.BufferDesc.Width					= m_clientWidth;
+			l_swapChainDesc.BufferDesc.Height					= m_clientHeight;
+			l_swapChainDesc.BufferDesc.RefreshRate.Numerator	= 60;			
+			l_swapChainDesc.BufferDesc.RefreshRate.Denominator	= 1;			
+			l_swapChainDesc.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;
+			l_swapChainDesc.SampleDesc.Count					= 1;
+			l_swapChainDesc.SampleDesc.Quality					= 0;
+			l_swapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_UNORDERED_ACCESS;
+			l_swapChainDesc.BufferCount							= 1;
+			l_swapChainDesc.OutputWindow						= m_handle;
+			l_swapChainDesc.Windowed							= true;
+
+			D3D_FEATURE_LEVEL featureLevelsToTry[] = {
+				D3D_FEATURE_LEVEL_11_0,
+				D3D_FEATURE_LEVEL_10_1,
+				D3D_FEATURE_LEVEL_10_0
+			};
+
+			UINT createDeviceFlags = 0;
+			#ifdef _DEBUG
+				createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+			#endif
+				D3D_FEATURE_LEVEL l_initiatedFeatureLevel;
+
+			l_hr = D3D11CreateDeviceAndSwapChain(
+				NULL,
+				D3D_DRIVER_TYPE_HARDWARE,
+				NULL,
+				createDeviceFlags,
+				featureLevelsToTry,
+				ARRAYSIZE(featureLevelsToTry),
+				D3D11_SDK_VERSION,
+				&l_swapChainDesc,
+				&m_swapChain,
+				&m_device,
+				&l_initiatedFeatureLevel,
+				&m_deviceContext);
+
+			return l_hr;
+		}
+		
 		void DirectXEngine::SetViewport()
 		{
 			D3D11_VIEWPORT vp;
-			vp.Width = (FLOAT)m_clientWidth;
-			vp.Height = (FLOAT)m_clientHeight;
-			vp.MinDepth = 0.0f;
-			vp.MaxDepth = 1.0f;
-			vp.TopLeftX = 0;
-			vp.TopLeftY = 0;
+			vp.Width		= (FLOAT)m_clientWidth;
+			vp.Height		= (FLOAT)m_clientHeight;
+			vp.MinDepth		= 0.0f;
+			vp.MaxDepth		= 1.0f;
+			vp.TopLeftX		= 0;
+			vp.TopLeftY		= 0;
 			m_deviceContext->RSSetViewports(1, &vp);
 		}
 
-		void DirectXEngine::SetBlendState()
-		{			
-			HRESULT hr = S_OK;
-			D3D11_BLEND_DESC l_blendStateDesc;
-			l_blendStateDesc.AlphaToCoverageEnable			= false;
-			l_blendStateDesc.IndependentBlendEnable			= false;
-
-			l_blendStateDesc.RenderTarget[0].BlendEnable	= true;
-			l_blendStateDesc.RenderTarget[0].SrcBlend		= D3D11_BLEND_SRC_ALPHA;
-			l_blendStateDesc.RenderTarget[0].DestBlend		= D3D11_BLEND_INV_SRC_ALPHA;
-			l_blendStateDesc.RenderTarget[0].BlendOp		= D3D11_BLEND_OP_ADD;
-			l_blendStateDesc.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND_ONE;
-			l_blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-			l_blendStateDesc.RenderTarget[0].BlendOpAlpha	= D3D11_BLEND_OP_ADD;
-			l_blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-			hr = m_device->CreateBlendState(&l_blendStateDesc, &m_blendState);
-
-			float l_blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
-			m_deviceContext->OMSetBlendState(m_blendState, l_blendFactor, 0xffffffff);
-		}
-
-
-		HRESULT DirectXEngine::CreateRasterizers()
+		HRESULT DirectXEngine::CreateDepthBuffer()
 		{
-			HRESULT hr = S_OK;
-			D3D11_RASTERIZER_DESC desc;
-
-			desc.FillMode = D3D11_FILL_SOLID;
-			desc.CullMode = D3D11_CULL_NONE;
-			desc.FrontCounterClockwise = false;
-			desc.DepthBias = 0;
-			desc.SlopeScaledDepthBias = 0.0f;
-			desc.DepthBiasClamp = 0.0f;
-			desc.DepthClipEnable = true;
-			desc.ScissorEnable = false;
-			desc.MultisampleEnable = false;
-			desc.AntialiasedLineEnable = false;
-
-			hr = m_device->CreateRasterizerState(&desc, &m_rasterizerState);
-			if (FAILED(hr))
-				return hr;
-
-			m_deviceContext->RSSetState(m_rasterizerState);
-
-			return hr;
-		}
-
-		void DirectXEngine::CreateBuffer()
-		{
-			HRESULT hr = S_OK;
-
-			D3D11_BUFFER_DESC bufferDesc;
-			bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			bufferDesc.Usage	 = D3D11_USAGE_DEFAULT;
-			bufferDesc.CPUAccessFlags = 0;
-			bufferDesc.MiscFlags = 0;
-			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4X4);
-			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perFrameBuffer);
-
-			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
-			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perTextureBuffer);
-			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
-			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perWindowChangeBuffer);
-
-
-			bufferDesc.BindFlags				= D3D11_BIND_VERTEX_BUFFER;
-			bufferDesc.Usage					= D3D11_USAGE_DYNAMIC;
-			bufferDesc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;
-			bufferDesc.ByteWidth				= sizeof(Vertex) * 300000; // LOL fix this maybe
-			hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_vertexBuffer);
-			
-			UINT stride = sizeof(Vertex);
-			UINT offset = 0;
-			m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-
-			m_deviceContext->GSSetConstantBuffers(0, 1, &m_perFrameBuffer);			// maybe fix array? yes
-			m_deviceContext->GSSetConstantBuffers(1, 1, &m_perTextureBuffer);
-			m_deviceContext->VSSetConstantBuffers(2, 1, &m_perWindowChangeBuffer);
-
-			DirectX::XMFLOAT4 PerWindowChange = DirectX::XMFLOAT4(static_cast<float>(m_clientWidth), static_cast<float>(m_clientHeight), 0, 0);
-			m_deviceContext->UpdateSubresource(m_perWindowChangeBuffer, 0, nullptr, &PerWindowChange, 0, 0); // UPDATE
-
-		}
-
-		void DirectXEngine::InitializeRenderTarget()
-		{
-			HRESULT hr;
-			ID3D11Texture2D* l_backBuffer;
-			hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&l_backBuffer);
-			hr = m_device	->CreateRenderTargetView(l_backBuffer, nullptr, &m_backBuffer_RTV);
-			hr = m_device	->CreateUnorderedAccessView(l_backBuffer, nullptr, &m_backBuffer_UAV);
-
-			m_deviceContext->OMSetRenderTargets(1, &m_backBuffer_RTV, m_depthStencilView);
-
-			l_backBuffer->Release();
-		}
-
-		void DirectXEngine::CreateDepthBuffer()
-		{
-			HRESULT hr = S_OK;
+			HRESULT l_hr = S_OK;
 
 			// Create depth stencil texture
 			D3D11_TEXTURE2D_DESC descDepth;
@@ -235,14 +238,18 @@ namespace Jamgine
 			descDepth.CPUAccessFlags	= 0;
 			descDepth.MiscFlags			= 0;
 
-			hr = m_device->CreateTexture2D(&descDepth, nullptr, &m_depthStencil);
+			l_hr = m_device->CreateTexture2D(&descDepth, nullptr, &m_depthStencil);
+			if(FAILED(l_hr))
+				return l_hr;
 
 			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 			ZeroMemory(&descDSV, sizeof(descDSV));
 			descDSV.Format				= descDepth.Format;
 			descDSV.ViewDimension		= D3D11_DSV_DIMENSION_TEXTURE2D;
 			descDSV.Texture2D.MipSlice	= 0;
-			hr = m_device->CreateDepthStencilView(m_depthStencil, &descDSV, &m_depthStencilView);
+			l_hr = m_device->CreateDepthStencilView(m_depthStencil, &descDSV, &m_depthStencilView);
+			if(FAILED(l_hr))
+				return l_hr;
 
 			//create states
 			D3D11_DEPTH_STENCIL_DESC dsDesc;
@@ -269,15 +276,144 @@ namespace Jamgine
 			dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 			dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
+			l_hr = m_device->CreateDepthStencilState(&dsDesc, &m_depthStencilState);
 
-			hr = m_device->CreateDepthStencilState(&dsDesc, &m_depthStencilState);
+			if(FAILED(l_hr))
+				return l_hr;
+
+			return l_hr;
 		}
 
-		void DirectXEngine::LoadShaders()
+		HRESULT DirectXEngine::InitializeRenderTarget()
 		{
-			HRESULT hr;
-			m_shaderLoader->CreateGeometryShader(L"GeometryShader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
-			m_shaderLoader->CreatePixelShader(L"PixelShader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
+			HRESULT l_hr = S_OK;
+			ID3D11Texture2D* l_backBuffer;
+			l_hr = m_swapChain	->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&l_backBuffer);
+			l_hr = m_device		->CreateRenderTargetView	(l_backBuffer, nullptr, &m_backBuffer_RTV);
+			l_hr = m_device		->CreateUnorderedAccessView	(l_backBuffer, nullptr, &m_backBuffer_UAV);
+
+			if(FAILED(l_hr))
+			{
+				l_backBuffer->Release();
+				return l_hr;
+			}
+			m_deviceContext->OMSetRenderTargets(1, &m_backBuffer_RTV, m_depthStencilView);
+			l_backBuffer->Release();
+
+			return l_hr;
+		}
+
+		HRESULT DirectXEngine::CreateRasterizers()
+		{
+			HRESULT l_hr = S_OK;
+			D3D11_RASTERIZER_DESC desc;
+
+			desc.FillMode = D3D11_FILL_SOLID;
+			desc.CullMode = D3D11_CULL_NONE;
+			desc.FrontCounterClockwise = false;
+			desc.DepthBias = 0;
+			desc.SlopeScaledDepthBias = 0.0f;
+			desc.DepthBiasClamp = 0.0f;
+			desc.DepthClipEnable = true;
+			desc.ScissorEnable = false;
+			desc.MultisampleEnable = false;
+			desc.AntialiasedLineEnable = false;
+
+			l_hr = m_device->CreateRasterizerState(&desc, &m_rasterizerState);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
+
+			m_deviceContext->RSSetState(m_rasterizerState);
+
+			return l_hr;
+		}
+
+		HRESULT DirectXEngine::SetBlendState()
+		{			
+			HRESULT l_hr = S_OK;
+			D3D11_BLEND_DESC l_blendStateDesc;
+			l_blendStateDesc.AlphaToCoverageEnable			= false;
+			l_blendStateDesc.IndependentBlendEnable			= false;
+
+			l_blendStateDesc.RenderTarget[0].BlendEnable	= true;
+			l_blendStateDesc.RenderTarget[0].SrcBlend		= D3D11_BLEND_SRC_ALPHA;
+			l_blendStateDesc.RenderTarget[0].DestBlend		= D3D11_BLEND_INV_SRC_ALPHA;
+			l_blendStateDesc.RenderTarget[0].BlendOp		= D3D11_BLEND_OP_ADD;
+			l_blendStateDesc.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND_ONE;
+			l_blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+			l_blendStateDesc.RenderTarget[0].BlendOpAlpha	= D3D11_BLEND_OP_ADD;
+			l_blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+			l_hr = m_device->CreateBlendState(&l_blendStateDesc, &m_blendState);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
+
+			float l_blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
+			m_deviceContext->OMSetBlendState(m_blendState, l_blendFactor, 0xffffffff);
+		}
+
+		HRESULT DirectXEngine::CreateBuffer()
+		{
+			HRESULT l_hr = S_OK;
+
+			D3D11_BUFFER_DESC bufferDesc;
+			bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			bufferDesc.Usage	 = D3D11_USAGE_DEFAULT;
+			bufferDesc.CPUAccessFlags = 0;
+			bufferDesc.MiscFlags = 0;
+			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4X4);
+			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perFrameBuffer);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
+
+			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
+			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perTextureBuffer);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
+			
+			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
+			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perWindowChangeBuffer);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
+
+			bufferDesc.BindFlags				= D3D11_BIND_VERTEX_BUFFER;
+			bufferDesc.Usage					= D3D11_USAGE_DYNAMIC;
+			bufferDesc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;
+			bufferDesc.ByteWidth				= sizeof(Vertex) * 300000; // LOL fix this maybe
+			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_vertexBuffer);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
+			
+			UINT stride = sizeof(Vertex);
+			UINT offset = 0;
+			m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+
+			m_deviceContext->GSSetConstantBuffers(0, 1, &m_perFrameBuffer);			// maybe fix array? yes
+			m_deviceContext->GSSetConstantBuffers(1, 1, &m_perTextureBuffer);
+			m_deviceContext->VSSetConstantBuffers(2, 1, &m_perWindowChangeBuffer);
+
+			DirectX::XMFLOAT4 PerWindowChange = DirectX::XMFLOAT4(static_cast<float>(m_clientWidth), static_cast<float>(m_clientHeight), 0, 0);
+			m_deviceContext->UpdateSubresource(m_perWindowChangeBuffer, 0, nullptr, &PerWindowChange, 0, 0); // UPDATE
+
+		}
+
+		HRESULT DirectXEngine::LoadShaders()
+		{
+			HRESULT l_hr;
+			l_hr = m_shaderLoader->CreateGeometryShader(L"GeometryShader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
+			l_hr = m_shaderLoader->CreatePixelShader(L"PixelShader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
 
 			D3D11_INPUT_ELEMENT_DESC l_desc[] =
 			{
@@ -287,11 +423,14 @@ namespace Jamgine
 				{ "TEXTURE_OFFSET", 0, DXGI_FORMAT_R32G32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 				{ "ROTATION", 0, DXGI_FORMAT_R32_FLOAT,				0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{ "TEXTUREDELTA", 0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "FLIP", 0, DXGI_FORMAT_R32_UINT,					0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},// 1 / number of subpictures}
+				{ "FLIP", 0, DXGI_FORMAT_R32_UINT,					0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 			};
-
 			unsigned int l_numElements = ARRAYSIZE(l_desc);
-			m_shaderLoader->CreateVertexShaderWithInputLayout(L"VertexShader.hlsl", "VS", "vs_5_0", m_device, &m_vertexShader, l_desc, l_numElements, &m_inputLayout);
+			l_hr = m_shaderLoader->CreateVertexShaderWithInputLayout(L"VertexShader.hlsl", "VS", "vs_5_0", m_device, &m_vertexShader, l_desc, l_numElements, &m_inputLayout);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
 
 			m_deviceContext->VSSetShader(m_vertexShader,	nullptr, 0);
 			m_deviceContext->PSSetShader(m_pixelShader,		nullptr, 0);
@@ -309,8 +448,13 @@ namespace Jamgine
 			sampler_desc.MinLOD = 0;
 			sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
 
-			hr = m_device->CreateSamplerState(&sampler_desc, &m_samplerState);
+			l_hr = m_device->CreateSamplerState(&sampler_desc, &m_samplerState);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
 			m_deviceContext->PSSetSamplers(0, 1, &m_samplerState);
+			return l_hr;
 		}
 
 
@@ -356,6 +500,7 @@ namespace Jamgine
 		{
 			m_renderData.push_back(SpriteData(p_position, p_textureOffset, (Texture2D*)p_texture, p_width, p_height, p_depth));
 		}
+
 		void DirectXEngine::Render(Position p_position, Position p_textureOffset,
 			Texture2DInterface* p_texture,
 			SpriteEffect p_spriteEffect,
@@ -402,7 +547,6 @@ namespace Jamgine
 			
 			unsigned int l_currentIndex = 0;
 			unsigned int l_amount = 1;
-//			unsigned int max = m_renderData.size()-1;
 			for ( int i = 0; i < max; i++)
 			{
 				if (m_renderData[i].texture == m_renderData[i + 1].texture)
@@ -431,6 +575,7 @@ namespace Jamgine
 			m_swapChain->Present(0, 0);
 			m_renderData.clear();
 		}
+
 		bool SortTransparentAlgorithm(SpriteData p_a, SpriteData p_b)
 		{
 			/*
@@ -461,7 +606,6 @@ namespace Jamgine
 
 			/*return (p_a.hasTransparent && !p_b.hasTransparent);*/
 		}
-
 		bool SortTextureAlgorithm(SpriteData p_a, SpriteData p_b)
 		{
 			return (p_a.texture < p_b.texture);
@@ -504,95 +648,8 @@ namespace Jamgine
 			std::sort(m_renderData.begin() + transparentStart, m_renderData.end(), &SortDepthAlgorithm);
 		}
 
-		ErrorMessage DirectXEngine::RegisterWindow(Jamgine::Data_Send p_data)
-		{
-			ErrorMessage l_errorMessage = J_OK;
+	
 
-			WNDCLASS l_wndClass;
-			l_wndClass.style         = CS_HREDRAW | CS_VREDRAW;
-			l_wndClass.lpfnWndProc   = p_data.messageProc; 
-			l_wndClass.cbClsExtra    = 0;
-			l_wndClass.cbWndExtra    = 0;
-			l_wndClass.hInstance     = m_hInstance;
-			l_wndClass.hIcon         = LoadIcon(0, IDI_APPLICATION);
-			l_wndClass.hCursor       = LoadCursor(0, IDC_ARROW);
-			l_wndClass.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
-			l_wndClass.lpszMenuName  = 0;
-			l_wndClass.lpszClassName = L"Testgame";
-			
-			if (!RegisterClass(&l_wndClass))
-				return J_FAIL;
-							
-			// Create window
-			RECT rc = { 0, 0, m_clientHeight, m_clientWidth};
-			//AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-			m_handle = CreateWindow(
-				L"TestGame",
-				L"Welcome to this window",
-				WS_OVERLAPPEDWINDOW,
-				CW_USEDEFAULT, CW_USEDEFAULT,
-				rc.right - rc.left,
-				rc.bottom - rc.top,
-				NULL,
-				NULL, 
-				p_data.hInstance, 
-				NULL);
-
-			if(!m_handle)
-				return J_FAIL;
-
-			ShowWindow( m_handle, SW_SHOW);
-
-			return l_errorMessage;
-		}		
-
-		ErrorMessage DirectXEngine::InitializeSwapChain()
-		{
-			ErrorMessage l_errorMessage = J_OK;
-
-			DXGI_SWAP_CHAIN_DESC l_swapChainDesc;
-			ZeroMemory( &l_swapChainDesc, sizeof( l_swapChainDesc ) );
-
-			l_swapChainDesc.BufferDesc.Width					= m_clientWidth; //ok
-			l_swapChainDesc.BufferDesc.Height					= m_clientHeight; //ok
-			l_swapChainDesc.BufferDesc.RefreshRate.Numerator	= 60; //ok
-			l_swapChainDesc.BufferDesc.RefreshRate.Denominator	= 1; //ok
-			l_swapChainDesc.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;//ok
-			l_swapChainDesc.SampleDesc.Count					= 1; //OK
-			l_swapChainDesc.SampleDesc.Quality					= 0;  //OK
-			l_swapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_UNORDERED_ACCESS; //OK
-			l_swapChainDesc.BufferCount							= 1; //OK
-			l_swapChainDesc.OutputWindow						= m_handle; //OK
-			l_swapChainDesc.Windowed							= true; //OK
-
-			D3D_FEATURE_LEVEL featureLevelsToTry[] = {
-				D3D_FEATURE_LEVEL_11_0,
-				D3D_FEATURE_LEVEL_10_1,
-				D3D_FEATURE_LEVEL_10_0
-			};
-
-			UINT createDeviceFlags = 0;
-			#ifdef _DEBUG
-				createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-			#endif
-				D3D_FEATURE_LEVEL l_initiatedFeatureLevel;
-
-			l_errorMessage = D3D11CreateDeviceAndSwapChain(
-				NULL,
-				D3D_DRIVER_TYPE_HARDWARE,
-				NULL,
-				createDeviceFlags,
-				featureLevelsToTry,
-				ARRAYSIZE(featureLevelsToTry),
-				D3D11_SDK_VERSION,
-				&l_swapChainDesc,
-				&m_swapChain,
-				&m_device,
-				&l_initiatedFeatureLevel,
-				&m_deviceContext);
-
-			return l_errorMessage;
-		}
 	}
 }

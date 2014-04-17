@@ -3,7 +3,6 @@
 
 namespace Jamgine
 {
-
 	struct Camera
 	{
 		Position position;
