@@ -29,7 +29,10 @@ set_target_properties(${PROJECT_NAME_TESTGAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM
 
 # Copy game resources
 add_custom_target(_resourceCopy ALL 
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources ${CMAKE_BINARY_DIR}/build/Resources
+#	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources ${CMAKE_BINARY_DIR}/build/Resources
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources/HLSL ${CMAKE_BINARY_DIR}/TestGame
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources/Level ${CMAKE_BINARY_DIR}/TestGame
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources/Texture ${CMAKE_BINARY_DIR}/TestGame
 )
 
 add_custom_target(_dependencies ALL 

@@ -412,8 +412,8 @@ namespace Jamgine
 		HRESULT DirectXEngine::LoadShaders()
 		{
 			HRESULT l_hr;
-			l_hr = m_shaderLoader->CreateGeometryShader(L"GeometryShader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
-			l_hr = m_shaderLoader->CreatePixelShader(L"PixelShader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
+			l_hr = m_shaderLoader->CreateGeometryShader	(L"GeometryShader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
+			l_hr = m_shaderLoader->CreatePixelShader	(L"PixelShader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
 
 			D3D11_INPUT_ELEMENT_DESC l_desc[] =
 			{

@@ -2,8 +2,6 @@
 
 #include <TestGame/Include/Scene/BaseScene.h>
 
-
-
 class RenderEntity;
 class EnemyEntity;
 class ProjectileEntity;
@@ -35,25 +33,18 @@ private:
 	std::vector<AnimationEntity*>	m_animationEntities;
 	std::vector<CollisionEntity*>	m_collisionEntities;
 
-
 	Jamgine::Camera m_camera;
 	Jamgine::Texture2DInterface* a;
 	Jamgine::Texture2DInterface* b;
+	SoundHandler* m_soundHandler;
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
 
-	std::vector<PlayerEntity*> playerEntities;
-
-
-
+	PlayerEntity* playerEntity;
+	
 	void CheckCollision();
-
 	bool InScreen(CollisionEntity* entity);
-	int CollideBox(Point apos, float aWidth, float aHeight, Jamgine::Point bPos, float bWidth, float bHeight);
-	bool HorizontalCollision(Point playPos, Point objPos, float playWidth, float playHeight, float objWidth);
-	bool VerticalCollision(Point playPos, Point objPos, float playWidth, float playHeight, float objHeight);
-
 	void CreateObject(int l_entity, char* l_data);
-	SoundHandler* m_soundHandler;
+	
 
 };
