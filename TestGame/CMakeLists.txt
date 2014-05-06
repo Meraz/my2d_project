@@ -33,5 +33,5 @@ add_custom_target(_resourceCopy ALL
 )
 
 add_custom_target(_dependencies ALL 
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin/ ${OUTPUT_DIRECTORY}/Debug
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/External/Dll ${OUTPUT_DIRECTORY}/Debug
 )
