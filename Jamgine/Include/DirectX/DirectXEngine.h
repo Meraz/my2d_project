@@ -5,8 +5,8 @@
 #include <Jamgine/Include/DirectX/SpriteData.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
 #include <Jamgine/Include/Camera.h>
-#include <DirectX/d3d11_1.h>
-#include <DirectX/DirectXMath.h>
+#include <d3d11_1.h>
+#include <DirectXMath.h>
 
 #include <vector>
 

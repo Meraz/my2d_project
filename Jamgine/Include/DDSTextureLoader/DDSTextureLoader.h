@@ -32,7 +32,7 @@
 #include <d3d11_1.h>
 #endif
 */
-#include <DirectX/d3d11_1.h>
+#include <d3d11_1.h>
 
 #pragma warning(push)
 #pragma warning(disable : 4005)
@@ -59,7 +59,7 @@ namespace DirectX
         DDS_ALPHA_MODE_STRAIGHT      = 1,
         DDS_ALPHA_MODE_PREMULTIPLIED = 2,
         DDS_ALPHA_MODE_OPAQUE        = 3,
-        DDS_ALPHA_MODE_CUSTOM        = 4,
+        DDS_ALPHA_MODE_CUSTOM        = 4
     };
 
     // Standard version

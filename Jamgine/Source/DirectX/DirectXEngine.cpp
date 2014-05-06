@@ -2,7 +2,7 @@
 #include <exception>
 #include <algorithm>  
 
-#include <DirectX/DirectXColors.h>
+#include <DirectXColors.h>
 
 // Project files
 #include <Jamgine/Include/DirectX/DirectXEngine.h>
@@ -646,9 +646,5 @@ namespace Jamgine
 			std::sort(m_renderData.begin(), m_renderData.begin() + transparentStart, &SortTextureAlgorithm);
 			std::sort(m_renderData.begin() + transparentStart, m_renderData.end(), &SortDepthAlgorithm);
 		}
-
-	
-
-
 	}
 }

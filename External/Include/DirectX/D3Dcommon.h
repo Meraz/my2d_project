@@ -3,7 +3,7 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 8.00.0595 */
+ /* File created by MIDL compiler version 8.00.0603 */
 /* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
@@ -825,9 +825,26 @@ enum D3D_MIN_PRECISION
         D3D_MIN_PRECISION_ANY_10	= 0xf1
     } 	D3D_MIN_PRECISION;
 
+typedef 
+enum D3D_INTERPOLATION_MODE
+    {
+        D3D_INTERPOLATION_UNDEFINED	= 0,
+        D3D_INTERPOLATION_CONSTANT	= 1,
+        D3D_INTERPOLATION_LINEAR	= 2,
+        D3D_INTERPOLATION_LINEAR_CENTROID	= 3,
+        D3D_INTERPOLATION_LINEAR_NOPERSPECTIVE	= 4,
+        D3D_INTERPOLATION_LINEAR_NOPERSPECTIVE_CENTROID	= 5,
+        D3D_INTERPOLATION_LINEAR_SAMPLE	= 6,
+        D3D_INTERPOLATION_LINEAR_NOPERSPECTIVE_SAMPLE	= 7
+    } 	D3D_INTERPOLATION_MODE;
+
 DEFINE_GUID(WKPDID_D3DDebugObjectName,0x429b8c22,0x9188,0x4b0c,0x87,0x42,0xac,0xb0,0xbf,0x85,0xc2,0x00);
 #define D3D_SET_OBJECT_NAME_N_A(pObject, Chars, pName) (pObject)->SetPrivateData(WKPDID_D3DDebugObjectName, Chars, pName)
 #define D3D_SET_OBJECT_NAME_A(pObject, pName) D3D_SET_OBJECT_NAME_N_A(pObject, lstrlenA(pName), pName)
+#define D3D_COMPONENT_MASK_X   1
+#define D3D_COMPONENT_MASK_Y   2
+#define D3D_COMPONENT_MASK_Z   4
+#define D3D_COMPONENT_MASK_W   8
 
 
 extern RPC_IF_HANDLE __MIDL_itf_d3dcommon_0000_0001_v0_0_c_ifspec;
