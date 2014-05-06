@@ -1,9 +1,4 @@
-BOSSJAM 2014 GitProject
+My personal hobbyproject
 ============
-Jonas Bergström
 
 Rasmus Tilljander
-
-Mostafa Hassan
-
-Christian Marcowicz 
