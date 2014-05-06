@@ -24,7 +24,7 @@ struct AnimationSetup
 	float width;
 	float height;
 	Texture2DInterface* texture;
-	Jamgine::Position numOfSubTextures;
+	Jamgine::Point numOfSubTextures;
 };
 
 /* CHEATSHEET of animations
@@ -41,7 +41,7 @@ public:
 	virtual std::stringstream ToFile();
 	virtual void LoadClassFromData(char* p_data);
 
-	void AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Position p_numOfSubTextures);
+	void AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Point p_numOfSubTextures);
 	virtual void Update(double p_deltaTime);
 	void CollideStatic();
 	void Kill();
@@ -68,13 +68,13 @@ private:
 	double  m_goatDurationTimer;
 	double  m_goatJumpColdownTimer;
 	double  m_animationWhaleJumpTimer;
-	Jamgine::Position m_velocity;
+	Jamgine::Point m_velocity;
 
 	XBOXController* m_playerOneController;
 	
 	std::vector<AnimationSetup> m_animations;
 
-	Position lastPos;
+	Point lastPos;
 
 	void CheckMovementInputs();
 	void MoveSideways(float amount);

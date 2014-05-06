@@ -6,7 +6,7 @@ EnemyEntity::EnemyEntity()
 	m_entity = ENTITY::ENENMY;
 }
 
-EnemyEntity::EnemyEntity(Position* playerPos)
+EnemyEntity::EnemyEntity(Point* playerPos)
 {
 	m_playerPos = playerPos;
 	m_gravity = 0.05;

@@ -8,9 +8,9 @@ namespace Jamgine
 	{
 		struct SpriteData
 		{
-			Position position;
-			Position origin;
-			Position textureOffset;
+			Point position;
+			Point origin;
+			Point textureOffset;
 			Texture2D* texture;
 			SpriteEffect spriteEffect;
 			float width;
@@ -18,13 +18,12 @@ namespace Jamgine
 			float depth;
 			float rotation;
 			bool hasTransparent;
-			Position textureDelta;
-
-
+			Point textureDelta;
+			
 			SpriteData(
-				Position p_position,
-				Position p_origin,
-				Position p_textureOffset,
+				Point p_position,
+				Point p_origin,
+				Point p_textureOffset,
 				Texture2D* p_texture,
 				SpriteEffect p_spriteEffect,
 				float p_width,
@@ -32,7 +31,7 @@ namespace Jamgine
 				float p_depth,
 				float p_rotation,
 				bool p_hasTransparent,
-				Position p_textureDelta
+				Point p_textureDelta
 				)
 			{
 				position = p_position;
@@ -51,9 +50,9 @@ namespace Jamgine
 			// Without flip
 			SpriteData
 				(
-				Position p_position,
-				Position p_origin,
-				Position p_textureOffset,
+				Point p_position,
+				Point p_origin,
+				Point p_textureOffset,
 				Texture2D* p_texture,
 				float p_width,
 				float p_height,
@@ -70,13 +69,13 @@ namespace Jamgine
 				depth = p_depth;
 				rotation = p_rotation;
 				hasTransparent = false;
-				textureDelta = Position(1,1);
+				textureDelta = Point(1,1);
 			}
 
 			// without flip and origin
 			SpriteData(
-				Position p_position,
-				Position p_textureOffset,
+				Point p_position,
+				Point p_textureOffset,
 				Texture2D* p_texture,
 				float p_width,
 				float p_height,
@@ -84,7 +83,7 @@ namespace Jamgine
 				)
 			{
 				position = p_position;
-				origin	= Position(0,0);
+				origin	= Point(0,0);
 				textureOffset = p_textureOffset;
 				texture = p_texture;
 				spriteEffect =	SpriteEffect::FLIP_NONE;
@@ -93,13 +92,13 @@ namespace Jamgine
 				depth = p_depth;
 				rotation = 0;
 				hasTransparent = false;
-				textureDelta = Position(1,1);
+				textureDelta = Point(1,1);
 			}
 
 			// Without origin and rotation
 			SpriteData(
-				Position p_position,
-				Position p_textureOffset,
+				Point p_position,
+				Point p_textureOffset,
 				Texture2D* p_texture,
 				SpriteEffect p_spriteEffect,
 				float p_width,
@@ -108,7 +107,7 @@ namespace Jamgine
 				)
 			{
 				position = p_position;
-				origin	= Position(0,0);
+				origin	= Point(0,0);
 				textureOffset = p_textureOffset;
 				texture = p_texture;
 				spriteEffect =	p_spriteEffect;
@@ -117,7 +116,7 @@ namespace Jamgine
 				depth = p_depth;
 				rotation = 0;
 				hasTransparent = false;
-				textureDelta = Position(1,1);
+				textureDelta = Point(1,1);
 			}
 		};
 	}	

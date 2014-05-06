@@ -49,7 +49,7 @@ private:
 	int m_totalTextures;
 	int m_selectedSpriteVibrateTimer;
 	bool m_newSpriteSelected;
-	Jamgine::Position m_originalSpritePosition;
+	Jamgine::Point m_originalSpritePosition;
 	float grassTile;
 	float dirtTile;
 
@@ -60,8 +60,8 @@ private:
 
 	bool m_prevMouseClick;
 	bool m_creatingBox, editBox;
-	Jamgine::Position m_firstPos;
-	Jamgine::Position m_secondPos;
+	Jamgine::Point m_firstPos;
+	Jamgine::Point m_secondPos;
 
 	CURRENTTOOL m_currTool;
 

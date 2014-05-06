@@ -20,43 +20,43 @@ namespace Jamgine
 		FLIP_BOTH		
 	};
 
-	struct Position
+	struct Point
 	{
 		float x;
 		float y;
 
-		Position() : x(0), y(0){}
-		Position(float _x, float _y) : x(_x), y(_y){}
+		Point() : x(0), y(0){}
+		Point(float _x, float _y) : x(_x), y(_y){}
 
-		Position& operator+(Position p_position)
+		Point& operator+(Point p_position)
 		{
 			x += p_position.x;
 			y += p_position.y;
 			return *this;
 		}
 
-		Position& operator-(Position p_position)
+		Point& operator-(Point p_position)
 		{
 			x -= p_position.x;
 			y -= p_position.y;
 			return *this;
 		}
 
-		Position& operator-=(Position p_position)
+		Point& operator-=(Point p_position)
 		{
 			x -= p_position.x;
 			y -= p_position.y;
 			return *this;
 		}
 
-		Position& operator+=(Position p_position)
+		Point& operator+=(Point p_position)
 		{
 			x += p_position.x;
 			y += p_position.y;
 			return *this;
 		}
 
-		Position& operator=(const Position& p_position)
+		Point& operator=(const Point& p_position)
 		{
 			x = p_position.x;
 			y = p_position.y;

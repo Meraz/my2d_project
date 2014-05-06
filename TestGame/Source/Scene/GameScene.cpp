@@ -40,8 +40,8 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	playerEntities.push_back( new PlayerEntity(1));
 
 
-	playerEntities[0]->Initialize(Jamgine::Position(200,400),Jamgine::Position(0,0),Jamgine::Position(0,0),"ANIM_WHALE_JUMP.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Position(5,5)); //funkar med valtexture
-	playerEntities[1]->Initialize(Jamgine::Position(400,400),Jamgine::Position(0,0),Jamgine::Position(0,0),"ANIM_WHALE_JUMP.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Position(5,5)); //funkar med valtexture
+	playerEntities[0]->Initialize(Jamgine::Point(200,400),Jamgine::Point(0,0),Jamgine::Point(0,0),"ANIM_WHALE_JUMP.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Point(5,5)); //funkar med valtexture
+	playerEntities[1]->Initialize(Jamgine::Point(400,400),Jamgine::Point(0,0),Jamgine::Point(0,0),"ANIM_WHALE_JUMP.dds",Jamgine::SpriteEffect::FLIP_NONE,250,300,0.1,0,true,Jamgine::Point(5,5)); //funkar med valtexture
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -49,8 +49,8 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	}
 
 	
-	m_collisionEntities[0]->Initialize(Position(700,0),"Circle.dds",100,100);
-	m_collisionEntities[1]->Initialize(Position(0,10),"Circle.dds",800,30);
+	m_collisionEntities[0]->Initialize(Point(700,0),"Circle.dds",100,100);
+	m_collisionEntities[1]->Initialize(Point(0,10),"Circle.dds",800,30);
 	
 
 	//LoadCurrentSetup("Level.lvl");
@@ -132,12 +132,12 @@ void GameScene::CheckCollision()
 					int leftTop, rightTop, leftBot, rightBot;
 					float halfWidth = playerEntities[i]->GetWidth()/2;
 					float halfHeight = playerEntities[i]->GetHeight()/2;
-					Position pos = playerEntities[i]->GetPosition();
+					Point pos = playerEntities[i]->GetPosition();
 
-					leftTop = CollideBox(Position(pos.x , pos.y + halfHeight), halfWidth, halfHeight, m_collisionEntities[i]->GetPosition(), m_collisionEntities[i]->GetWidth(), m_collisionEntities[i]->GetHeight());
-					rightTop = CollideBox(Position(pos.x + halfWidth, pos.y + halfHeight), halfWidth, halfHeight, m_collisionEntities[i]->GetPosition(), m_collisionEntities[i]->GetWidth(), m_collisionEntities[i]->GetHeight());
-					leftBot = CollideBox(Position(pos.x , pos.y), halfWidth, halfHeight, m_collisionEntities[i]->GetPosition(), m_collisionEntities[i]->GetWidth(), m_collisionEntities[i]->GetHeight());
-					rightBot = CollideBox(Position(pos.x + halfWidth, pos.y), halfWidth, halfHeight, m_collisionEntities[i]->GetPosition(), m_collisionEntities[i]->GetWidth(), m_collisionEntities[i]->GetHeight());
+					leftTop = CollideBox(Point(pos.x , pos.y + halfHeight), halfWidth, halfHeight, m_collisionEntities[i]->GetPosition(), m_collisionEntities[i]->GetWidth(), m_collisionEntities[i]->GetHeight());
+					rightTop = CollideBox(Point(pos.x + halfWidth, pos.y + halfHeight), halfWidth, halfHeight, m_collisionEntities[i]->GetPosition(), m_collisionEntities[i]->GetWidth(), m_collisionEntities[i]->GetHeight());
+					leftBot = CollideBox(Point(pos.x , pos.y), halfWidth, halfHeight, m_collisionEntities[i]->GetPosition(), m_collisionEntities[i]->GetWidth(), m_collisionEntities[i]->GetHeight());
+					rightBot = CollideBox(Point(pos.x + halfWidth, pos.y), halfWidth, halfHeight, m_collisionEntities[i]->GetPosition(), m_collisionEntities[i]->GetWidth(), m_collisionEntities[i]->GetHeight());
 
 				
 					if (leftTop + rightTop + leftBot + rightBot == 1)
@@ -160,12 +160,12 @@ void GameScene::CheckCollision()
 			int leftTop, rightTop, leftBot, rightBot;
 			float halfWidth = playerEntities[0]->GetWidth()/2;
 			float halfHeight = playerEntities[0]->GetHeight()/2;
-			Position pos = playerEntities[0]->GetPosition();
+			Point pos = playerEntities[0]->GetPosition();
 
-			leftTop = CollideBox(Position(pos.x , pos.y + halfHeight), halfWidth, halfHeight, playerEntities[1]->GetPosition(), playerEntities[1]->GetWidth(), playerEntities[1]->GetHeight());
-			rightTop = CollideBox(Position(pos.x + halfWidth, pos.y + halfHeight), halfWidth, halfHeight, playerEntities[1]->GetPosition(), playerEntities[1]->GetWidth(), playerEntities[1]->GetHeight());
-			leftBot = CollideBox(Position(pos.x , pos.y), halfWidth, halfHeight, playerEntities[1]->GetPosition(), playerEntities[1]->GetWidth(), playerEntities[1]->GetHeight());
-			rightBot = CollideBox(Position(pos.x + halfWidth, pos.y), halfWidth, halfHeight, playerEntities[1]->GetPosition(), playerEntities[1]->GetWidth(), playerEntities[1]->GetHeight());
+			leftTop = CollideBox(Point(pos.x , pos.y + halfHeight), halfWidth, halfHeight, playerEntities[1]->GetPosition(), playerEntities[1]->GetWidth(), playerEntities[1]->GetHeight());
+			rightTop = CollideBox(Point(pos.x + halfWidth, pos.y + halfHeight), halfWidth, halfHeight, playerEntities[1]->GetPosition(), playerEntities[1]->GetWidth(), playerEntities[1]->GetHeight());
+			leftBot = CollideBox(Point(pos.x , pos.y), halfWidth, halfHeight, playerEntities[1]->GetPosition(), playerEntities[1]->GetWidth(), playerEntities[1]->GetHeight());
+			rightBot = CollideBox(Point(pos.x + halfWidth, pos.y), halfWidth, halfHeight, playerEntities[1]->GetPosition(), playerEntities[1]->GetWidth(), playerEntities[1]->GetHeight());
 
 				
 			if (leftTop + rightTop + leftBot + rightBot == 1)
@@ -182,12 +182,12 @@ void GameScene::CheckCollision()
 			int leftTop, rightTop, leftBot, rightBot;
 			float halfWidth = playerEntities[1]->GetWidth()/2;
 			float halfHeight = playerEntities[1]->GetHeight()/2;
-			Position pos = playerEntities[1]->GetPosition();
+			Point pos = playerEntities[1]->GetPosition();
 
-			leftTop = CollideBox(Position(pos.x , pos.y + halfHeight), halfWidth, halfHeight, playerEntities[0]->GetPosition(), playerEntities[0]->GetWidth(), playerEntities[0]->GetHeight());
-			rightTop = CollideBox(Position(pos.x + halfWidth, pos.y + halfHeight), halfWidth, halfHeight, playerEntities[0]->GetPosition(), playerEntities[0]->GetWidth(), playerEntities[0]->GetHeight());
-			leftBot = CollideBox(Position(pos.x , pos.y), halfWidth, halfHeight, playerEntities[0]->GetPosition(), playerEntities[0]->GetWidth(), playerEntities[0]->GetHeight());
-			rightBot = CollideBox(Position(pos.x + halfWidth, pos.y), halfWidth, halfHeight, playerEntities[0]->GetPosition(), playerEntities[0]->GetWidth(), playerEntities[0]->GetHeight());
+			leftTop = CollideBox(Point(pos.x , pos.y + halfHeight), halfWidth, halfHeight, playerEntities[0]->GetPosition(), playerEntities[0]->GetWidth(), playerEntities[0]->GetHeight());
+			rightTop = CollideBox(Point(pos.x + halfWidth, pos.y + halfHeight), halfWidth, halfHeight, playerEntities[0]->GetPosition(), playerEntities[0]->GetWidth(), playerEntities[0]->GetHeight());
+			leftBot = CollideBox(Point(pos.x , pos.y), halfWidth, halfHeight, playerEntities[0]->GetPosition(), playerEntities[0]->GetWidth(), playerEntities[0]->GetHeight());
+			rightBot = CollideBox(Point(pos.x + halfWidth, pos.y), halfWidth, halfHeight, playerEntities[0]->GetPosition(), playerEntities[0]->GetWidth(), playerEntities[0]->GetHeight());
 
 				
 			if (leftTop + rightTop + leftBot + rightBot == 1)
@@ -232,7 +232,7 @@ void GameScene::CheckCollision()
 //}
 
 
-int GameScene::CollideBox(Position aPos, float aWidth, float aHeight, Position bPos, float bWidth, float bHeight)
+int GameScene::CollideBox(Point aPos, float aWidth, float aHeight, Point bPos, float bWidth, float bHeight)
 {
 	if (aPos.x-bPos.x > 0)
 	{
@@ -280,7 +280,7 @@ int GameScene::CollideBox(Position aPos, float aWidth, float aHeight, Position b
 
 bool GameScene::InScreen(CollisionEntity* entity)
 {
-	Position p = entity->GetPosition();
+	Point p = entity->GetPosition();
 	if (m_camera.position.x - p.x > 0) //entity is left
 	{
 		float width = entity->GetWidth();

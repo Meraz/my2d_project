@@ -7,7 +7,7 @@ class EnemyEntity : public AnimationEntity
 {
 public:
 	EnemyEntity();
-	EnemyEntity(Position* playerPos);
+	EnemyEntity(Point* playerPos);
 	virtual ~EnemyEntity();
 
 	void Update();
@@ -16,8 +16,8 @@ public:
 	bool horizontalCollision();
 	int getPlayerPos();
 private:
-	Position			m_moveDir;
-	Position*			m_playerPos;
+	Point			m_moveDir;
+	Point*			m_playerPos;
 	float	m_gravity;
 	bool	onGround;
 };

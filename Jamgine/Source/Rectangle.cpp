@@ -8,7 +8,7 @@ namespace Jamgine
 		
 	}
 
-	Rectangle::Rectangle(Position l_position, float l_width, float l_height)
+	Rectangle::Rectangle(Point l_position, float l_width, float l_height)
 	{
 		m_position = l_position;
 		m_width = l_width;

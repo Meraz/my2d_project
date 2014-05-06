@@ -10,11 +10,11 @@ namespace Jamgine
 		Rectangle();
 
 		/* Comment */
-		Rectangle(Position l_position, float l_width, float l_height);
+		Rectangle(Point l_position, float l_width, float l_height);
 
 		~Rectangle();
 			
-		Position m_position;
+		Point m_position;
 		float m_width, m_height;			
 	};
 }

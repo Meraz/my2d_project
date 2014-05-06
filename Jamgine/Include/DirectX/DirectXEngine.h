@@ -27,9 +27,9 @@ namespace Jamgine
 			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data);
 			virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath);
 
-			virtual void Render(Position p_position,
-				Position p_origin,
-				Position p_textureOffset,
+			virtual void Render(Point p_position,
+				Point p_origin,
+				Point p_textureOffset,
 				Texture2DInterface* p_texture,
 				SpriteEffect p_spriteEffect,
 				float p_width,
@@ -37,24 +37,24 @@ namespace Jamgine
 				float p_depth,
 				float p_rotation,
 				bool p_hasTransparent,
-				Position p_textureDelta);
+				Point p_textureDelta);
 
 			virtual void Render(
-				Position p_position,
-				Position p_origin,
-				Position p_textureOffset,
+				Point p_position,
+				Point p_origin,
+				Point p_textureOffset,
 				Texture2DInterface* p_texture,
 				float p_width,
 				float p_height,
 				float p_depth,
 				float p_rotation);
-			virtual void Render(Position p_position,
-				Position p_textureOffset,
+			virtual void Render(Point p_position,
+				Point p_textureOffset,
 				Texture2DInterface* p_texture,
 				float p_width,
 				float p_height,
 				float p_depth);
-			virtual void Render(Position p_position, Position p_textureOffset,
+			virtual void Render(Point p_position, Point p_textureOffset,
 				Texture2DInterface* p_texture,
 				SpriteEffect p_spriteEffect,
 				float p_width,

@@ -30,11 +30,11 @@ public:
 	RenderEntity();
 	virtual ~RenderEntity();
 
-	virtual void Initialize(Position p_position, Position p_origin, Position p_currentSubImage, char* p_texture, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Position p_amountOfSubImages);
-	virtual void Initialize(Position p_position, Position p_currentSubImage, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Position p_amountOfSubImages);
-	virtual void Initialize(Position p_position, char* p_texture, float p_width, float p_height);
-	virtual void Initialize(Position p_position, float p_width, float p_height);
-	virtual void Initialize(Position p_position, float p_width, float p_height, bool p_hasTransparent);
+	virtual void Initialize(Point p_position, Point p_origin, Point p_currentSubImage, char* p_texture, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Point p_amountOfSubImages);
+	virtual void Initialize(Point p_position, Point p_currentSubImage, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Point p_amountOfSubImages);
+	virtual void Initialize(Point p_position, char* p_texture, float p_width, float p_height);
+	virtual void Initialize(Point p_position, float p_width, float p_height);
+	virtual void Initialize(Point p_position, float p_width, float p_height, bool p_hasTransparent);
 
 
 	void SetTexture(Texture2DInterface* p_texture);
@@ -50,15 +50,15 @@ public:
 	char m_texturePath[50];
 	Jamgine::Texture2DInterface* m_texture;
 	Jamgine::SpriteEffect		m_spriteEffect;
-	Jamgine::Position			m_position;
-	Jamgine::Position			m_origin;
-	Jamgine::Position			m_currentSubImage; // 0-n
+	Jamgine::Point			m_position;
+	Jamgine::Point			m_origin;
+	Jamgine::Point			m_currentSubImage; // 0-n
 	float m_width;
 	float m_height;
 	float m_depth;
 	float m_rotation;
 	bool			  m_hasTransparent;
-	Jamgine::Position m_amountOfSubImages;	//1-n
+	Jamgine::Point m_amountOfSubImages;	//1-n
 	Jamgine::JamgineEngine* m_engine;		//1-n
 
 protected:

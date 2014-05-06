@@ -10,7 +10,7 @@ RenderEntity::~RenderEntity()
 {
 }
 
-void RenderEntity::Initialize(Position p_position, Position p_origin, Position p_currentSubImage, char* p_texturePath, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Position p_amountOfSubImages)
+void RenderEntity::Initialize(Point p_position, Point p_origin, Point p_currentSubImage, char* p_texturePath, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Point p_amountOfSubImages)
 {
 	GetEngine(); // Cheat lol
 
@@ -30,11 +30,11 @@ void RenderEntity::Initialize(Position p_position, Position p_origin, Position p
 	m_textureIndex = 0;
 }
 
-void RenderEntity::Initialize(Position p_position, Position p_textureOffset, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Position p_amountOfSubImages)
+void RenderEntity::Initialize(Point p_position, Point p_textureOffset, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Point p_amountOfSubImages)
 {
 	Initialize(
 		p_position, 
-		Position(0, 0),
+		Point(0, 0),
 		p_textureOffset, 
 		p_texture, 
 		SpriteEffect::FLIP_NONE,
@@ -43,15 +43,15 @@ void RenderEntity::Initialize(Position p_position, Position p_textureOffset, cha
 		STANDARD_SPRITE_DEPTH, 
 		0,
 		false,
-		Position(1, 1)
+		Point(1, 1)
 		);
 }
-void RenderEntity::Initialize(Position p_position, char* p_texture, float p_width, float p_height)
+void RenderEntity::Initialize(Point p_position, char* p_texture, float p_width, float p_height)
 {
 	Initialize(
 		p_position,
-		Position(0, 0),
-		Position(0, 0),
+		Point(0, 0),
+		Point(0, 0),
 		p_texture,
 		SpriteEffect::FLIP_NONE,
 		p_width,
@@ -59,16 +59,16 @@ void RenderEntity::Initialize(Position p_position, char* p_texture, float p_widt
 		STANDARD_SPRITE_DEPTH,
 		0,
 		false,
-		Position(1, 1)
+		Point(1, 1)
 		);
 }
 
-void RenderEntity::Initialize(Position p_position, float p_width, float p_height)
+void RenderEntity::Initialize(Point p_position, float p_width, float p_height)
 {
 	Initialize(
 		p_position,
-		Position(0, 0),
-		Position(1, 1),
+		Point(0, 0),
+		Point(1, 1),
 		nullptr,
 		SpriteEffect::FLIP_NONE,
 		p_width,
@@ -76,16 +76,16 @@ void RenderEntity::Initialize(Position p_position, float p_width, float p_height
 		STANDARD_SPRITE_DEPTH,
 		0, 
 		false,
-		Position(1, 1)
+		Point(1, 1)
 		);
 }
 
-void RenderEntity::Initialize( Position p_position, float p_width, float p_height, bool p_hasTransparent)
+void RenderEntity::Initialize(Point p_position, float p_width, float p_height, bool p_hasTransparent)
 {
 	Initialize(
 		p_position,
-		Position(0, 0),
-		Position(1, 1),
+		Point(0, 0),
+		Point(1, 1),
 		nullptr,
 		SpriteEffect::FLIP_NONE,
 		p_width,
@@ -93,7 +93,7 @@ void RenderEntity::Initialize( Position p_position, float p_width, float p_heigh
 		STANDARD_SPRITE_DEPTH,
 		0,
 		p_hasTransparent,
-		Position(1, 1)
+		Point(1, 1)
 		);
 }
 

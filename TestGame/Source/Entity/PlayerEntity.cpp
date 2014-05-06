@@ -13,7 +13,7 @@ PlayerEntity::PlayerEntity(int num)
 	m_animationWhaleJumpTimer = 0;
 	m_onGround = false;
 	m_isWhaleAnimating = false;
-	m_velocity = Position(0,0);
+	m_velocity = Point(0,0);
 	m_isAlive = true;
 	m_noControl = false;
 	IsReversedYaxis = false;
@@ -185,7 +185,7 @@ void PlayerEntity::Update(double deltaTime)
 		/*if (!m_onGround)
 		{*/
 			m_velocity.y += deltaTime*(double)(GRAVITY + rocketHover);
-			m_position += Position(m_velocity.x*deltaTime, m_velocity.y*deltaTime);
+			m_position += Point(m_velocity.x*deltaTime, m_velocity.y*deltaTime);
 		//}
 		
 		
@@ -260,7 +260,7 @@ void PlayerEntity::CollideStatic()
 	}
 }
 
-void PlayerEntity::AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Position p_numOfSubTextures)
+void PlayerEntity::AddAnimationTexture(float p_width, float p_height, char * p_textureName, Jamgine::Point p_numOfSubTextures)
 {
 	AnimationSetup newSetup;
 	newSetup.numOfSubTextures = p_numOfSubTextures;

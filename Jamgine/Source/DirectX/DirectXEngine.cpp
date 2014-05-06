@@ -456,16 +456,15 @@ namespace Jamgine
 			m_deviceContext->PSSetSamplers(0, 1, &m_samplerState);
 			return l_hr;
 		}
-
-
+		
 		ErrorMessage DirectXEngine::LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath)
 		{
 			return m_texture2DManager->GetTexture(p_texture2DInterface, p_filePath);
 		}
 	
-		void DirectXEngine::Render(Position p_position,
-			Position p_origin,
-			Position p_textureOffset,
+		void DirectXEngine::Render(Point p_position,
+			Point p_origin,
+			Point p_textureOffset,
 			Texture2DInterface* p_texture,
 			SpriteEffect p_spriteEffect,
 			float p_width,
@@ -473,15 +472,15 @@ namespace Jamgine
 			float p_depth,
 			float p_rotation,
 			bool p_hasTransparent,
-			Position p_textureDelta)
+			Point p_textureDelta)
 		{
 			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation, p_hasTransparent, p_textureDelta));
 		}
 
 		void DirectXEngine::Render(
-			Position p_position,
-			Position p_origin,
-			Position p_textureOffset,
+			Point p_position,
+			Point p_origin,
+			Point p_textureOffset,
 			Texture2DInterface* p_texture,
 			float p_width,
 			float p_height,
@@ -491,8 +490,8 @@ namespace Jamgine
 			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_width, p_height, p_depth, p_rotation));
 		}
 
-		void DirectXEngine::Render(Position p_position,
-			Position p_textureOffset,
+		void DirectXEngine::Render(Point p_position,
+			Point p_textureOffset,
 			Texture2DInterface* p_texture,
 			float p_width,
 			float p_height,
@@ -501,7 +500,7 @@ namespace Jamgine
 			m_renderData.push_back(SpriteData(p_position, p_textureOffset, (Texture2D*)p_texture, p_width, p_height, p_depth));
 		}
 
-		void DirectXEngine::Render(Position p_position, Position p_textureOffset,
+		void DirectXEngine::Render(Point p_position, Point p_textureOffset,
 			Texture2DInterface* p_texture,
 			SpriteEffect p_spriteEffect,
 			float p_width,

@@ -5,7 +5,7 @@ class CollisionEntity :	public RenderEntity
 public:
 	CollisionEntity();
 	~CollisionEntity();
-	Position GetPosition();
+	Point GetPosition();
 	float GetWidth();
 	float GetHeight();
 };

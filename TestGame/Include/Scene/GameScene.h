@@ -49,9 +49,9 @@ private:
 	void CheckCollision();
 
 	bool InScreen(CollisionEntity* entity);
-	int CollideBox(Jamgine::Position apos, float aWidth, float aHeight, Jamgine::Position bPos, float bWidth, float bHeight);
-	bool HorizontalCollision(Position playPos, Position objPos, float playWidth, float playHeight, float objWidth);
-	bool VerticalCollision(Position playPos, Position objPos, float playWidth, float playHeight, float objHeight);
+	int CollideBox(Point apos, float aWidth, float aHeight, Jamgine::Point bPos, float bWidth, float bHeight);
+	bool HorizontalCollision(Point playPos, Point objPos, float playWidth, float playHeight, float objWidth);
+	bool VerticalCollision(Point playPos, Point objPos, float playWidth, float playHeight, float objHeight);
 
 	void CreateObject(int l_entity, char* l_data);
 	SoundHandler* m_soundHandler;

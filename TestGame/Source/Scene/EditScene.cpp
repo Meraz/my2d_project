@@ -59,7 +59,7 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 		for (float x = 0; x < firstSprint / dirtTile; x++)
 		{
 			m_renderEntity.push_back(new RenderEntity());
-			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
+			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
 		}
 	}
 	for (float y = (200 + grassTile) / dirtTile; y < 250 / dirtTile; y++)
@@ -67,7 +67,7 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 		for (float x = 0; x < firstSprint / dirtTile; x++)
 		{
 			m_renderEntity.push_back(new RenderEntity());
-			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
+			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
 		}
 	}
 	for (float y = (400 + grassTile - 5) / dirtTile; y < 450 / dirtTile; y++)
@@ -75,32 +75,32 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 		for (float x = 0; x < firstSprint / dirtTile; x++)
 		{
 			m_renderEntity.push_back(new RenderEntity());
-			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
+			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
 		}
 	}
 
 	for (unsigned int i = 0; i < firstSprint / grassTile; i++)
 	{
 		m_renderEntity.push_back(new RenderEntity());
-		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(grassTile * i, 55), "tiled_grass_top.dds", grassTile, grassTile); // Grass
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(grassTile * i, 55), "tiled_grass_top.dds", grassTile, grassTile); // Grass
 	}
 
 	for (unsigned int i = 0; i < firstSprint / grassTile; i++)
 	{
 		m_renderEntity.push_back(new RenderEntity());
-		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(grassTile * i, 205), "tiled_grass_top.dds", grassTile, grassTile); // Grass
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(grassTile * i, 205), "tiled_grass_top.dds", grassTile, grassTile); // Grass
 	}
 
 	for (unsigned int i = 0; i < firstSprint / grassTile; i++)
 	{
 		m_renderEntity.push_back(new RenderEntity());
-		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(grassTile * i, 250), "tiled_grass_top.dds", grassTile, grassTile); // Grass
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(grassTile * i, 250), "tiled_grass_top.dds", grassTile, grassTile); // Grass
 	}
 
 	for (unsigned int i = 0; i < firstSprint / grassTile; i++)
 	{
 		m_renderEntity.push_back(new RenderEntity());
-		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(grassTile * i, 400), "tiled_grass_top.dds", grassTile, grassTile); // Grass
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(grassTile * i, 400), "tiled_grass_top.dds", grassTile, grassTile); // Grass
 	}
 
 		
@@ -206,17 +206,17 @@ void EditScene::NewRect(float p_mousePositionX, float p_mousePositionY, bool p_m
 	if (p_mouseClicked == true && m_prevMouseClick == false && m_creatingBox == false)
 	{
 		m_creatingBox = true;
-		m_firstPos = Position(p_mousePositionX, p_mousePositionY);
+		m_firstPos = Point(p_mousePositionX, p_mousePositionY);
 	}
 	else if (p_mouseClicked == true && m_prevMouseClick == false && m_creatingBox == true)
 	{
-		m_secondPos = Position(p_mousePositionX, p_mousePositionY);
+		m_secondPos = Point(p_mousePositionX, p_mousePositionY);
 
 		float l_width = m_secondPos.x - m_firstPos.x;
 		float l_heigth = m_secondPos.y - m_firstPos.y;
 
 		m_renderEntity.push_back(new RenderEntity());
-		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(m_firstPos), "dirt_texture.dds", l_width, l_heigth);
+		m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(m_firstPos), "dirt_texture.dds", l_width, l_heigth);
 
 		m_creatingBox = false;
 		m_currentSprite = m_renderEntity.size() - 1;
@@ -277,13 +277,13 @@ void EditScene::SetOrigin(float p_mousePositionX, float p_mousePositionY, bool p
 	// if a new click has been done and I'm not creating a box	
 	if (p_mouseClicked == true && m_prevMouseClick == false)
 	{
-		m_firstPos = Position(p_mousePositionX, p_mousePositionY);
+		m_firstPos = Point(p_mousePositionX, p_mousePositionY);
 		m_renderEntity[m_currentSprite]->m_origin = m_firstPos - m_renderEntity[m_currentSprite]->m_position;
 		PrintDebugWithValue("origin x:%f y:%f\t %f \n", m_renderEntity[m_currentSprite]->m_origin.x, m_renderEntity[m_currentSprite]->m_origin.y, 0);
 	}
 	if (tab && !prevtab)
 	{
-		m_renderEntity[m_currentSprite]->m_origin = Position(0,0);
+		m_renderEntity[m_currentSprite]->m_origin = Point(0,0);
 		PrintDebugWithValue("origin x:%f y:%f\t %f \n", m_renderEntity[m_currentSprite]->m_origin.x, m_renderEntity[m_currentSprite]->m_origin.y, 0);
 	}
 }
@@ -317,11 +317,11 @@ void EditScene::EditRect(float p_mousePositionX, float p_mousePositionY, bool p_
 	if (p_mouseClicked == true && m_prevMouseClick == false && editBox == false)
 	{
 		editBox = true;
-		m_firstPos = Position(p_mousePositionX, p_mousePositionY);
+		m_firstPos = Point(p_mousePositionX, p_mousePositionY);
 	}
 	else if (p_mouseClicked == true && m_prevMouseClick == false && editBox == true)
 	{
-		m_secondPos = Position(p_mousePositionX, p_mousePositionY);
+		m_secondPos = Point(p_mousePositionX, p_mousePositionY);
 
 		float l_width = m_secondPos.x - m_firstPos.x;
 		float l_heigth = m_secondPos.y - m_firstPos.y;
@@ -512,9 +512,9 @@ void EditScene::Render()
 		if (m_selectedSpriteVibrateTimer++ < 1000)
 		{
 			if (m_selectedSpriteVibrateTimer % 2 == 0)
-				m_renderEntity[m_currentSprite]->m_position -= Position(3, 3);
+				m_renderEntity[m_currentSprite]->m_position -= Point(3, 3);
 			else
-				m_renderEntity[m_currentSprite]->m_position += Position(3, 3);
+				m_renderEntity[m_currentSprite]->m_position += Point(3, 3);
 		}
 		else
 		{
@@ -533,7 +533,7 @@ void EditScene::CreateDirt(int yStart, int yEnd, int xStart, int xEnd)
 		for (float x = xStart; x < xEnd / dirtTile; x++)
 		{
 			m_renderEntity.push_back(new RenderEntity());
-			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Position(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
+			m_renderEntity[m_renderEntity.size() - 1]->Initialize(Point(dirtTile * x, y*dirtTile), "dirt_texture.dds", dirtTile, dirtTile);
 		}
 	}
 }

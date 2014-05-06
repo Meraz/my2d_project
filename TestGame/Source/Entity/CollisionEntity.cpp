@@ -10,7 +10,7 @@ CollisionEntity::~CollisionEntity()
 {
 }
 
-Position CollisionEntity::GetPosition()
+Point CollisionEntity::GetPosition()
 {
 	return m_position;
 }
