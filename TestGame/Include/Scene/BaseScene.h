@@ -21,6 +21,9 @@ public:
 protected:
 	SceneState m_sceneState;
 	bool m_previousMouseState;
+
+public:
 	SceneManagerInterface* m_sceneManagerInterface;
+protected:
 	Jamgine::JamgineEngine* m_engine;
 };

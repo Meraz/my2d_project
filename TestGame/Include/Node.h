@@ -11,6 +11,7 @@ public:
 	virtual ~Node();
 	void AddEntity(CollisionEntity* p_entity);
 	bool Collide(Jamgine::Rectangle p_rectangle);
+	void Render(Jamgine::Rectangle p_rectangle);
 
 private:
 	void Subdivide();

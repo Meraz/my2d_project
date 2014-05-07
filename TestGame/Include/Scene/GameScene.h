@@ -28,8 +28,7 @@ public:
 	void Render();
 
 private:
-	float m_width;
-	float m_height;
+	
 
 	std::vector<RenderEntity*>		m_renderEntities;
 	std::vector<EnemyEntity*>		m_enemyEntities;
@@ -52,6 +51,8 @@ private:
 	LuaManager* m_luaManager;
 	
 public:
-	Node* QuadTreeRootNode;
+	float m_width;
+	float m_height;
+	Node* m_quadTreeRootNode;
 
 };

@@ -48,13 +48,7 @@ bool Node::Collide(Rectangle p_rectangle)
 		{
 			for(unsigned int i = 0; i < CHILD_CAPACITY; i++)
 			{
-				if(m_child[0]->Collide(p_rectangle) == true)
-					return true;
-				if(m_child[1]->Collide(p_rectangle) == true)
-					return true;
-				if(m_child[2]->Collide(p_rectangle) == true)
-					return true;
-				if(m_child[3]->Collide(p_rectangle) == true)
+				if(m_child[i]->Collide(p_rectangle) == true)
 					return true;
 			}
 		}
@@ -62,6 +56,30 @@ bool Node::Collide(Rectangle p_rectangle)
 	return false;
 }
 
+void Node::Render(Jamgine::Rectangle p_rectangle)
+{
+	if(m_rectangle.Intersect(p_rectangle) == true)
+	{
+		for(int i = 0; i < m_entity.size(); i++)
+		{
+			if(p_rectangle.Intersect(m_entity[i]->GetRectangle()))
+			{
+				m_entity[i]->Render();
+			}
+		}
+
+		if(m_leaf == false)
+		{
+			for(unsigned int i = 0; i < CHILD_CAPACITY; i++)
+			{
+				if(p_rectangle.Intersect(m_entity[i]->GetRectangle()))
+				{
+					m_entity[i]->Render();
+				}
+			}
+		}
+	}
+}
 
 void Node::Subdivide()
 {

@@ -81,6 +81,23 @@ void RenderEntity::Initialize(Point p_position, float p_width, float p_height)
 		);
 }
 
+void RenderEntity::Initialize(Jamgine::Rectangle p_rectangle, char* p_texture)
+{
+	Initialize(
+		p_rectangle.position,
+		Point(0, 0),
+		Point(0, 0),
+		p_texture,
+		SpriteEffect::FLIP_NONE,
+		p_rectangle.position.x,
+		p_rectangle.position.y,
+		STANDARD_SPRITE_DEPTH,
+		0,
+		false,
+		Point(1, 1)
+		);
+}
+
 void RenderEntity::Initialize(Point p_position, float p_width, float p_height, bool p_hasTransparent)
 {
 	Initialize(
@@ -107,9 +124,9 @@ void RenderEntity::Update(double p_deltaTime)
 {
 }
 
-void RenderEntity::Render(Jamgine::JamgineEngine* p_engine)
+void RenderEntity::Render()
 {
-	p_engine->Render(m_position, m_width, m_height, m_origin, m_currentSubImage, m_texture, m_spriteEffect, m_depth, m_rotation, m_hasTransparent, m_amountOfSubImages);
+	m_engine->Render(m_position, m_width, m_height, m_origin, m_currentSubImage, m_texture, m_spriteEffect, m_depth, m_rotation, m_hasTransparent, m_amountOfSubImages);
 }
 
 std::stringstream RenderEntity::ToFile()

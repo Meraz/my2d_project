@@ -503,7 +503,7 @@ void EditScene::Render()
 	{
 		for (int i = 0; i < a ; i++)
 		{
-			m_renderEntity[i]->Render(m_engine);
+			m_renderEntity[i]->Render();
 		}
 	}
 

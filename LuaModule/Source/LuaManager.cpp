@@ -1,6 +1,7 @@
 #include <LuaModule/Include/LuaManager.h>
 
 #include <iostream>
+#include <functional>
 
 LuaManager::LuaManager()
 {
@@ -27,8 +28,6 @@ LuaManager::LuaManager()
 		luaL_requiref(m_luaState, lib->name, lib->func, 1);
 		lua_pop(m_luaState, 1);
 	}
-
-	luaL_dofile(m_luaState, "test.lua");
 }
 
 LuaManager::~LuaManager()
@@ -36,7 +35,24 @@ LuaManager::~LuaManager()
 	lua_close(m_luaState);
 }
 
+
+void LuaManager::RegisterFunction(std::string p_functionName, int (*p_function)(lua_State* p_state))
+{
+	lua_register(m_luaState, p_functionName.c_str(), p_function);
+}
+
 void LuaManager::RunEntireScript(char* p_path)
 {
+	luaL_dofile(m_luaState, p_path);
+}
 
+void LuaManager::RunSpecificFuntionInScript(char* p_path, char* p_functionName)
+{
+	luaL_dofile(m_luaState, p_path);
+	lua_getglobal(m_luaState, p_functionName);
+
+	lua_pcall(m_luaState, 0, LUA_MULTRET, 0);
+
+	int argc = lua_gettop(m_luaState);
+	lua_pop(m_luaState, argc);
 }

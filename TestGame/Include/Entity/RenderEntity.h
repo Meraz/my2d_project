@@ -30,13 +30,14 @@ public:
 	virtual void Initialize(Point p_position, Point p_origin, Point p_currentSubImage, char* p_texture, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Point p_amountOfSubImages);
 	virtual void Initialize(Point p_position, Point p_currentSubImage, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Point p_amountOfSubImages);
 	virtual void Initialize(Point p_position, char* p_texture, float p_width, float p_height);
+	virtual void Initialize(Jamgine::Rectangle p_rectangle,  char* p_texture);
 	virtual void Initialize(Point p_position, float p_width, float p_height);
 	virtual void Initialize(Point p_position, float p_width, float p_height, bool p_hasTransparent);
 
 
 	void SetTexture(Texture2DInterface* p_texture);
 	virtual void Update(double p_deltaTime);
-	virtual	void Render(Jamgine::JamgineEngine* p_engine);
+	virtual	void Render();
 	
 	// Load and save class
 	virtual std::stringstream ToFile();

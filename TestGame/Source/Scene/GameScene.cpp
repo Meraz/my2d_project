@@ -21,8 +21,57 @@ namespace //Used for the scripting
 	GameScene* a_gameScene = nullptr;
 }
 
+static int SetMapSize(lua_State* l_luaState) // float x, float y
+{
+	float width, height;
+	width = lua_tonumber(l_luaState, 1);
+	height = lua_tonumber(l_luaState, 2);
+	int argc = lua_gettop(l_luaState);
+	lua_pop(l_luaState, argc);
+
+	a_gameScene->m_width = width;
+	a_gameScene->m_height = height;
+
+	a_gameScene->m_quadTreeRootNode = new Node(Jamgine::Rectangle(0,0,width, height));
+	return 1;
+}
+
+static int AddObject(lua_State* l_luaState) // float x, float y
+{
+	float x, y, width, height;
+	x = lua_tonumber(l_luaState, 1);
+	y = lua_tonumber(l_luaState, 2);
+	width = lua_tonumber(l_luaState, 3);
+	height = lua_tonumber(l_luaState, 4);
+	int argc = lua_gettop(l_luaState);
+	lua_pop(l_luaState, argc);
+
+	if(a_gameScene != nullptr)
+	{
+		CollisionEntity* l_collisionEntity = new CollisionEntity();
+		l_collisionEntity->Initialize(Jamgine::Rectangle(x, y, width, height), "Circle.dds");
+		a_gameScene->m_quadTreeRootNode->AddEntity(l_collisionEntity);	
+	}
+	return 1;
+}
+
+static int StaticCheckCollision(lua_State* l_luaState) // float x, float y, float width, float height
+{
+	float x, y, width, height;
+	x = lua_tonumber(l_luaState, 1);
+	y = lua_tonumber(l_luaState, 2);
+	width = lua_tonumber(l_luaState, 3);
+	height = lua_tonumber(l_luaState, 4);
+	int argc = lua_gettop(l_luaState);
+	lua_pop(l_luaState, argc);
+
+	if(a_gameScene != nullptr)
+		return a_gameScene->m_quadTreeRootNode->Collide(Jamgine::Rectangle(x, y, width, height));	
+	return 1;
+}
+
 GameScene::GameScene(float width, float height)
-	: QuadTreeRootNode(nullptr), m_luaManager(nullptr)
+	: m_quadTreeRootNode(nullptr), m_luaManager(nullptr)
 { 
 	a_gameScene = this;
 	m_renderEntities		= std::vector<RenderEntity*>();
@@ -34,27 +83,14 @@ GameScene::GameScene(float width, float height)
 	m_height = height;
 
 	m_luaManager = new LuaManager();
+	m_luaManager->RegisterFunction("SetMapSize", SetMapSize);	
+	m_luaManager->RegisterFunction("StaticCheckCollision", StaticCheckCollision);
+	m_luaManager->RegisterFunction("AddObject", AddObject);
 
-	//m_luaManager->RunScript("Something.lua");
+//	m_luaManager->RunEntireScript("Maze1.lua");
+	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "Test");
 
-	//QuadTreeRootNode = new Node();
-}
 
-static int SetMapSize()
-{
-
-}
-
-static int AddObject(float x, float y)
-{
-
-}
-
-static bool CheckCollision(float x, float y, float width, float height)
-{
-	if(a_gameScene != nullptr)
-		return a_gameScene->QuadTreeRootNode->Collide(Jamgine::Rectangle(x, y, width, height));
-	
 }
 
 GameScene::~GameScene()
@@ -92,7 +128,9 @@ void GameScene::CheckCollision()
 
 void GameScene::Render()
 {
-	playerEntity->Render(m_engine);
+	playerEntity->Render();
+
+	m_quadTreeRootNode->Render(Jamgine::Rectangle(0, 0, m_width, m_height));
 
 	/*
 	for (unsigned int i = 0; i < m_renderEntities.size(); i++)
