@@ -35,7 +35,7 @@ static int SetMapSize(lua_State* l_luaState) // float x, float y
 	a_gameScene->m_quadTreeRootNode = new Node(Jamgine::Rectangle(0,0,width, height));
 	return 1;
 }
-
+static int derp = 0;
 static int AddObject(lua_State* l_luaState) // float x, float y
 {
 	float x, y, width, height;
@@ -48,9 +48,11 @@ static int AddObject(lua_State* l_luaState) // float x, float y
 
 	if(a_gameScene != nullptr)
 	{
-		CollisionEntity* l_collisionEntity = new CollisionEntity();
+		RenderEntity* l_collisionEntity = new RenderEntity();
 		l_collisionEntity->Initialize(Jamgine::Rectangle(x, y, width, height), "Circle.dds");
-		a_gameScene->m_quadTreeRootNode->AddEntity(l_collisionEntity);	
+		a_gameScene->m_renderEntities.push_back(l_collisionEntity);
+		//a_gameScene->m_quadTreeRootNode->AddEntity(l_collisionEntity);
+		derp++;
 	}
 	return 1;
 }
@@ -88,7 +90,8 @@ GameScene::GameScene(float width, float height)
 	m_luaManager->RegisterFunction("AddObject", AddObject);
 
 //	m_luaManager->RunEntireScript("Maze1.lua");
-	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "Test");
+	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "SetSize");
+	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "GenerateMaze");
 }
 
 GameScene::~GameScene()
@@ -128,13 +131,14 @@ void GameScene::Render()
 {
 	playerEntity->Render();
 
-	m_quadTreeRootNode->Render(Jamgine::Rectangle(0, 0, m_width, m_height));
+//	if (m_quadTreeRootNode != nullptr)
+//		m_quadTreeRootNode->Render(Jamgine::Rectangle(0, 0, 800, 800));
 
-	/*
+	
 	for (unsigned int i = 0; i < m_renderEntities.size(); i++)
 	{
-		m_renderEntities[i]->Render(m_engine);
-	}*/
+		m_renderEntities[i]->Render();
+	}
 
 	m_engine->PostRender(&m_camera);
 }

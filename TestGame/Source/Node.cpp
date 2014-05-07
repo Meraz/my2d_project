@@ -30,12 +30,13 @@ void Node::AddEntity(CollisionEntity* p_entity)
 		}
 		if(m_leaf == true)
 		{
-			if(m_entity.size() > BUCKET_CAPACITY)
+			if(m_entity.size() >= BUCKET_CAPACITY)
 			{				
 				Subdivide();
 				MoveOneEntityDown(p_entity);		
 			}
-			m_entity.push_back(p_entity);
+			else
+				m_entity.push_back(p_entity);
 		}
 	}
 }
@@ -98,10 +99,6 @@ void Node::MoveOneEntityDown(CollisionEntity* p_entity)
 {
 	for(unsigned int i = 0; i < CHILD_CAPACITY; i++)
 	{
-		if(m_child[i] == nullptr)
-		{
-			m_child[i] = new Node(CalculateRectangleForchild(i));
-		}
 		m_child[i]->AddEntity(p_entity);
 	}
 }

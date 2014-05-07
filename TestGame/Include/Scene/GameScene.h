@@ -30,7 +30,7 @@ public:
 private:
 	
 
-	std::vector<RenderEntity*>		m_renderEntities;
+	
 	std::vector<EnemyEntity*>		m_enemyEntities;
 	std::vector<ProjectileEntity*>  m_projectileEntities;
 	std::vector<AnimationEntity*>	m_animationEntities;
@@ -51,6 +51,7 @@ private:
 	LuaManager* m_luaManager;
 	
 public:
+	std::vector<RenderEntity*>		m_renderEntities;
 	float m_width;
 	float m_height;
 	Node* m_quadTreeRootNode;

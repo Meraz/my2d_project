@@ -54,5 +54,5 @@ void LuaManager::RunSpecificFuntionInScript(char* p_path, char* p_functionName)
 	lua_pcall(m_luaState, 0, LUA_MULTRET, 0);
 
 	int argc = lua_gettop(m_luaState);
-	lua_pop(m_luaState, argc);
+	lua_pop(m_luaState, argc-1);
 }
