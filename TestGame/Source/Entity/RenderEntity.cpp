@@ -28,6 +28,7 @@ void RenderEntity::Initialize(Point p_position, Point p_origin, Point p_currentS
 	m_hasTransparent = p_hasTransparent;
 	m_amountOfSubImages = p_amountOfSubImages;
 	m_textureIndex = 0;
+	m_rectangle = Rectangle(m_position, m_width, m_height);
 }
 
 void RenderEntity::Initialize(Point p_position, Point p_textureOffset, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Point p_amountOfSubImages)
@@ -108,8 +109,7 @@ void RenderEntity::Update(double p_deltaTime)
 
 void RenderEntity::Render(Jamgine::JamgineEngine* p_engine)
 {
-
-	p_engine->Render(m_position, m_origin, m_currentSubImage, m_texture, m_spriteEffect, m_width, m_height, m_depth, m_rotation, m_hasTransparent, m_amountOfSubImages);
+	p_engine->Render(m_position, m_width, m_height, m_origin, m_currentSubImage, m_texture, m_spriteEffect, m_depth, m_rotation, m_hasTransparent, m_amountOfSubImages);
 }
 
 std::stringstream RenderEntity::ToFile()
@@ -160,6 +160,7 @@ void RenderEntity::LoadClassFromData(char* p_data)
 
 	GetEngine();
 	m_engine->LoadTexture(&m_texture, m_texturePath);
+	m_rectangle = Rectangle(m_position, m_width, m_height);
 }
 
 void RenderEntity::GetEngine()

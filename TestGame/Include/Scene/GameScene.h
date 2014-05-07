@@ -9,6 +9,10 @@ class AnimationEntity;
 class PlayerEntity;
 class CollisionEntity;
 class SoundHandler;
+class Node;
+
+#include <LuaModule/Include/LuaManager.h>
+//class LuaManager;
 
 #include <vector>
 using namespace Jamgine;
@@ -45,6 +49,9 @@ private:
 	void CheckCollision();
 	bool InScreen(CollisionEntity* entity);
 	void CreateObject(int l_entity, char* l_data);
+	LuaManager* m_luaManager;
 	
+public:
+	Node* QuadTreeRootNode;
 
 };

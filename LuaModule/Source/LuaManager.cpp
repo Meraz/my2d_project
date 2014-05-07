@@ -1,7 +1,6 @@
-#include <LuaScript/Include/LuaManager.h>
+#include <LuaModule/Include/LuaManager.h>
 
 #include <iostream>
-
 
 LuaManager::LuaManager()
 {
@@ -28,9 +27,16 @@ LuaManager::LuaManager()
 		luaL_requiref(m_luaState, lib->name, lib->func, 1);
 		lua_pop(m_luaState, 1);
 	}
+
+	luaL_dofile(m_luaState, "test.lua");
 }
 
 LuaManager::~LuaManager()
+{
+	lua_close(m_luaState);
+}
+
+void LuaManager::RunEntireScript(char* p_path)
 {
 
 }

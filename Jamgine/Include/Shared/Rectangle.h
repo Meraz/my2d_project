@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Jamgine/Include/Shared.h>
+#include <Jamgine/Include/Shared/Point.h>
 
 namespace Jamgine
 {

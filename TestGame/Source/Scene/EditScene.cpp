@@ -43,7 +43,7 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	m_texturePath.push_back("dirt_texture.dds");
 	m_texturePath.push_back("tiled_grass_top.dds");
 
-	int max = m_texturePath.size();
+	unsigned int max = m_texturePath.size();
 	m_texture.resize(max);
 	for (unsigned int i = 0; i < max; i++)
 	{

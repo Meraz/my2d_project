@@ -8,5 +8,7 @@ public:
 	Point GetPosition();
 	float GetWidth();
 	float GetHeight();
+
+	Jamgine::Rectangle GetRectangle() {return m_rectangle;}
 };
 

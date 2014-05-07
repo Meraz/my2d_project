@@ -57,6 +57,7 @@ public:
 	bool			  m_hasTransparent;
 	Jamgine::Point m_amountOfSubImages;	//1-n
 	Jamgine::JamgineEngine* m_engine;		//1-n
+	Jamgine::Rectangle m_rectangle;
 
 protected:
 	void GetEngine();

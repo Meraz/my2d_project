@@ -8,12 +8,23 @@
 #include <TestGame/Include/Entity/AnimationEntity.h>
 #include <TestGame/Include/Sound/FMODHandler.h>
 #include <TestGame/Include/Sound/SoundHandler.h>
+#include <TestGame/Include/Node.h>
+
+// Custom lib include
+
 
 // c++ includes
 #include <fstream>
 
+namespace //Used for the scripting
+{
+	GameScene* a_gameScene = nullptr;
+}
+
 GameScene::GameScene(float width, float height)
+	: QuadTreeRootNode(nullptr), m_luaManager(nullptr)
 { 
+	a_gameScene = this;
 	m_renderEntities		= std::vector<RenderEntity*>();
 	m_enemyEntities			= std::vector<EnemyEntity*>();
 	m_projectileEntities	= std::vector<ProjectileEntity*>();
@@ -21,6 +32,29 @@ GameScene::GameScene(float width, float height)
 	m_collisionEntities		= std::vector<CollisionEntity*>();
 	m_width = width;
 	m_height = height;
+
+	m_luaManager = new LuaManager();
+
+	//m_luaManager->RunScript("Something.lua");
+
+	//QuadTreeRootNode = new Node();
+}
+
+static int SetMapSize()
+{
+
+}
+
+static int AddObject(float x, float y)
+{
+
+}
+
+static bool CheckCollision(float x, float y, float width, float height)
+{
+	if(a_gameScene != nullptr)
+		return a_gameScene->QuadTreeRootNode->Collide(Jamgine::Rectangle(x, y, width, height));
+	
 }
 
 GameScene::~GameScene()
@@ -39,7 +73,8 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	m_camera = Jamgine::Camera(0,0);
 
 	playerEntity = new PlayerEntity();
-	playerEntity->Initialize(Point(200, 400), Point(0, 0), Point(0, 0), "Circle.dds", SpriteEffect::FLIP_NONE, 250, 300, 0.1, 0, true, Point(1, 1));
+	playerEntity->Initialize(Point(200.0f, 400.0f), Point(0.0f, 0.0f), Point(0.0f, 0.0f), "Circle.dds", SpriteEffect::FLIP_NONE, 250.0f, 300.0f, 0.1f, 0.0f, true, Point(1.0f, 1.0f));
+	//playerEntity->Initialize(Point(200, 400), Point(0, 0), Point(0, 0), "Circle.dds", SpriteEffect::FLIP_NONE, 250, 300, 0.1, 0, true, Point(1, 1));
 	
 	
 //	LoadCurrentSetup("Level.lvl");

@@ -39,5 +39,5 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Add subdirectories
 add_subdirectory(Jamgine)
 add_subdirectory(TestGame)
-add_subdirectory(LuaScript)
+add_subdirectory(LuaModule)
 

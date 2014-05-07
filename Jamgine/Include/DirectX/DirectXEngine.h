@@ -2,7 +2,6 @@
 
 #include <Jamgine/Include/Jamgine.h>
 #include <Jamgine/Include/Texture/Texture2DManager.h>
-#include <Jamgine/Include/DirectX/SpriteData.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
 #include <Jamgine/Include/Camera.h>
 #include <d3d11_1.h>
@@ -27,40 +26,19 @@ namespace Jamgine
 			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data);
 			virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath);
 
-			virtual void Render(Point p_position,
+			virtual void Render(
+				Point p_position,
+				float p_width,
+				float p_height,
 				Point p_origin,
 				Point p_textureOffset,
 				Texture2DInterface* p_texture,
 				SpriteEffect p_spriteEffect,
-				float p_width,
-				float p_height,
 				float p_depth,
 				float p_rotation,
 				bool p_hasTransparent,
 				Point p_textureDelta);
-
-			virtual void Render(
-				Point p_position,
-				Point p_origin,
-				Point p_textureOffset,
-				Texture2DInterface* p_texture,
-				float p_width,
-				float p_height,
-				float p_depth,
-				float p_rotation);
-			virtual void Render(Point p_position,
-				Point p_textureOffset,
-				Texture2DInterface* p_texture,
-				float p_width,
-				float p_height,
-				float p_depth);
-			virtual void Render(Point p_position, Point p_textureOffset,
-				Texture2DInterface* p_texture,
-				SpriteEffect p_spriteEffect,
-				float p_width,
-				float p_height,
-				float p_depth
-				);
+			virtual void Render(Jamgine::SpriteData p_spriteData);
 
 
 			virtual void PostRender(Camera* p_camera);

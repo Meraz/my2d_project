@@ -16,7 +16,7 @@ namespace Jamgine
 		{
 			DirectX::XMFLOAT3 position;
 			DirectX::XMFLOAT2 origin;
-			DirectX::XMFLOAT2 offset;
+			DirectX::XMFLOAT2 offset;	// width and heigth
 			DirectX::XMFLOAT2 texture_offset;
 			float  rotation;
 			DirectX::XMFLOAT2 TextureDeltaUVSize;	// 1 / number of subpictures
@@ -29,9 +29,9 @@ namespace Jamgine
 
 			Vertex(Jamgine::SpriteData input)
 			{
-				position = DirectX::XMFLOAT3(input.position.x, input.position.y, input.depth);
+				position = DirectX::XMFLOAT3(input.rectangle.position.x, input.rectangle.position.y, input.depth);
 				origin	 = DirectX::XMFLOAT2(input.origin.x, input.origin.y);
-				offset	 = DirectX::XMFLOAT2(input.width, input.height);
+				offset	 = DirectX::XMFLOAT2(input.rectangle.width, input.rectangle.height);
 				texture_offset = DirectX::XMFLOAT2(input.textureOffset.x, input.textureOffset.y);
 				rotation = input.rotation;
 				TextureDeltaUVSize = DirectX::XMFLOAT2(1/input.textureDelta.x, 1/input.textureDelta.y);
@@ -462,54 +462,29 @@ namespace Jamgine
 			return m_texture2DManager->GetTexture(p_texture2DInterface, p_filePath);
 		}
 	
-		void DirectXEngine::Render(Point p_position,
+		void DirectXEngine::Render(
+			Point p_position,
+			float p_width,
+			float p_height,
 			Point p_origin,
 			Point p_textureOffset,
 			Texture2DInterface* p_texture,
 			SpriteEffect p_spriteEffect,
-			float p_width,
-			float p_height,
+
 			float p_depth,
 			float p_rotation,
 			bool p_hasTransparent,
 			Point p_textureDelta)
 		{
-			m_renderData.push_back(Jamgine::SpriteData(p_position, p_origin, p_textureOffset, p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation, p_hasTransparent, p_textureDelta));
+			m_renderData.push_back(Jamgine::SpriteData(p_position, p_width, p_height, p_origin, p_textureOffset, p_texture, p_spriteEffect, p_depth, p_rotation, p_hasTransparent, p_textureDelta));
 		}
 
-		void DirectXEngine::Render(
-			Point p_position,
-			Point p_origin,
-			Point p_textureOffset,
-			Texture2DInterface* p_texture,
-			float p_width,
-			float p_height,
-			float p_depth,
-			float p_rotation) 
+		void DirectXEngine::Render(Jamgine::SpriteData p_spriteData)
 		{
-			m_renderData.push_back(Jamgine::SpriteData(p_position, p_origin, p_textureOffset, p_texture, p_width, p_height, p_depth, p_rotation));
+			m_renderData.push_back(p_spriteData);
 		}
 
-		void DirectXEngine::Render(Point p_position,
-			Point p_textureOffset,
-			Texture2DInterface* p_texture,
-			float p_width,
-			float p_height,
-			float p_depth)
-		{
-			m_renderData.push_back(Jamgine::SpriteData(p_position, p_textureOffset, p_texture, p_width, p_height, p_depth));
-		}
-
-		void DirectXEngine::Render(Point p_position, Point p_textureOffset,
-			Texture2DInterface* p_texture,
-			SpriteEffect p_spriteEffect,
-			float p_width,
-			float p_height,
-			float p_depth)
-		{
-			m_renderData.push_back(Jamgine::SpriteData(p_position, p_textureOffset, p_texture, p_spriteEffect, p_width, p_height, p_depth));
-		}
-		
+	
 		void DirectXEngine::PostRender(Camera* p_camera)
 		{
 			int max = m_renderData.size() - 1;
@@ -527,7 +502,7 @@ namespace Jamgine
 
 			for (int i = 0; i < max + 1; i++)
 			{
-				m_renderData[i].position -= p_camera->position;
+				m_renderData[i].rectangle.position -= p_camera->position;
 				a[i] = Vertex(m_renderData[i]);
 			}
 

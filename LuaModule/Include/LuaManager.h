@@ -8,7 +8,7 @@ public:
 	LuaManager();
 	~LuaManager();
 	void RegisterFunction();
-	void RunScript(char* p_path);
+	void RunEntireScript(char* p_path);
 
 private:
 	lua_State* m_luaState;
