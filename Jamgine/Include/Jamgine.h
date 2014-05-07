@@ -1,6 +1,5 @@
 #pragma once
 #include <Jamgine/Include/Shared.h>
-#include <Jamgine/Include/Texture/Texture2DInterface.h>
 #include <Jamgine/Include/Camera.h>
 
 namespace Jamgine

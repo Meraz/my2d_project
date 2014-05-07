@@ -1,10 +1,12 @@
 #pragma once
 
+#include <Jamgine/Include/Shared.h>
+
 namespace Jamgine
 {
 	struct Rectangle
 	{
-		Vector2 position; // Bot left
+		Point position; // Bot left
 		float width;
 		float height;
 
@@ -14,7 +16,7 @@ namespace Jamgine
 		
 		};
 
-		Rectangle(Vector2 _position, float _width, float _height)
+		Rectangle(Point _position, float _width, float _height)
 			: position(_position), width(_width), height(_height)
 		{
 		

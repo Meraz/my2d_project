@@ -61,6 +61,8 @@ namespace Jamgine
 				float p_height,
 				float p_depth
 				);
+
+
 			virtual void PostRender(Camera* p_camera);
 		
 		private:
@@ -73,7 +75,7 @@ namespace Jamgine
 			int			m_clientWidth;
 			int			m_clientHeight;
 
-			std::vector<SpriteData> m_renderData;
+			std::vector<Jamgine::SpriteData> m_renderData;
 			DirectX::XMFLOAT4X4 m_view;
 
 

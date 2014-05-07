@@ -6,12 +6,13 @@ namespace Jamgine
 {
 	namespace JDirectX
 	{
+		/*
 		struct SpriteData
 		{
 			Point position;
 			Point origin;
 			Point textureOffset;
-			Texture2D* texture;
+			Texture2DInterface* texture;
 			SpriteEffect spriteEffect;
 			float width;
 			float height;
@@ -24,7 +25,7 @@ namespace Jamgine
 				Point p_position,
 				Point p_origin,
 				Point p_textureOffset,
-				Texture2D* p_texture,
+				Texture2DInterface* p_texture,
 				SpriteEffect p_spriteEffect,
 				float p_width,
 				float p_height,
@@ -53,7 +54,7 @@ namespace Jamgine
 				Point p_position,
 				Point p_origin,
 				Point p_textureOffset,
-				Texture2D* p_texture,
+				Texture2DInterface* p_texture,
 				float p_width,
 				float p_height,
 				float p_depth,
@@ -76,7 +77,7 @@ namespace Jamgine
 			SpriteData(
 				Point p_position,
 				Point p_textureOffset,
-				Texture2D* p_texture,
+				Texture2DInterface* p_texture,
 				float p_width,
 				float p_height,
 				float p_depth
@@ -99,7 +100,7 @@ namespace Jamgine
 			SpriteData(
 				Point p_position,
 				Point p_textureOffset,
-				Texture2D* p_texture,
+				Texture2DInterface* p_texture,
 				SpriteEffect p_spriteEffect,
 				float p_width,
 				float p_height,
@@ -119,5 +120,6 @@ namespace Jamgine
 				textureDelta = Point(1,1);
 			}
 		};
+		*/
 	}	
 }

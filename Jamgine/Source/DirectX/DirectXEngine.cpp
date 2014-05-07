@@ -27,7 +27,7 @@ namespace Jamgine
 			
 			}
 
-			Vertex(SpriteData input)
+			Vertex(Jamgine::SpriteData input)
 			{
 				position = DirectX::XMFLOAT3(input.position.x, input.position.y, input.depth);
 				origin	 = DirectX::XMFLOAT2(input.origin.x, input.origin.y);
@@ -474,7 +474,7 @@ namespace Jamgine
 			bool p_hasTransparent,
 			Point p_textureDelta)
 		{
-			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation, p_hasTransparent, p_textureDelta));
+			m_renderData.push_back(Jamgine::SpriteData(p_position, p_origin, p_textureOffset, p_texture, p_spriteEffect, p_width, p_height, p_depth, p_rotation, p_hasTransparent, p_textureDelta));
 		}
 
 		void DirectXEngine::Render(
@@ -487,7 +487,7 @@ namespace Jamgine
 			float p_depth,
 			float p_rotation) 
 		{
-			m_renderData.push_back(SpriteData(p_position, p_origin, p_textureOffset, (Texture2D*)p_texture, p_width, p_height, p_depth, p_rotation));
+			m_renderData.push_back(Jamgine::SpriteData(p_position, p_origin, p_textureOffset, p_texture, p_width, p_height, p_depth, p_rotation));
 		}
 
 		void DirectXEngine::Render(Point p_position,
@@ -497,7 +497,7 @@ namespace Jamgine
 			float p_height,
 			float p_depth)
 		{
-			m_renderData.push_back(SpriteData(p_position, p_textureOffset, (Texture2D*)p_texture, p_width, p_height, p_depth));
+			m_renderData.push_back(Jamgine::SpriteData(p_position, p_textureOffset, p_texture, p_width, p_height, p_depth));
 		}
 
 		void DirectXEngine::Render(Point p_position, Point p_textureOffset,
@@ -507,7 +507,7 @@ namespace Jamgine
 			float p_height,
 			float p_depth)
 		{
-			m_renderData.push_back(SpriteData(p_position, p_textureOffset, (Texture2D*)p_texture, p_spriteEffect, p_width, p_height, p_depth));
+			m_renderData.push_back(Jamgine::SpriteData(p_position, p_textureOffset, p_texture, p_spriteEffect, p_width, p_height, p_depth));
 		}
 		
 		void DirectXEngine::PostRender(Camera* p_camera)
@@ -552,7 +552,7 @@ namespace Jamgine
 					l_amount++;
 				else
 				{
-					ID3D11ShaderResourceView* a = m_renderData[i].texture->GetShaderResourceView();	// change name
+					ID3D11ShaderResourceView* a = dynamic_cast<Texture2D*>(m_renderData[i].texture)->GetShaderResourceView();	// change name
 					m_deviceContext->PSSetShaderResources(0, 1, &a);
 
 					DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
@@ -563,7 +563,7 @@ namespace Jamgine
 					l_amount = 1;
 				}	
 			}
-			ID3D11ShaderResourceView* b = m_renderData[l_currentIndex].texture->GetShaderResourceView();	// change name
+			ID3D11ShaderResourceView* b = dynamic_cast<Texture2D*>(m_renderData[l_currentIndex].texture)->GetShaderResourceView();	// change name
 			m_deviceContext->PSSetShaderResources(0, 1, &b);
 
 			DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
@@ -575,7 +575,7 @@ namespace Jamgine
 			m_renderData.clear();
 		}
 
-		bool SortTransparentAlgorithm(SpriteData p_a, SpriteData p_b)
+		bool SortTransparentAlgorithm(Jamgine::SpriteData p_a, Jamgine::SpriteData p_b)
 		{
 			/*
 				if p_a has transparent and p_b has transparent = > ok
@@ -605,11 +605,11 @@ namespace Jamgine
 
 			/*return (p_a.hasTransparent && !p_b.hasTransparent);*/
 		}
-		bool SortTextureAlgorithm(SpriteData p_a, SpriteData p_b)
+		bool SortTextureAlgorithm(Jamgine::SpriteData p_a, Jamgine::SpriteData p_b)
 		{
 			return (p_a.texture < p_b.texture);
 		}
-		bool SortDepthAlgorithm(SpriteData p_a, SpriteData p_b)
+		bool SortDepthAlgorithm(Jamgine::SpriteData p_a, Jamgine::SpriteData p_b)
 		{
 			return (p_a.depth > p_b.depth);
 		}
@@ -626,7 +626,7 @@ namespace Jamgine
 				{
 					if (SortTransparentAlgorithm(m_renderData[i], m_renderData[i+1]))
 					{
-						SpriteData temp = m_renderData[i];
+						Jamgine::SpriteData temp = m_renderData[i];
 						m_renderData[i] = m_renderData[i + 1];
 						m_renderData[i + 1] = temp;
 						NOTWORKING = true;
