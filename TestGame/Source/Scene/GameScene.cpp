@@ -89,8 +89,6 @@ GameScene::GameScene(float width, float height)
 
 //	m_luaManager->RunEntireScript("Maze1.lua");
 	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "Test");
-
-
 }
 
 GameScene::~GameScene()
