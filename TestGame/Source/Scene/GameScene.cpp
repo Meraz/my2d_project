@@ -21,6 +21,7 @@ namespace //Used for the scripting
 	GameScene* a_gameScene = nullptr;
 }
 
+/* Legacy code from 2014-05-07
 static int SetMapSize(lua_State* l_luaState) // float x, float y
 {
 	float width, height;
@@ -32,29 +33,47 @@ static int SetMapSize(lua_State* l_luaState) // float x, float y
 	a_gameScene->m_width = width;
 	a_gameScene->m_height = height;
 
-	a_gameScene->m_quadTreeRootNode = new Node(Jamgine::Rectangle(0,0,width, height));
-	return 1;
-}
-static int derp = 0;
-static int AddObject(lua_State* l_luaState) // float x, float y
+	a_gameScene->m_renderEntitiesArray = allocate2D(width, height);
+	//a_gameScene->m_quadTreeRootNode = new Node(Jamgine::Rectangle(0,0,width, height));
+	return 0;
+}*/
+
+
+static int AddObject(lua_State* l_luaState) // float x, float y 0-39, 0-39
 {
-	float x, y, width, height;
-	x = lua_tonumber(l_luaState, 1);
-	y = lua_tonumber(l_luaState, 2);
-	width = lua_tonumber(l_luaState, 3);
-	height = lua_tonumber(l_luaState, 4);
+	int x, y, width, height;
+	x = lua_tonumber(l_luaState, 1)-1;
+	y = lua_tonumber(l_luaState, 2)-1;
+//	width = lua_tonumber(l_luaState, 3); // Hardcoded until further notice
+//	height = lua_tonumber(l_luaState, 4);
 	int argc = lua_gettop(l_luaState);
 	lua_pop(l_luaState, argc);
 
 	if(a_gameScene != nullptr)
 	{
-		RenderEntity* l_collisionEntity = new RenderEntity();
-		l_collisionEntity->Initialize(Jamgine::Rectangle(x, y, width, height), "Circle.dds");
-		a_gameScene->m_renderEntities.push_back(l_collisionEntity);
+		CollisionEntity* l_collisionEntity = new CollisionEntity();
+		l_collisionEntity->Initialize(Jamgine::Rectangle(x*20, y*20, 20, 20), "Circle.dds");
+		a_gameScene->m_wall[x][y] = l_collisionEntity;
+		a_gameScene->m_wall[x][y]->isWall = true;
+			//a_gameScene->m_renderEntities.push_back(l_collisionEntity);
 		//a_gameScene->m_quadTreeRootNode->AddEntity(l_collisionEntity);
-		derp++;
 	}
-	return 1;
+	return 0;
+}
+
+static int MakeWay(lua_State* l_luaState) // float x, float y 0-39, 0-39
+{
+	int x, y, width, height;
+	x = lua_tonumber(l_luaState, 1)-1;
+	y = lua_tonumber(l_luaState, 2)-1;
+	int argc = lua_gettop(l_luaState);
+	lua_pop(l_luaState, argc);
+
+	if (a_gameScene != nullptr)
+	{
+		a_gameScene->m_wall[x][y]->isWall = false;
+	}
+	return 0;
 }
 
 static int StaticCheckCollision(lua_State* l_luaState) // float x, float y, float width, float height
@@ -69,12 +88,38 @@ static int StaticCheckCollision(lua_State* l_luaState) // float x, float y, floa
 
 	if(a_gameScene != nullptr)
 		return a_gameScene->m_quadTreeRootNode->Collide(Jamgine::Rectangle(x, y, width, height));	
+	return 0;
+}
+
+static int IsWall(lua_State* l_luaState) // float x, float y, float width, float height
+{
+	int x, y;
+	x = lua_tonumber(l_luaState, 1)-1;
+	y = lua_tonumber(l_luaState, 2)-1;
+	int argc = lua_gettop(l_luaState);
+	lua_pop(l_luaState, argc);
+
+	if (a_gameScene->m_wall[x][y]->isWall == true)
+	{
+		lua_pushboolean(l_luaState, 1);
+	}
+	else
+		lua_pushboolean(l_luaState, 0);
+	
 	return 1;
 }
 
 GameScene::GameScene(float width, float height)
 	: m_quadTreeRootNode(nullptr), m_luaManager(nullptr)
 { 
+
+	for (int y = 0; y < 40; y++)
+	{
+		for (int x = 0; x < 40; x++)
+		{
+			m_wall[x][y] == nullptr;
+		}
+	}
 	a_gameScene = this;
 	m_renderEntities		= std::vector<RenderEntity*>();
 	m_enemyEntities			= std::vector<EnemyEntity*>();
@@ -85,12 +130,13 @@ GameScene::GameScene(float width, float height)
 	m_height = height;
 
 	m_luaManager = new LuaManager();
-	m_luaManager->RegisterFunction("SetMapSize", SetMapSize);	
+	m_luaManager->RegisterFunction("IsWall", IsWall);	
 	m_luaManager->RegisterFunction("StaticCheckCollision", StaticCheckCollision);
 	m_luaManager->RegisterFunction("AddObject", AddObject);
+	m_luaManager->RegisterFunction("MakeWay", MakeWay);
 
 //	m_luaManager->RunEntireScript("Maze1.lua");
-	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "SetSize");
+	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "CreateWalls");
 	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "GenerateMaze");
 }
 
@@ -135,10 +181,18 @@ void GameScene::Render()
 //		m_quadTreeRootNode->Render(Jamgine::Rectangle(0, 0, 800, 800));
 
 	
-	for (unsigned int i = 0; i < m_renderEntities.size(); i++)
+	for (int y = 0; y < 40; y++)
 	{
-		m_renderEntities[i]->Render();
+		for (int x = 0; x < 40; x++)
+		{
+			if (m_wall[x][y] != nullptr)
+				m_wall[x][y]->Render();
+		}
 	}
+//	for (unsigned int i = 0; i < m_renderEntities.size(); i++)
+//	{
+//		m_renderEntities[i]->Render();
+//	}
 
 	m_engine->PostRender(&m_camera);
 }

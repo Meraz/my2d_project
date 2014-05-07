@@ -29,7 +29,7 @@ public:
 
 private:
 	
-
+	bool initialized;
 	
 	std::vector<EnemyEntity*>		m_enemyEntities;
 	std::vector<ProjectileEntity*>  m_projectileEntities;
@@ -52,6 +52,7 @@ private:
 	
 public:
 	std::vector<RenderEntity*>		m_renderEntities;
+	CollisionEntity* m_wall[40][40];
 	float m_width;
 	float m_height;
 	Node* m_quadTreeRootNode;

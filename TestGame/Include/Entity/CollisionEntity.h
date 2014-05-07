@@ -8,6 +8,8 @@ public:
 	Point GetPosition();
 	float GetWidth();
 	float GetHeight();
+	bool isWall;
+	virtual void Render();
 
 	Jamgine::Rectangle GetRectangle() {return m_rectangle;}
 };
