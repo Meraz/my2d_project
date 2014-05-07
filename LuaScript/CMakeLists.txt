@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 # Root project settings
-set(LIBNAME jamgine_lua)
+set(LIBNAME Jamgine_lua)
 project(${LIBNAME})
 
 # Set the files used in the target

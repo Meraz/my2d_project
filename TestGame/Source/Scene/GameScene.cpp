@@ -29,6 +29,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgine::JamgineEngine* p_engine)
 {
+	using namespace Jamgine;
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 	
 	m_soundHandler = new SoundHandler();
@@ -36,16 +37,10 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 //	m_soundHandler->PlaySoundCustom();
 
 	m_camera = Jamgine::Camera(0,0);
-	playerEntity = new PlayerEntity(0);
 
-
-	playerEntity->Initialize(Jamgine::Point(200, 400), Jamgine::Point(0, 0), Jamgine::Point(0, 0), "ANIM_WHALE_JUMP.dds", Jamgine::SpriteEffect::FLIP_NONE, 250, 300, 0.1, 0, true, Jamgine::Point(5, 5)); //funkar med valtexture
+	playerEntity = new PlayerEntity();
+	playerEntity->Initialize(Point(200, 400), Point(0, 0), Point(0, 0), "ANIM_WHALE_JUMP.dds", SpriteEffect::FLIP_NONE, 250, 300, 0.1, 0, true, Point(5, 5)); //funkar med valtexture
 	
-	for (int i = 0; i < 2; i++)
-	{
-		m_collisionEntities.push_back(new CollisionEntity());
-	}
-
 	
 	m_collisionEntities[0]->Initialize(Point(700,0),"Circle.dds",100,100);
 
@@ -66,10 +61,11 @@ void GameScene::Render()
 {
 	playerEntity->Render(m_engine);
 
+	/*
 	for (unsigned int i = 0; i < m_renderEntities.size(); i++)
 	{
 		m_renderEntities[i]->Render(m_engine);
-	}
+	}*/
 
 	m_engine->PostRender(&m_camera);
 }
