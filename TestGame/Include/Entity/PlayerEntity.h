@@ -15,6 +15,7 @@ public:
 	virtual void Update(double p_deltaTime);
 
 private:
+	float m_speed;
 
 };
 

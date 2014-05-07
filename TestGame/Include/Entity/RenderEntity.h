@@ -20,9 +20,6 @@ enum class ENTITY
 	PLAYER,
 	PROJECTILE
 };
-#define GRAVITY -700.0
-
-using namespace Jamgine;
 
 class RenderEntity
 {
@@ -48,11 +45,11 @@ public:
 	int m_textureIndex; // only used for editor
 	ENTITY m_entity;
 	char m_texturePath[50];
-	Jamgine::Texture2DInterface* m_texture;
-	Jamgine::SpriteEffect		m_spriteEffect;
-	Jamgine::Point			m_position;
-	Jamgine::Point			m_origin;
-	Jamgine::Point			m_currentSubImage; // 0-n
+	Jamgine::Texture2DInterface*	m_texture;
+	Jamgine::SpriteEffect			m_spriteEffect;
+	Jamgine::Point					m_position;
+	Jamgine::Point					m_origin;
+	Jamgine::Point					m_currentSubImage; // 0-n
 	float m_width;
 	float m_height;
 	float m_depth;

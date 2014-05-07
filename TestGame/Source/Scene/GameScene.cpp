@@ -39,12 +39,10 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	m_camera = Jamgine::Camera(0,0);
 
 	playerEntity = new PlayerEntity();
-	playerEntity->Initialize(Point(200, 400), Point(0, 0), Point(0, 0), "ANIM_WHALE_JUMP.dds", SpriteEffect::FLIP_NONE, 250, 300, 0.1, 0, true, Point(5, 5)); //funkar med valtexture
+	playerEntity->Initialize(Point(200, 400), Point(0, 0), Point(0, 0), "Circle.dds", SpriteEffect::FLIP_NONE, 250, 300, 0.1, 0, true, Point(1, 1));
 	
 	
-	m_collisionEntities[0]->Initialize(Point(700,0),"Circle.dds",100,100);
-
-	LoadCurrentSetup("Level.lvl");
+//	LoadCurrentSetup("Level.lvl");
 }
 
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
