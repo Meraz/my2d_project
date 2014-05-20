@@ -9,8 +9,7 @@ static const float frictionFactor = 0.7f;
 PlayerEntity::PlayerEntity()
 : m_speed(0.0f, 0.0f)
 {
-	m_entity = ENTITY::PLAYER;
-	
+	m_entity = ENTITY::PLAYER; 	
 }
 
 PlayerEntity::~PlayerEntity()
@@ -33,6 +32,7 @@ void PlayerEntity::LoadClassFromData(char* p_data)
 
 void PlayerEntity::Update(double deltaTime)
 {
+	Point l_pos = m_position;
 	// Update speed_direction
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
@@ -72,14 +72,23 @@ void PlayerEntity::Update(double deltaTime)
 		m_speed.y += frictionFactor;
 	}
 
+	/*
 	// if close to zero brake
 	if(m_speed.x > 0.0f && m_speed.x < 0.1f)
 		m_speed.x = 0.0f;
 
 	if(m_speed.y > 0.0f && m_speed.y < 0.1f)
 		m_speed.y = 0.0f;
+	*/
 
 	// Update position
 	m_position.x = m_position.x + m_speed.x * deltaTime;
 	m_position.y = m_position.y + m_speed.y * deltaTime;
+	
+	if(m_position.x < -50-0.0f || m_position.x > 800.0f)
+	{
+		m_speed.x *= -1.0f;
+	}
+
+
 }
