@@ -137,7 +137,7 @@ GameScene::GameScene(float width, float height)
 
 //	m_luaManager->RunEntireScript("Maze1.lua");
 	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "CreateWalls");
-	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "GenerateMaze");
+//	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "GenerateMaze");
 }
 
 GameScene::~GameScene()
@@ -185,8 +185,8 @@ void GameScene::Render()
 	{
 		for (int x = 0; x < 40; x++)
 		{
-			if (m_wall[x][y] != nullptr)
-				m_wall[x][y]->Render();
+//			if (m_wall[x][y] != nullptr)
+//				m_wall[x][y]->Render();
 		}
 	}
 //	for (unsigned int i = 0; i < m_renderEntities.size(); i++)

@@ -15,7 +15,9 @@ public:
 	virtual void Update(double p_deltaTime);
 
 private:
-	float m_speed;
+	Point m_speed; // Not 
+//	Point m_acceleration;
+	
 
 };
 

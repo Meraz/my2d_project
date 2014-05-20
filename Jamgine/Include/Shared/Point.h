@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math.h>
+
 namespace Jamgine
 {
 	struct Point
@@ -44,6 +46,16 @@ namespace Jamgine
 			x = p_position.x;
 			y = p_position.y;
 			return *this;
+		}
+
+		void Normalize()
+		{
+			if(x == 0.0f && y == 0.0f)
+				return;
+			float l_length;
+			l_length = sqrt(x*x + y*y);
+			x = x / l_length;
+			y = y / l_length;
 		}
 	};
 }
