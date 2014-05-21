@@ -156,9 +156,8 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	m_camera = Jamgine::Camera(0,0);
 
 	playerEntity = new PlayerEntity();
-	playerEntity->Initialize(Point(400.0f, 400.0f), Point(0.0f, 0.0f), Point(0.0f, 0.0f), "Circle.dds", SpriteEffect::FLIP_NONE, 300.0f, 300.0f, 0.1f, 0.0f, true, Point(1.0f, 1.0f));
-	//playerEntity->Initialize(Point(200, 400), Point(0, 0), Point(0, 0), "Circle.dds", SpriteEffect::FLIP_NONE, 250, 300, 0.1, 0, true, Point(1, 1));
-	
+	playerEntity->Initialize(Point(375.0f, 100.0f), Point(25.0f, 25.0f), Point(0.0f, 0.0f), "SpaceShip.dds", SpriteEffect::FLIP_NONE, 50.0f, 50.0f, 0.1f, 0.0f, true, Point(1.0f, 1.0f));
+
 	
 //	LoadCurrentSetup("Level.lvl");
 }

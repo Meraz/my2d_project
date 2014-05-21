@@ -14,9 +14,15 @@ public:
 
 	virtual void Update(double p_deltaTime);
 
+	CollisionEntity* CreateProjectile();
+
 private:
-	Point m_speed; // Not 
-//	Point m_acceleration;
+	Point m_direction;
+	Point m_velocity;
+	float m_acceleration;	
+
+	void AddRotation(float p_angle);
+
 	
 
 };

@@ -48,14 +48,24 @@ namespace Jamgine
 			return *this;
 		}
 
+		float Length()
+		{
+			return sqrt(x*x + y*y);
+		}
+
 		void Normalize()
 		{
 			if(x == 0.0f && y == 0.0f)
 				return;
 			float l_length;
-			l_length = sqrt(x*x + y*y);
+			l_length = Length();
 			x = x / l_length;
 			y = y / l_length;
+		}
+		void Invert()
+		{
+			x = -x;
+			y = -y;
 		}
 	};
 }
