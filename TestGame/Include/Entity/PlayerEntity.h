@@ -18,8 +18,8 @@ public:
 
 private:
 	Point m_direction;
-	Point m_velocity;
-	float m_acceleration;	
+//	Point m_velocity;
+//	float m_acceleration;	
 
 	void AddRotation(float p_angle);
 

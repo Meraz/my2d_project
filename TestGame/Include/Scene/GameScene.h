@@ -35,6 +35,7 @@ private:
 	std::vector<ProjectileEntity*>  m_projectileEntities;
 	std::vector<AnimationEntity*>	m_animationEntities;
 	std::vector<CollisionEntity*>	m_collisionEntities;
+	std::vector<RenderEntity*>	m_renderEntities;
 
 	Jamgine::Camera m_camera;
 	Jamgine::Texture2DInterface* a;
@@ -49,12 +50,13 @@ private:
 	bool InScreen(CollisionEntity* entity);
 	void CreateObject(int l_entity, char* l_data);
 	LuaManager* m_luaManager;
-	
-public:
-	std::vector<RenderEntity*>		m_renderEntities;
-	CollisionEntity* m_wall[40][40];
+
 	float m_width;
 	float m_height;
-	Node* m_quadTreeRootNode;
+	
+public:
+
+//	CollisionEntity* m_wall[40][40];
+//	Node* m_quadTreeRootNode;
 
 };

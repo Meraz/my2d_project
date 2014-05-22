@@ -7,7 +7,7 @@ static const float maxSpeed = 0.10f;
 // should implement a
 Point Rotate(Point p_point, float p_angle);
 PlayerEntity::PlayerEntity()
-	: m_direction(), m_velocity(),m_acceleration(0.0f)
+	: m_direction()
 {
 	m_entity = ENTITY::PLAYER;
 	m_direction = Point(0.0f, 1.0f);
@@ -75,8 +75,7 @@ void PlayerEntity::Update(double deltaTime)
 		m_direction = Rotate(m_direction, -rotationSpeed*deltaTime);
 		m_direction.Normalize();
 	}
-
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	else if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 	{
 		AddRotation(-rotationSpeed*deltaTime);
 		m_direction = Rotate(m_direction, rotationSpeed*deltaTime);
@@ -126,14 +125,13 @@ void PlayerEntity::Update(double deltaTime)
 	}
 	
 
-	// Stop if very slow, might remove this later
+	// Stop if very slow and not accelerating, might remove this later
 	if(l_length > 0 && l_length < 0.01 && m_acceleration == 0)
 	{
 		m_velocity.x = 0.0f;
 		m_velocity.y = 0.0f;
 	}
 	
-
 	m_position.x = m_position.x + m_velocity.x;
 	m_position.y = m_position.y + m_velocity.y;
 }

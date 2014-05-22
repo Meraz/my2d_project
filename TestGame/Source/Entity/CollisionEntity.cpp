@@ -2,12 +2,19 @@
 
 
 CollisionEntity::CollisionEntity()
+	:  m_velocity(),m_acceleration(0.0f)
 {
 	m_entity = ENTITY::COLLISION;
 }
 
 CollisionEntity::~CollisionEntity()
 {
+}
+
+void CollisionEntity::Update(double deltaTime)
+{	
+	m_position.x += m_velocity.x;
+	m_position.y += m_velocity.y;
 }
 
 Point CollisionEntity::GetPosition()
@@ -23,10 +30,4 @@ float CollisionEntity::GetWidth()
 float CollisionEntity::GetHeight()
 {
 	return m_height;
-}
-
-void CollisionEntity::Render()
-{
-	if (isWall)
-		m_engine->Render(m_position, m_width, m_height, m_origin, m_currentSubImage, m_texture, m_spriteEffect, m_depth, m_rotation, m_hasTransparent, m_amountOfSubImages);
 }
