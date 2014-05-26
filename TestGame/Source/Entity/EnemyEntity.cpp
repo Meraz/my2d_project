@@ -74,6 +74,6 @@ static Point Move(float p_speed, float p_deltaTime, float p_rotation, float& p_t
 
 void EnemyEntity::Update(double deltaTime)
 {
-	m_position = Move(50.0f, (float)deltaTime, m_rotation, m_totalMovement);
+	m_position = Move(50.0f, (float)deltaTime, 3.1415/4, m_totalMovement);
 }
 
