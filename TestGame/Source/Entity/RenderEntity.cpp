@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 RenderEntity::RenderEntity()
-	: 
+	
 {
 	/*
 	int								m_textureIndex; // only used for editor

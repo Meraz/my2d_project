@@ -12,7 +12,6 @@ class SoundHandler;
 class Node;
 
 #include <LuaModule/Include/LuaManager.h>
-//class LuaManager;
 
 #include <vector>
 using namespace Jamgine;

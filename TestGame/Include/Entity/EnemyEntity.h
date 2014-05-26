@@ -3,23 +3,21 @@
 
 #include <TestGame/Include/Entity/AnimationEntity.h>
 
+// forward declaration
+class LuaManager;
+
 class EnemyEntity : public AnimationEntity
 {
 public:
-	EnemyEntity();
-	EnemyEntity(Point* playerPos);
+//	EnemyEntity();
+	EnemyEntity(LuaManager* p_luaManager);
 	virtual ~EnemyEntity();
 
-	void Update();
-	bool cornerCollision();
-	bool verticalCollision();
-	bool horizontalCollision();
-	int getPlayerPos();
+	void Update(double p_deltaTime);
+
 private:
-	Point			m_moveDir;
-	Point*			m_playerPos;
-	float	m_gravity;
-	bool	onGround;
+	LuaManager* m_luaManager;
+	float m_totalMovement;
 };
 
 #endif

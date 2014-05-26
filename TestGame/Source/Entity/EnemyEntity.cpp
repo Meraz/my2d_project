@@ -1,100 +1,79 @@
 #include <TestGame/Include/Entity/EnemyEntity.h>
 
+#include <LuaModule/Include/LuaManager.h>
 
+namespace
+{
+	LuaManager* g_luaManager;
+}
+
+/*
 EnemyEntity::EnemyEntity()
 {
+//	m_entity = ENTITY::ENENMY;
+}
+*/
+
+EnemyEntity::EnemyEntity(LuaManager* p_luaManager)
+	: m_totalMovement(0)
+{
+	m_luaManager = p_luaManager;
 	m_entity = ENTITY::ENENMY;
+	g_luaManager = m_luaManager;
+	m_totalMovement = 0;
 }
 
-EnemyEntity::EnemyEntity(Point* playerPos)
-{
-	m_playerPos = playerPos;
-	m_gravity = 0.05;
-	m_entity = ENTITY::ENENMY;
-}
 EnemyEntity::~EnemyEntity()
 {
+
 }
 
-int EnemyEntity::getPlayerPos()
+#include <iostream>
+#include <Windows.h>
+
+static int Err(lua_State* l_luaState)
 {
-	return m_playerPos->x;
-}
+	OutputDebugStringA("FUCK THE WORLD");
+		
+	return 0;
+}// float x, float y, float width, float height
+static Point Move(float p_speed, float p_deltaTime, float p_rotation, float& p_totalMovement)
+{
 
-bool EnemyEntity::cornerCollision()
-{	// might need change for rotation. object is a placeholder for other objects than this.
-	bool intersection = false;
-	//Position corners[4], otherCorners[4];
+	lua_State* l_luaState = g_luaManager->GetLuaState();
 
-	//corners[0].x	= m_position.x + m_width;	// BR
-	//corners[1].y	= m_position.y + m_height;	// TR
-	//corners[1].x	= m_position.x + m_width;	// TR
-	//corners[2].y	= m_position.y + m_height;	// TL
-	//corners[3]		= m_position;				// BL
+	g_luaManager->RegisterFunction("Err", Err);
+//	g_luaManager->RunSpecificFuntionInScriptWithParameters("Move.lua", "Move", 4);
 
-	//otherCorners[0].x	= object.x + object.width;	// BR
-	//otherCorners[1].y	= object.y + object.height;	// TR
-	//otherCorners[1].x	= object.x + object.width;	// TR
-	//otherCorners[2].y	= object.y + object.height;	// TL
-	//otherCorners[3]		= object;					// BL
-
-	//if ((corners[0].x > otherCorners[2].x && corners[0].y > otherCorners[2].y) ||	// BR corner intersect
-	//	(corners[1].x > otherCorners[3].x && corners[1].y > otherCorners[3].y) ||	// TR corner intersect
-	//	(corners[2].x < otherCorners[0].x && corners[2].y > otherCorners[0].y) ||	// TL corner intersect
-	//	(corners[3].x < otherCorners[1].x && corners[3].y > otherCorners[1].y))		// BL corner intersect
-	//{
-	//	intersection = true;
-	//}
+	std::string MoveAA = "MoveAA";
+	int a = luaL_dofile(l_luaState, "Move.lua");
+	lua_getglobal(l_luaState, MoveAA.c_str());
 	
-	return intersection;
-}
-bool EnemyEntity::horizontalCollision()
-{
-	bool intersection = false;
+	lua_pushnumber(l_luaState, p_speed);			/* push 1st argument */
+    lua_pushnumber(l_luaState, p_deltaTime);		/* push 2nd argument */
+	lua_pushnumber(l_luaState, p_rotation);			/* push 3nd argument */
+	lua_pushnumber(l_luaState, p_totalMovement);	/* push 4nd argument */
 
-	//if (!onGround && m_position.y < object.y && m_position.y + m_height > object.y &&
-	//	m_position.x + m_width > object.x || m_position.x < object.x + object.width)
-	//{
-	//	intersection = true;
-	//}
+	int b = lua_pcall(l_luaState, 4, 3, 0);
 
-	return intersection;
-}
-bool EnemyEntity::verticalCollision()
-{
-	bool intersection = false;
-
-	//if (!onGround && m_position.x < object.x && m_position.x + m_width < object.x &&
-	//	m_position.y + m_height > object.y || m_position.y < object.y + object.height)
-	//{
-	//	intersection = true;
-	//	if (m_position.y < object.y + object.height)
-	//		onGround = true;
-	//}
-
-	return intersection;
-}
-void EnemyEntity::Update()
-{
-	// Find out which direction to move in
-	if (m_position.x > getPlayerPos())
-		m_moveDir.x = -1;
-	else
-		m_moveDir.x = 1;
-
-	if (m_moveDir.y > 0)
+	if(b)
 	{
-		onGround = false;
+		OutputDebugStringA(lua_tostring(l_luaState, -1));
 	}
 
-	if (cornerCollision() && onGround)
-	{
-		m_moveDir.y = 1;
-	}
+	float x = lua_tonumber(l_luaState, 1);
+	float y = lua_tonumber(l_luaState, 2);
+	p_totalMovement = lua_tonumber(l_luaState, 3);
 
 
-	m_position.x += m_moveDir.x;
-	m_position.y += m_moveDir.y;
+	int argc = lua_gettop(l_luaState);
+	lua_pop(l_luaState, argc);
 
-	m_moveDir.y -= m_gravity;
+	return Point(x,y);
 }
+
+void EnemyEntity::Update(double deltaTime)
+{
+	m_position = Move(50.0f, (float)deltaTime, m_rotation, m_totalMovement);
+}
+

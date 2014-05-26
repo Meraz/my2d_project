@@ -57,7 +57,7 @@ void LuaManager::RunSpecificFuntionInScript(char* p_path, char* p_functionName)
 	lua_pop(m_luaState, argc-1);
 }
 
-void LuaManager::RunSpecificFuntionInScriptWithoutChaningCurrentScript(char* p_functionName)
+void LuaManager::RunSpecificFuntionInScriptWithoutChangingCurrentScript(char* p_functionName)
 {
 	lua_getglobal(m_luaState, p_functionName);
 

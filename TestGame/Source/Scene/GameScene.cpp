@@ -39,11 +39,11 @@ static int SetMapSize(lua_State* l_luaState) // float x, float y
 }*/
 
 
-static int CreateObject(lua_State* p_luaState) // float x, float y 0-39, 0-39
+static int S_CreateObject(lua_State* p_luaState) // float x, float y 0-39, 0-39
 {
 	float l_positionX, l_positionY;
 	float l_width, l_height;
-	float l_velocityX, l_velocityX;
+	float l_velocityX, l_velocityY;
 
 	l_positionX = lua_tonumber(p_luaState, 1);
 	l_positionY = lua_tonumber(p_luaState, 2);
@@ -52,7 +52,7 @@ static int CreateObject(lua_State* p_luaState) // float x, float y 0-39, 0-39
 	l_height = lua_tonumber(p_luaState, 4);
 
 	l_velocityX = lua_tonumber(p_luaState, 1);
-	l_velocityX = lua_tonumber(p_luaState, 2);
+	l_velocityY = lua_tonumber(p_luaState, 2);
 
 	int argc = lua_gettop(p_luaState);
 	lua_pop(p_luaState, argc);
@@ -67,36 +67,6 @@ static int CreateObject(lua_State* p_luaState) // float x, float y 0-39, 0-39
 		// Add it to vectors
 		//l_collisionEntity->Initialize(l_rectangle, "derp");
 	}
-	return 0;
-}
-
-static int MakeWay(lua_State* l_luaState) // float x, float y 0-39, 0-39
-{
-	int x, y, width, height;
-	x = lua_tonumber(l_luaState, 1)-1;
-	y = lua_tonumber(l_luaState, 2)-1;
-	int argc = lua_gettop(l_luaState);
-	lua_pop(l_luaState, argc);
-
-	if (a_gameScene != nullptr)
-	{
-//		a_gameScene->m_wall[x][y]->isWall = false;
-	}
-	return 0;
-}
-
-static int StaticCheckCollision(lua_State* l_luaState) // float x, float y, float width, float height
-{
-	float x, y, width, height;
-	x = lua_tonumber(l_luaState, 1);
-	y = lua_tonumber(l_luaState, 2);
-	width = lua_tonumber(l_luaState, 3);
-	height = lua_tonumber(l_luaState, 4);
-	int argc = lua_gettop(l_luaState);
-	lua_pop(l_luaState, argc);
-
-//	if(a_gameScene != nullptr)
-//		return a_gameScene->m_quadTreeRootNode->Collide(Jamgine::Rectangle(x, y, width, height));	
 	return 0;
 }
 
@@ -131,14 +101,18 @@ GameScene::GameScene(float width, float height)
 	m_height = height;
 
 	m_luaManager = new LuaManager();
-//	m_luaManager->RegisterFunction("IsWall", IsWall);	
-//	m_luaManager->RegisterFunction("StaticCheckCollision", StaticCheckCollision);
-//	m_luaManager->RegisterFunction("AddObject", AddObject);
-//	m_luaManager->RegisterFunction("MakeWay", MakeWay);
+
+
+//	m_luaManager->RegisterFunction("CreateObject", S_CreateObject);
+//	m_luaManager->RunSpecificFuntionInScript("Move.lua", "Move");
+
+//	m_luaManager->RunSpecificFuntionInScript("Test.lua", "Move");
 
 //	m_luaManager->RunEntireScript("Maze1.lua");
+//	m_luaManager->RunEntireScript("Move.lua");
 //	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "CreateWalls");
 //	m_luaManager->RunSpecificFuntionInScript("Maze1.lua", "GenerateMaze");
+	
 }
 
 GameScene::~GameScene()
@@ -159,6 +133,10 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	playerEntity = new PlayerEntity();
 	playerEntity->Initialize(Point(375.0f, 100.0f), Point(25.0f, 25.0f), Point(0.0f, 0.0f), "SpaceShip.dds", SpriteEffect::FLIP_NONE, 50.0f, 50.0f, 0.1f, 0.0f, true, Point(1.0f, 1.0f));
 
+	EnemyEntity* a = new EnemyEntity(m_luaManager);
+	a->Initialize(Point(0.0f, 400.0f), Point(25.0f, 25.0f), Point(0.0f, 0.0f), "SpaceShip.dds", SpriteEffect::FLIP_NONE, 10.0f, 10.0f, 0.1f, 0.0f, false, Point(1.0f, 1.0f));
+	m_renderEntities.push_back(a);
+
 	
 //	LoadCurrentSetup("Level.lvl");
 }
@@ -166,6 +144,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
 	playerEntity->Update(p_deltaTime);
+	m_renderEntities[0]->Update(p_deltaTime);
 }
 
 void GameScene::CheckCollision()
@@ -177,22 +156,7 @@ void GameScene::Render()
 {
 	playerEntity->Render();
 
-//	if (m_quadTreeRootNode != nullptr)
-//		m_quadTreeRootNode->Render(Jamgine::Rectangle(0, 0, 800, 800));
-
-	
-	for (int y = 0; y < 40; y++)
-	{
-		for (int x = 0; x < 40; x++)
-		{
-//			if (m_wall[x][y] != nullptr)
-//				m_wall[x][y]->Render();
-		}
-	}
-//	for (unsigned int i = 0; i < m_renderEntities.size(); i++)
-//	{
-//		m_renderEntities[i]->Render();
-//	}
+	m_renderEntities[0]->Render();
 
 	m_engine->PostRender(&m_camera);
 }
@@ -254,7 +218,7 @@ void GameScene::CreateObject(int l_entityType, char* l_data)
 	}
 	else if (l_entityType == (int)ENTITY::ENENMY)
 	{
-		l_entity = new EnemyEntity();
+		l_entity = new EnemyEntity(m_luaManager);
 		m_enemyEntities.push_back(static_cast<EnemyEntity*>(l_entity));
 	}
 	else if (l_entityType == (int)ENTITY::PLAYER)
