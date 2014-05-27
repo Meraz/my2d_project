@@ -1,4 +1,6 @@
---maxenemies = 50;
+maxenemies = 50;
+
+math.randomseed( os.time() )
 
 Rotate = function(pointx, pointy, rotationAngle)
 	cosAngle = math.cos(rotationAngle);
@@ -10,40 +12,29 @@ Rotate = function(pointx, pointy, rotationAngle)
 	return l_x, l_y;
 end
 
-MoveAA = function (speed, deltaTime, rotationAngle, totalMovement)
+Move = function (posx, posy, speed, deltaTime, rotationAngle, totalMovement)
 	totalMovement = totalMovement + (speed*deltaTime);
 	l_posx = totalMovement;
-	l_posy = math.sin(totalMovement/4)*50;
+	l_posy = math.sin(totalMovement/8)*40;
 	
 	l_posx, l_posy = Rotate(l_posx, l_posy, rotationAngle);
+	l_posx = l_posx + posx;
+	l_posy = l_posy + posy;
 	
 	return l_posx, l_posy, totalMovement;
 end
 
-
---x,y,totMov = MoveAA(50, 0.01, 0, 0);
---print(x,y,totMov);
-
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
---x,y,totMov = MoveAA(50, 0.01, 0, totMov);print(x,y,totMov);
-
-
---CreateEntity = function()
+SpawnEnemy = function()
 --	if totalEnemies < maxenemies then
---		--CreateEnemy
+		--totalEnemies = totalEnemies + 1;
+		x = math.random(0, 800);
+		y = math.random(0, 800);
+		--x = 0;
+		--y = 5;
+		width = math.random(5, 40);;
+		height = width;
+		rotation = math.random(0,360);
+		CreateEnemy(x, y, width, height, rotation);
 --	end
---end
+end
+

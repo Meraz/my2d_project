@@ -68,10 +68,30 @@ struct Rectangle
 	bool Intersect(Rectangle r2)
 	{
 		Rectangle r1 = *this;
-		if((LeftIntersect(r1, r2) || RightIntersect(r1, r2))  && (BotIntersect(r1, r2) ||TopIntersect(r1, r2)))
+		if((LeftIntersect(r1, r2) || RightIntersect(r1, r2))  && (BotIntersect(r1, r2) ||TopIntersect(r1, r2))) // Edge intersect
 		{
 			return true;
 		}
+		
+		if
+		(
+			(r1.position.x <= r2.position.x && r1.position.x + r1.width >= r2.position.x + r2.width) // r2 is inside of r1 
+			&&
+			(r1.position.y <= r2.position.y && r1.position.y + r1.height >= r2.position.y + r2.height)
+		)		
+		{
+			return true;
+		}
+		if
+		(
+			(r2.position.x <= r1.position.x && r2.position.x + r2.width >= r1.position.x + r1.width) // r1 is inside of r2
+			&&
+			(r2.position.y <= r1.position.y && r2.position.y + r2.height >= r1.position.y + r1.height)
+		)		
+		{
+			return true;
+		}
+
 		return false;
 	}	
 };

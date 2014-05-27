@@ -13,6 +13,8 @@ public:
 	bool Animate(int p_section);
 	void ResetAnimation();
 
+
+
 private:
 
 

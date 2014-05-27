@@ -10,7 +10,8 @@ PlayerEntity::PlayerEntity()
 	: m_direction()
 {
 	m_entity = ENTITY::PLAYER;
-	m_direction = Point(0.0f, 1.0f);
+	m_once = true;
+	m_direction = Point(0.0f, 1.0f);	
 }
 
 PlayerEntity::~PlayerEntity()
@@ -64,21 +65,28 @@ void PlayerEntity::AddRotation(float p_angle)
 static const float pi = 3.1415;
 static const float rotationSpeed = pi;
 
-void PlayerEntity::Update(double deltaTime)
+void PlayerEntity::Update(double p_deltaTime)
 {	
+	RenderEntity::Update(p_deltaTime);
+	if(m_once)
+	{
+		m_spawn = m_position;
+		m_once = false;
+	}
+
 	m_acceleration = 0;
 	Point l_pos = m_position;
 	// Update speed_direction
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
-		AddRotation(rotationSpeed*deltaTime);
-		m_direction = Rotate(m_direction, -rotationSpeed*deltaTime);
+		AddRotation(rotationSpeed*p_deltaTime);
+		m_direction = Rotate(m_direction, -rotationSpeed*p_deltaTime);
 		m_direction.Normalize();
 	}
 	else if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 	{
-		AddRotation(-rotationSpeed*deltaTime);
-		m_direction = Rotate(m_direction, rotationSpeed*deltaTime);
+		AddRotation(-rotationSpeed*p_deltaTime);
+		m_direction = Rotate(m_direction, rotationSpeed*p_deltaTime);
 		m_direction.Normalize();
 	}
 
@@ -87,16 +95,16 @@ void PlayerEntity::Update(double deltaTime)
 		// Add acceleration
 		m_acceleration = CalcAcceleration(m_velocity.Length());
 		//m_acceleration = acceleration;
-		m_velocity.x += m_direction.x*m_acceleration*deltaTime;
-		m_velocity.y += m_direction.y*m_acceleration*deltaTime;
+		m_velocity.x += m_direction.x*m_acceleration*p_deltaTime;
+		m_velocity.y += m_direction.y*m_acceleration*p_deltaTime;
 	}
 
 	else if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 	{
 		// Add acceleration
 		m_acceleration = -CalcAcceleration(m_velocity.Length());
-		m_velocity.x += m_direction.x*m_acceleration*deltaTime;
-		m_velocity.y += m_direction.y*m_acceleration*deltaTime;
+		m_velocity.x += m_direction.x*m_acceleration*p_deltaTime;
+		m_velocity.y += m_direction.y*m_acceleration*p_deltaTime;
 	}
 
 	Point l_position;
@@ -140,7 +148,14 @@ CollisionEntity* PlayerEntity::CreateProjectile()
 {
 	CollisionEntity* l_entity;
 	l_entity = new CollisionEntity();
-	//l_entity->Initialize();
-//	new CollisionEntity();
+	l_entity->Initialize(Point(m_position.x+m_origin.x, m_position.y+m_origin.y), Point(1.5f, 1.5f), Point(0.0f, 0.0f), "SpaceShip.dds", SpriteEffect::FLIP_NONE, 3.0f, 3.0f, 0.1f, 0.0f, false, Point(1.0f, 1.0f));
+	
+	l_entity->SetVelocity(Point(m_direction.x*5,m_direction.y*5));
+
 	return l_entity;
+}
+
+void PlayerEntity::RestToSpawn()
+{
+	m_position = m_spawn;
 }

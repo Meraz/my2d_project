@@ -43,3 +43,4 @@ void AnimationEntity::ResetAnimation()
 	m_currentSubImage.x = 0;
 	m_currentSubImage.y = 0;
 }
+

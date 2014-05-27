@@ -14,12 +14,14 @@ public:
 
 	virtual void Update(double p_deltaTime);
 
+	void RestToSpawn();
+
 	CollisionEntity* CreateProjectile();
 
 private:
 	Point m_direction;
-//	Point m_velocity;
-//	float m_acceleration;	
+	Point m_spawn;	
+	bool m_once;
 
 	void AddRotation(float p_angle);
 

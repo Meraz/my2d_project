@@ -144,6 +144,10 @@ void RenderEntity::SetTexture(Texture2DInterface* p_texture)
 
 void RenderEntity::Update(double p_deltaTime)
 {
+	m_rectangle.position.x	= m_position.x;
+	m_rectangle.position.y	= m_position.y;
+	m_rectangle.width		= m_width;
+	m_rectangle.height		= m_height;
 }
 
 
