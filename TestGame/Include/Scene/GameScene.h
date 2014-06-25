@@ -25,15 +25,12 @@ public:
 	void Render();
 
 private:
-	
-	bool initialized;
-public:
 	std::vector<EnemyEntity*>		m_enemyEntities;
 	std::vector<ProjectileEntity*>  m_projectileEntities;
 	std::vector<AnimationEntity*>	m_animationEntities;
 	std::vector<CollisionEntity*>	m_collisionEntities;
 	std::vector<RenderEntity*>		m_renderEntities;
-private:
+
 	Jamgine::Camera m_camera;
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
@@ -43,9 +40,6 @@ private:
 	void CheckCollision();
 	bool InScreen(CollisionEntity* entity);
 	void CreateObject(int l_entity, char* l_data);
-
-
-	std::vector<RenderEntity*>		m_renderEntities;
 
 	float m_width;
 	float m_height;

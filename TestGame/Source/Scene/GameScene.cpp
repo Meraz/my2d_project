@@ -37,7 +37,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 {
 	using namespace Jamgine;
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
-	
+
 	m_camera = Jamgine::Camera(0,0);
 
 	playerEntity = new PlayerEntity();
@@ -46,20 +46,24 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	//	LoadCurrentSetup("Level.lvl");
 }
 
-#include <exception>
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
-	
+
+	for (unsigned int i = 0; i < m_renderEntities.size(); ++i)
+	{
+		m_renderEntities.at(i)->Update(p_deltaTime);
+	}
 }
 
-void GameScene::CheckCollision()
-{
-	
-}
 
 void GameScene::Render()
 {
-
+	for (unsigned int i = 0; i < m_renderEntities.size(); ++i)
+	{
+		m_renderEntities.at(i)->Render();
+	}
+	playerEntity->Render(); 
+	m_engine->PostRender(&m_camera);
 }
 
 
