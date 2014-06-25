@@ -15,19 +15,17 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/Modules/")
 
 find_package(DIRECTX11 REQUIRED)
 find_package(FMOD REQUIRED)
-find_package(LUA REQUIRED)
-
 
 set(EXTERNAL_INCLUDE_DIRS 
 	${DIRECTX11_INCLUDE_DIRS}
 	${FMOD_INCLUDE_DIRS}
-	${LUA_INCLUDE_DIRS}		
+		
 )
 	
 set(EXTERNAL_LIBRARIES
 	${DIRECTX11_LIBRARY}
 	${FMOD_LIBRARY_PATH}
-	${LUA_LIBRARY_PATH}
+
 )
 
 # Set global compiler options
@@ -39,5 +37,3 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Add subdirectories
 add_subdirectory(Jamgine)
 add_subdirectory(TestGame)
-add_subdirectory(LuaModule)
-

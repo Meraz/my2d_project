@@ -22,10 +22,8 @@ target_link_libraries(${PROJECT_NAME_TESTGAME} d3dcompiler.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} dxguid.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} Xinput9_1_0.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} fmod_vc.lib)
-target_link_libraries(${PROJECT_NAME_TESTGAME} lua_lib.lib)
 
 target_link_libraries(${PROJECT_NAME_TESTGAME} Jamgine.lib)
-target_link_libraries(${PROJECT_NAME_TESTGAME} Jamgine_lua.lib)
 
 # Set SUBSYSTEM:WINDOWS
 set_target_properties(${PROJECT_NAME_TESTGAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")

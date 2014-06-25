@@ -8,11 +8,7 @@ class ProjectileEntity;
 class AnimationEntity;
 class PlayerEntity;
 class CollisionEntity;
-class SoundHandler;
 class Node;
-
-#include <LuaModule/Include/LuaManager.h>
-//class LuaManager;
 
 #include <vector>
 using namespace Jamgine;
@@ -37,9 +33,6 @@ private:
 	std::vector<CollisionEntity*>	m_collisionEntities;
 
 	Jamgine::Camera m_camera;
-	Jamgine::Texture2DInterface* a;
-	Jamgine::Texture2DInterface* b;
-	SoundHandler* m_soundHandler;
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
 
@@ -48,11 +41,9 @@ private:
 	void CheckCollision();
 	bool InScreen(CollisionEntity* entity);
 	void CreateObject(int l_entity, char* l_data);
-	LuaManager* m_luaManager;
 	
 public:
 	std::vector<RenderEntity*>		m_renderEntities;
-	CollisionEntity* m_wall[40][40];
 	float m_width;
 	float m_height;
 	Node* m_quadTreeRootNode;
