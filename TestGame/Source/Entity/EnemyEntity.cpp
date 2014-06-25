@@ -1,100 +1,82 @@
 #include <TestGame/Include/Entity/EnemyEntity.h>
 
+#include <LuaModule/Include/LuaManager.h>
 
-EnemyEntity::EnemyEntity()
+namespace
 {
-	m_entity = ENTITY::ENENMY;
+	LuaManager* g_luaManager;
 }
 
-EnemyEntity::EnemyEntity(Point* playerPos)
+EnemyEntity::EnemyEntity(LuaManager* p_luaManager, Point p_spawnPosition)
+	: m_totalMovement(0)
 {
-	m_playerPos = playerPos;
-	m_gravity = 0.05;
+	m_luaManager = p_luaManager;
 	m_entity = ENTITY::ENENMY;
+	g_luaManager = m_luaManager;
+	m_totalMovement = 0;
+	m_spawnPosition = p_spawnPosition;
 }
+
 EnemyEntity::~EnemyEntity()
 {
+
 }
 
-int EnemyEntity::getPlayerPos()
+#include <iostream>
+#include <Windows.h>
+
+static int Err(lua_State* l_luaState)
 {
-	return m_playerPos->x;
+	OutputDebugStringA("This is not going well");
+		
+	return 0;
 }
 
-bool EnemyEntity::cornerCollision()
-{	// might need change for rotation. object is a placeholder for other objects than this.
-	bool intersection = false;
-	//Position corners[4], otherCorners[4];
+static Point Move(Point p_spawnPosition, float p_speed, float p_deltaTime, float p_rotation, float& p_totalMovement)
+{
 
-	//corners[0].x	= m_position.x + m_width;	// BR
-	//corners[1].y	= m_position.y + m_height;	// TR
-	//corners[1].x	= m_position.x + m_width;	// TR
-	//corners[2].y	= m_position.y + m_height;	// TL
-	//corners[3]		= m_position;				// BL
+	lua_State* l_luaState = g_luaManager->GetLuaState();
 
-	//otherCorners[0].x	= object.x + object.width;	// BR
-	//otherCorners[1].y	= object.y + object.height;	// TR
-	//otherCorners[1].x	= object.x + object.width;	// TR
-	//otherCorners[2].y	= object.y + object.height;	// TL
-	//otherCorners[3]		= object;					// BL
+//	g_luaManager->RegisterFunction("Err", Err);
+//	g_luaManager->RunSpecificFuntionInScriptWithParameters("Move.lua", "Move", 4);
 
-	//if ((corners[0].x > otherCorners[2].x && corners[0].y > otherCorners[2].y) ||	// BR corner intersect
-	//	(corners[1].x > otherCorners[3].x && corners[1].y > otherCorners[3].y) ||	// TR corner intersect
-	//	(corners[2].x < otherCorners[0].x && corners[2].y > otherCorners[0].y) ||	// TL corner intersect
-	//	(corners[3].x < otherCorners[1].x && corners[3].y > otherCorners[1].y))		// BL corner intersect
-	//{
-	//	intersection = true;
-	//}
+	std::string MoveAA = "Move";
+	//int a = luaL_dofile(l_luaState, "Move.lua");
+	lua_getglobal(l_luaState, MoveAA.c_str());
 	
-	return intersection;
+	lua_pushnumber(l_luaState, p_spawnPosition.x);		
+	lua_pushnumber(l_luaState, p_spawnPosition.y);		
+	lua_pushnumber(l_luaState, p_speed);				
+   lua_pushnumber(l_luaState, p_deltaTime);	
+	lua_pushnumber(l_luaState, p_rotation);		
+	lua_pushnumber(l_luaState, p_totalMovement);
+
+	lua_call(l_luaState, 6, 3);
+
+
+
+	float x = lua_tonumber(l_luaState, 1);
+	float y = lua_tonumber(l_luaState, 2);
+	p_totalMovement = lua_tonumber(l_luaState, 3);
+
+
+	int argc = lua_gettop(l_luaState);
+	lua_pop(l_luaState, argc);
+
+	return Point(x,y);
 }
-bool EnemyEntity::horizontalCollision()
+
+void EnemyEntity::Update(double p_deltaTime)
 {
-	bool intersection = false;
-
-	//if (!onGround && m_position.y < object.y && m_position.y + m_height > object.y &&
-	//	m_position.x + m_width > object.x || m_position.x < object.x + object.width)
-	//{
-	//	intersection = true;
-	//}
-
-	return intersection;
+	m_position = Move(m_spawnPosition, 50.0f, (float)p_deltaTime, m_rotation, m_totalMovement);
+	RenderEntity::Update(p_deltaTime);
 }
-bool EnemyEntity::verticalCollision()
+
+bool EnemyEntity::OutsideBounds(float p_left, float p_right, float p_bot, float p_top)
 {
-	bool intersection = false;
+	Jamgine::Rectangle a = Jamgine::Rectangle(p_left, p_bot, abs(p_left-p_right), abs(p_top-p_bot));
 
-	//if (!onGround && m_position.x < object.x && m_position.x + m_width < object.x &&
-	//	m_position.y + m_height > object.y || m_position.y < object.y + object.height)
-	//{
-	//	intersection = true;
-	//	if (m_position.y < object.y + object.height)
-	//		onGround = true;
-	//}
-
-	return intersection;
-}
-void EnemyEntity::Update()
-{
-	// Find out which direction to move in
-	if (m_position.x > getPlayerPos())
-		m_moveDir.x = -1;
-	else
-		m_moveDir.x = 1;
-
-	if (m_moveDir.y > 0)
-	{
-		onGround = false;
-	}
-
-	if (cornerCollision() && onGround)
-	{
-		m_moveDir.y = 1;
-	}
-
-
-	m_position.x += m_moveDir.x;
-	m_position.y += m_moveDir.y;
-
-	m_moveDir.y -= m_gravity;
+	if(m_rectangle.Intersect(a) == false)
+		return true;
+	return false;
 }

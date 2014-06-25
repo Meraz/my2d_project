@@ -2,7 +2,29 @@
 #include <stdio.h>
 
 RenderEntity::RenderEntity()
+	
 {
+	/*
+	int								m_textureIndex; // only used for editor
+	ENTITY							m_entity;
+	char							m_texturePath[50];
+	Jamgine::Texture2DInterface*	m_texture;
+	Jamgine::SpriteEffect			m_spriteEffect;
+	Jamgine::Point					m_position;
+	Jamgine::Point					m_origin;
+	Jamgine::Point					m_currentSubImage; // 0-n
+	float							m_width;
+	float							m_height;
+	float							m_depth;
+	float							m_rotation;
+	bool							m_hasTransparent;
+	Jamgine::Point					m_amountOfSubImages;	//1-n
+	Jamgine::JamgineEngine*			m_engine;		//1-n
+	Jamgine::Rectangle				m_rectangle;
+	*/
+
+
+
 	m_entity = ENTITY::RENDER;
 }
 
@@ -122,7 +144,12 @@ void RenderEntity::SetTexture(Texture2DInterface* p_texture)
 
 void RenderEntity::Update(double p_deltaTime)
 {
+	m_rectangle.position.x	= m_position.x;
+	m_rectangle.position.y	= m_position.y;
+	m_rectangle.width		= m_width;
+	m_rectangle.height		= m_height;
 }
+
 
 void RenderEntity::Render()
 {

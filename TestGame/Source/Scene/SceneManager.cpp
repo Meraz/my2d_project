@@ -33,6 +33,7 @@ void SceneManager::Render()
 void SceneManager::NotifyExit()
 {
 	// Do something here
+	exit(0);
 }
 
 void SceneManager::SwapSceneState(SceneState p_sceneState)

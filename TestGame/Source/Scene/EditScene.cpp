@@ -593,7 +593,7 @@ void EditScene::CreateObject(int l_entityType, char* l_data)
 	}
 	else if (l_entityType == (int)ENTITY::ENENMY)
 	{
-		l_entity = new EnemyEntity();
+	//	l_entity = new EnemyEntity(m);
 	}
 	else if (l_entityType == (int)ENTITY::PLAYER)
 	{
