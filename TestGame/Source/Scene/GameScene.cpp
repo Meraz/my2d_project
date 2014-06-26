@@ -29,20 +29,23 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
 	m_camera = Jamgine::Camera(0,0);
-
-	playerEntity = new RenderEntity();
 	Jamgine::Texture2DInterface* a;
 	m_engine->LoadTexture(&a, "Circle.dds");
-	playerEntity->Initialize(Jamgine::Rectangle(0,0,50,50), a, m_engine);
+	for (unsigned int i = 0; i < 5; i++)
+	{
+		m_renderEntities.push_back(new RenderEntity());
+		m_renderEntities.at(i)->Initialize(Jamgine::Rectangle(25*i, 0, 50, 50), a, m_engine);
+	}
 	
-	//	LoadCurrentSetup("Level.lvl");
+	//	playerEntity = new RenderEntity();
+	//playerEntity->Initialize(Jamgine::Rectangle(0,0,50,50), a, m_engine);
 }
 
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
 	for (unsigned int i = 0; i < m_renderEntities.size(); ++i)
 	{
-		m_renderEntities.at(i)->Update(p_deltaTime);
+	//	m_renderEntities.at(i)->Update(p_deltaTime);
 	}
 }
 
@@ -53,7 +56,7 @@ void GameScene::Render()
 	{
 		m_renderEntities.at(i)->Render();
 	}
-	playerEntity->Render(); 
+//	playerEntity->Render(); 
 	m_engine->PostRender(&m_camera);
 }
 

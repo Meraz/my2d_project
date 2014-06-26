@@ -494,8 +494,7 @@ namespace Jamgine
 			{
 				m_swapChain->Present(0, 0);
 				return; // DO NOTHING
-			}
-				
+			}				
 
 			// Sort sprites after textures
 			SortSprites();		
@@ -580,12 +579,13 @@ namespace Jamgine
 				return false;
 			}
 
-			/*return (p_a.hasTransparent && !p_b.hasTransparent);*/
 		}
+
 		bool SortTextureAlgorithm(Jamgine::SpriteData p_a, Jamgine::SpriteData p_b)
 		{
 			return (p_a.texture < p_b.texture);
 		}
+
 		bool SortDepthAlgorithm(Jamgine::SpriteData p_a, Jamgine::SpriteData p_b)
 		{
 			return (p_a.depth > p_b.depth);
@@ -593,7 +593,6 @@ namespace Jamgine
 		
 		void DirectXEngine::SortSprites()
 		{	
-			//std::sort(m_renderData.begin(), m_renderData.end(), &SortTransparentAlgorithm);
 			int size = m_renderData.size() - 1;
 			bool NOTWORKING = TRUE;
 			while (NOTWORKING)
