@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Jamgine/Include/Jamgine.h>
-#include <Jamgine/Include/Texture/Texture2DManager.h>
+#include <Jamgine/Include/DirectX/JDirectXTexture2DManager.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
 #include <Jamgine/Include/Camera.h>
 #include <d3d11_1.h>
@@ -25,21 +25,14 @@ namespace Jamgine
 			virtual ErrorMessage Initialize(void* p_data);			
 			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data);
 			virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath);
+			
+			virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture);
+			virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture, float p_depth);
+			virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture);
+			virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture, float p_depth);
 
-			virtual void Render(
-				Point p_position,
-				float p_width,
-				float p_height,
-				Point p_origin,
-				Point p_textureOffset,
-				Texture2DInterface* p_texture,
-				SpriteEffect p_spriteEffect,
-				float p_depth,
-				float p_rotation,
-				bool p_hasTransparent,
-				Point p_textureDelta);
+			// Render with a pre-filled SpriteData struct
 			virtual void Render(Jamgine::SpriteData p_spriteData);
-
 
 			virtual void PostRender(Camera* p_camera);
 		

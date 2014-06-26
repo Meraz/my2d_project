@@ -23,9 +23,13 @@ namespace Jamgine
 		// Because of a map, a texture will actually only be loaded once and the same pointer will be returned.
 		virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath) = 0;
 
-		virtual	void Render(Point p_position, float p_width, float p_height, Point p_origin, Point p_textureOffset, Texture2DInterface* p_texture, SpriteEffect p_spriteEffect, float p_depth, float p_rotation,bool p_hasTransparent, Point p_textureDelta) = 0;
+		virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture) = 0;
+		virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture, float p_depth) = 0;
+		virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture) = 0;
+		virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture, float p_depth) = 0;
+
+		// Render with a pre-filled SpriteData struct
 		virtual void Render(Jamgine::SpriteData p_spriteData) = 0;
-	
 
 		// This function is called once per draw, this call actually renders the sprites to the backbuffer. Camera is used for offset
 		virtual void PostRender(Camera* p_camera) = 0;

@@ -1,30 +1,8 @@
 #include <TestGame/Include/Entity/RenderEntity.h>
 #include <stdio.h>
 
-RenderEntity::RenderEntity()
-	
+RenderEntity::RenderEntity()	
 {
-	/*
-	int								m_textureIndex; // only used for editor
-	ENTITY							m_entity;
-	char							m_texturePath[50];
-	Jamgine::Texture2DInterface*	m_texture;
-	Jamgine::SpriteEffect			m_spriteEffect;
-	Jamgine::Point					m_position;
-	Jamgine::Point					m_origin;
-	Jamgine::Point					m_currentSubImage; // 0-n
-	float							m_width;
-	float							m_height;
-	float							m_depth;
-	float							m_rotation;
-	bool							m_hasTransparent;
-	Jamgine::Point					m_amountOfSubImages;	//1-n
-	Jamgine::JamgineEngine*			m_engine;		//1-n
-	Jamgine::Rectangle				m_rectangle;
-	*/
-
-
-
 	m_entity = ENTITY::RENDER;
 }
 
@@ -34,8 +12,6 @@ RenderEntity::~RenderEntity()
 
 void RenderEntity::Initialize(Point p_position, Point p_origin, Point p_currentSubImage, char* p_texturePath, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Point p_amountOfSubImages)
 {
-	GetEngine(); // Cheat lol
-
 	strcpy(m_texturePath, p_texturePath);
 
 	m_position = p_position;
@@ -49,7 +25,6 @@ void RenderEntity::Initialize(Point p_position, Point p_origin, Point p_currentS
 	m_rotation = p_rotation;
 	m_hasTransparent = p_hasTransparent;
 	m_amountOfSubImages = p_amountOfSubImages;
-	m_textureIndex = 0;
 	m_rectangle = Rectangle(m_position, m_width, m_height);
 }
 
@@ -137,6 +112,13 @@ void RenderEntity::Initialize(Point p_position, float p_width, float p_height, b
 		);
 }
 
+void RenderEntity::Initialize(Jamgine::Rectangle p_rectangle, Texture2DInterface* p_texture, Jamgine::JamgineEngine* p_engine)
+{
+	m_rectangle = p_rectangle;
+	m_texture = p_texture;
+	m_engine = p_engine;
+}
+
 void RenderEntity::SetTexture(Texture2DInterface* p_texture)
 {
 	m_texture = p_texture;
@@ -153,7 +135,7 @@ void RenderEntity::Update(double p_deltaTime)
 
 void RenderEntity::Render()
 {
-	m_engine->Render(m_position, m_width, m_height, m_origin, m_currentSubImage, m_texture, m_spriteEffect, m_depth, m_rotation, m_hasTransparent, m_amountOfSubImages);
+	m_engine->Render(m_rectangle, m_texture);
 }
 
 std::stringstream RenderEntity::ToFile()
@@ -201,13 +183,6 @@ void RenderEntity::LoadClassFromData(char* p_data)
 		&m_amountOfSubImages.x,
 		&m_amountOfSubImages.y
 		);
-
-	GetEngine();
 	m_engine->LoadTexture(&m_texture, m_texturePath);
 	m_rectangle = Rectangle(m_position, m_width, m_height);
-}
-
-void RenderEntity::GetEngine()
-{
-	Jamgine::JamgineEngine::CreateEngine(&m_engine, Jamgine::GraphicalSystem::DIRECTX);
 }

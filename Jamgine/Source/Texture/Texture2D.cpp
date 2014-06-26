@@ -1,4 +1,4 @@
-#include <Jamgine/Include/Texture/Texture2D.h>
+#include <Jamgine/Include/DirectX/JDirectXTexture2D.h>
 
 namespace Jamgine
 {

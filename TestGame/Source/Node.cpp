@@ -1,9 +1,18 @@
 #include <TestGame/Include/Node.h>
-#include <TestGame/Include/Entity/CollisionEntity.h>
 
 
 #define BUCKET_CAPACITY 32
-#define CHILD_CAPACITY 4 // should always be 4
+#define CHILD_CAPACITY 4
+
+class Entity
+{
+
+	Jamgine::Rectangle m_rectangle;
+public:
+	Jamgine::Rectangle GetRectangle(){ return m_rectangle; }
+	void Render() {}
+
+};
 
 Node::Node(Jamgine::Rectangle p_rectangle)
 	: m_rectangle(), m_entity(), m_leaf(true)
@@ -20,7 +29,7 @@ Node::~Node()
 
 }
 
-void Node::AddEntity(CollisionEntity* p_entity)
+void Node::AddEntity(Entity* p_entity)
 {
 	if(m_rectangle.Intersect(p_entity->GetRectangle()) == true)
 	{
@@ -41,7 +50,7 @@ void Node::AddEntity(CollisionEntity* p_entity)
 	}
 }
 
-bool Node::Collide(Rectangle p_rectangle)
+bool Node::Collide(Jamgine::Rectangle p_rectangle)
 {
 	if(m_rectangle.Intersect(p_rectangle) == true)
 	{
@@ -95,7 +104,7 @@ void Node::Subdivide()
 	m_leaf = false;
 }
 
-void Node::MoveOneEntityDown(CollisionEntity* p_entity)
+void Node::MoveOneEntityDown(Entity* p_entity)
 {
 	for(unsigned int i = 0; i < CHILD_CAPACITY; i++)
 	{
@@ -103,9 +112,9 @@ void Node::MoveOneEntityDown(CollisionEntity* p_entity)
 	}
 }
 
-Rectangle Node::CalculateRectangleForchild(unsigned int p_index)
+Jamgine::Rectangle Node::CalculateRectangleForchild(unsigned int p_index)
 {
-	Rectangle l_returnRectangle = m_rectangle;
+	Jamgine::Rectangle l_returnRectangle = m_rectangle;
 
 	// All subrectangles are half size in both width and height
 	l_returnRectangle.width /= 2;

@@ -2,10 +2,6 @@
 
 // Definition of forward declaration
 #include <TestGame/Include/Entity/RenderEntity.h>
-#include <TestGame/Include/Entity/PlayerEntity.h>
-#include <TestGame/Include/Entity/EnemyEntity.h>
-#include <TestGame/Include/Entity/ProjectileEntity.h>
-#include <TestGame/Include/Entity/AnimationEntity.h>
 
 #include <fstream>
 
@@ -252,6 +248,7 @@ void EditScene::Entity()
 
 void EditScene::ChoseTex()
 {
+/*
 	if (GetAsyncKeyState(VK_SHIFT) & 0x8000 && tab && !prevtab)
 	{
 		m_renderEntity[m_currentSprite]->m_textureIndex += -1;
@@ -268,6 +265,7 @@ void EditScene::ChoseTex()
 		m_renderEntity[m_currentSprite]->m_texture = m_texture[m_renderEntity[m_currentSprite]->m_textureIndex];
 		strcpy(m_renderEntity[m_currentSprite]->m_texturePath, m_texturePath[m_renderEntity[m_currentSprite]->m_textureIndex]);
 	}
+	*/
 }
 
 void EditScene::SetOrigin(float p_mousePositionX, float p_mousePositionY, bool p_mouseClicked)
@@ -585,11 +583,11 @@ void EditScene::CreateObject(int l_entityType, char* l_data)
 	}
 	else if (l_entityType == (int)ENTITY::COLLISION)
 	{
-		l_entity = new CollisionEntity();
+//		l_entity = new CollisionEntity();
 	}
 	else if (l_entityType == (int)ENTITY::ANIMATION)
 	{
-		l_entity = new AnimationEntity();
+//		l_entity = new AnimationEntity();
 	}
 	else if (l_entityType == (int)ENTITY::ENENMY)
 	{
@@ -601,7 +599,7 @@ void EditScene::CreateObject(int l_entityType, char* l_data)
 	}
 	else if (l_entityType == (int)ENTITY::PROJECTILE)
 	{
-		l_entity = new ProjectileEntity();
+//		l_entity = new ProjectileEntity();
 	}
 
 	l_entity->LoadClassFromData(l_data);

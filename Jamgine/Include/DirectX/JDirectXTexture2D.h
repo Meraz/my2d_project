@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Jamgine/Include/Texture/Texture2DInterface.h>
+#include <Jamgine/Include/Texture2DInterface.h>
 #include <Jamgine/Include/DDSTextureLoader/DDSTextureLoader.h>
 #include <Jamgine/Include/ErrorMessage.h>
 #include <string>

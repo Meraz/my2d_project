@@ -2,10 +2,6 @@
 
 // Definition of forward declaration
 #include <TestGame/Include/Entity/RenderEntity.h>
-#include <TestGame/Include/Entity/PlayerEntity.h>
-#include <TestGame/Include/Entity/EnemyEntity.h>
-#include <TestGame/Include/Entity/ProjectileEntity.h>
-#include <TestGame/Include/Entity/AnimationEntity.h>
 #include <TestGame/Include/Sound/FMODHandler.h>
 #include <TestGame/Include/Node.h>
 
@@ -14,16 +10,10 @@
 // c++ includes
 #include <fstream>
 
-
-
 GameScene::GameScene(float width, float height)
 	: m_quadTreeRootNode(nullptr)
 { 
 	m_renderEntities		= std::vector<RenderEntity*>();
-	m_enemyEntities			= std::vector<EnemyEntity*>();
-	m_projectileEntities	= std::vector<ProjectileEntity*>();
-	m_animationEntities		= std::vector<AnimationEntity*>();
-	m_collisionEntities		= std::vector<CollisionEntity*>();
 	m_width = width;
 	m_height = height;
 
@@ -40,15 +30,16 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_camera = Jamgine::Camera(0,0);
 
-	playerEntity = new PlayerEntity();
-	playerEntity->Initialize(Point(375.0f, 100.0f), Point(25.0f, 25.0f), Point(0.0f, 0.0f), "SpaceShip.dds", SpriteEffect::FLIP_NONE, 50.0f, 50.0f, 0.1f, 0.0f, true, Point(1.0f, 1.0f));
+	playerEntity = new RenderEntity();
+	Jamgine::Texture2DInterface* a;
+	m_engine->LoadTexture(&a, "Circle.dds");
+	playerEntity->Initialize(Jamgine::Rectangle(0,0,50,50), a, m_engine);
 	
 	//	LoadCurrentSetup("Level.lvl");
 }
 
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
-
 	for (unsigned int i = 0; i < m_renderEntities.size(); ++i)
 	{
 		m_renderEntities.at(i)->Update(p_deltaTime);
@@ -111,31 +102,6 @@ void GameScene::CreateObject(int l_entityType, char* l_data)
 	{
 		l_entity = new RenderEntity();
 	}
-	else if (l_entityType == (int)ENTITY::COLLISION)
-	{
-		l_entity = new CollisionEntity();
-		m_collisionEntities.push_back(static_cast<CollisionEntity*>(l_entity));
-	}
-	else if (l_entityType == (int)ENTITY::ANIMATION)
-	{
-		l_entity = new AnimationEntity();
-		m_animationEntities.push_back(static_cast<AnimationEntity*>(l_entity));
-	}
-	else if (l_entityType == (int)ENTITY::ENENMY)
-	{
-	//	l_entity = new EnemyEntity(m_luaManager);
-	//	m_enemyEntities.push_back(static_cast<EnemyEntity*>(l_entity));
-	}
-	else if (l_entityType == (int)ENTITY::PLAYER)
-	{
-		ExitProcess(0);		// This should not happen
-	}
-	else if (l_entityType == (int)ENTITY::PROJECTILE)
-	{
-		l_entity = new ProjectileEntity();
-		m_projectileEntities.push_back(static_cast<ProjectileEntity*>(l_entity));
-	}
-	
 	l_entity->LoadClassFromData(l_data);
 		
 	m_renderEntities.push_back(l_entity);

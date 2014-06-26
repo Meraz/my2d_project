@@ -3,11 +3,6 @@
 #include <TestGame/Include/Scene/BaseScene.h>
 
 class RenderEntity;
-class EnemyEntity;
-class ProjectileEntity;
-class AnimationEntity;
-class PlayerEntity;
-class CollisionEntity;
 class Node;
 
 #include <vector>
@@ -25,20 +20,15 @@ public:
 	void Render();
 
 private:
-	std::vector<EnemyEntity*>		m_enemyEntities;
-	std::vector<ProjectileEntity*>  m_projectileEntities;
-	std::vector<AnimationEntity*>	m_animationEntities;
-	std::vector<CollisionEntity*>	m_collisionEntities;
 	std::vector<RenderEntity*>		m_renderEntities;
 
 	Jamgine::Camera m_camera;
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
 
-	PlayerEntity* playerEntity;
+	RenderEntity* playerEntity;
 	
 	void CheckCollision();
-	bool InScreen(CollisionEntity* entity);
 	void CreateObject(int l_entity, char* l_data);
 
 	float m_width;

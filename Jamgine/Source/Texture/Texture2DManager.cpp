@@ -1,5 +1,5 @@
-#include <Jamgine/Include/Texture/Texture2DManager.h>
-#include <Jamgine/Include/Texture/Texture2D.h>
+#include <Jamgine/Include/DirectX/JDirectXTexture2DManager.h>
+#include <Jamgine/Include/DirectX/JDirectXTexture2D.h>
 #include <exception>
 
 namespace Jamgine

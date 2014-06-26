@@ -33,7 +33,7 @@ public:
 	virtual void Initialize(Jamgine::Rectangle p_rectangle,  char* p_texture);
 	virtual void Initialize(Point p_position, float p_width, float p_height);
 	virtual void Initialize(Point p_position, float p_width, float p_height, bool p_hasTransparent);
-
+	virtual void Initialize(Jamgine::Rectangle p_rectangle, Texture2DInterface* p_texture, Jamgine::JamgineEngine* p_engine);
 
 	void SetTexture(Texture2DInterface* p_texture);
 	virtual void Update(double p_deltaTime);
@@ -43,7 +43,6 @@ public:
 	virtual std::stringstream ToFile();
 	virtual void LoadClassFromData(char* p_data); // Return how many variables you read
 	
-	int m_textureIndex; // only used for editor
 	ENTITY m_entity;
 	char m_texturePath[50];
 	Jamgine::Texture2DInterface*	m_texture;
@@ -60,8 +59,6 @@ public:
 	Jamgine::JamgineEngine* m_engine;		//1-n
 	Jamgine::Rectangle m_rectangle;
 
-protected:
-	void GetEngine();
 };
 
 #endif

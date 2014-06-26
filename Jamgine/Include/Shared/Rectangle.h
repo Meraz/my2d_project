@@ -16,19 +16,19 @@ struct Rectangle
 	
 	};
 
-	Rectangle(Point _position, float _width, float _height)
-		: position(_position), width(_width), height(_height)
+	Rectangle(Point p_position, float p_width, float p_height)
+		: position(p_position), width(p_width), height(p_height)
 	{
 	
 	};
 
-	Rectangle(float _x, float _y, float _width, float _height): position(_x, _y), width(_width), height(_height)
+	Rectangle(float x, float y, float p_width, float p_height): position(x, y), width(p_width), height(p_height)
 	{
 	
 	};
 
-	Rectangle(const Rectangle& _rectangle)
-		: position(_rectangle.position), width(_rectangle.width), height(_rectangle.height)
+	Rectangle(const Rectangle& p_rectangle)
+		: position(p_rectangle.position), width(p_rectangle.width), height(p_rectangle.height)
 	{
 	
 	};

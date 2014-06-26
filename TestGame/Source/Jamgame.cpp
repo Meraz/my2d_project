@@ -1,7 +1,7 @@
 #include <TestGame/Include/Jamgame.h>
 
 #include <Windowsx.h>
-#include <Jamgine/Include/DirectX/DirectXShared.h>
+#include <Jamgine/Include/DirectX/JDirectXShared.h>
 
 #define CLIENT_WIDTH 800
 #define CLIENT_HEIGHT 800
