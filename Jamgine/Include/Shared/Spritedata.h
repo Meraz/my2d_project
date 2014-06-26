@@ -194,7 +194,7 @@ namespace Jamgine
 		{
 			rectangle = Rectangle(p_position, p_width, p_height);
 			origin = Point(0, 0);
-			subTexture = Rectangle(rectangle);
+			subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;
 			depth = STANDARD_SPRITE_DEPTH;
@@ -210,7 +210,7 @@ namespace Jamgine
 		{
 			rectangle = p_rectangle;
 			origin = Point(0, 0);
-			subTexture = Rectangle(rectangle);
+			subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;
 			depth = STANDARD_SPRITE_DEPTH;
@@ -230,7 +230,7 @@ namespace Jamgine
 			{
 				rectangle = Rectangle(p_position, p_width, p_height);
 				origin = Point(0, 0);
-				subTexture = Rectangle(rectangle);
+				subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
 				texture = p_texture;
 				spriteEffect = SpriteEffect::FLIP_NONE;
 				depth = p_depth;
@@ -247,7 +247,7 @@ namespace Jamgine
 			{
 				rectangle = p_rectangle;
 				origin = Point(0, 0);
-				subTexture = Rectangle(rectangle);
+				subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);	// Entire texture
 				texture = p_texture;
 				spriteEffect = SpriteEffect::FLIP_NONE;
 				depth = p_depth;
