@@ -1,14 +1,17 @@
 #pragma once
 
+// Official libs
+#include <vector>
+
+// Official in-project includes 
+#include <Jamgine/Include/DirectX/JDirectXShared.h>
+#include <DirectXMath.h>	// DOsen't work to include via DirectX/DirectXMath. No idea why, I think I might have done something wrong with cMake
+
+// Project files
 #include <Jamgine/Include/Jamgine.h>
 #include <Jamgine/Include/DirectX/JDirectXTexture2DManager.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
-#include <Jamgine/Include/Camera.h>
-#include <d3d11_1.h>
-#include <DirectXMath.h>
-
-#include <vector>
-
+#include <Jamgine/Include/CameraStruct.h>
 
 namespace Jamgine
 {
@@ -34,7 +37,7 @@ namespace Jamgine
 			// Render with a pre-filled SpriteData struct
 			virtual void Render(Jamgine::SpriteData p_spriteData);
 
-			virtual void PostRender(Camera* p_camera);
+			virtual void PostRender(CameraStruct* p_camera);
 		
 		private:
 			///////////
@@ -66,6 +69,7 @@ namespace Jamgine
 			ID3D11Buffer*				m_perTextureBuffer;
 			ID3D11Buffer*				m_perWindowChangeBuffer;
 			ID3D11Buffer*				m_vertexBuffer;
+			ID3D11Buffer*				m_cameraBuffer;
 			ID3D11SamplerState*			m_samplerState;
 			ID3D11RasterizerState*		m_rasterizerState;
 			ID3D11BlendState*			m_blendState;
@@ -94,6 +98,10 @@ namespace Jamgine
 
 			HRESULT CreateBuffer();
 			HRESULT LoadShaders();
+
+
+			// Camera functions
+			void updateCameraMatrix();
 
 			// Other functions
 			void SortSprites();

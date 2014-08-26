@@ -1,17 +1,5 @@
 Texture2D Texture;
 
-cbuffer PerFrame : register(b0)
-{
-	float4x4 ViewMatrix;
-};
-
-cbuffer PerWindowChange :  register(b2)
-{
-	float ClientWidth;
-	float ClientHeight;
-	float2 padding2;
-};
-
 SamplerState Sampler : register(s0);
 
 

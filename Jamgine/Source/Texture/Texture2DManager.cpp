@@ -47,7 +47,7 @@ namespace Jamgine
 			ErrorMessage l_errorMessage = J_FAIL;
 			try
 			{
-				if(m_texture[p_filePath] == nullptr)
+				if(m_texture[p_filePath] == nullptr)	// TODO, this code creates an entry in the map
 				{
 					m_texture[p_filePath] = new Texture2D();
 					m_texture[p_filePath]->LoadTexture(m_device, p_filePath);
@@ -56,6 +56,7 @@ namespace Jamgine
 			}
 			catch(std::exception e)
 			{
+				// Should remove the entry in the map
 				return J_FAIL;
 			}
 			return J_OK;

@@ -1,6 +1,6 @@
 #pragma once
 #include <Jamgine/Include/Shared.h>
-#include <Jamgine/Include/Camera.h>
+#include <Jamgine/Include/CameraStruct.h>
 
 namespace Jamgine
 {
@@ -32,7 +32,7 @@ namespace Jamgine
 		virtual void Render(Jamgine::SpriteData p_spriteData) = 0;
 
 		// This function is called once per draw, this call actually renders the sprites to the backbuffer. Camera is used for offset
-		virtual void PostRender(Camera* p_camera) = 0;
+		virtual void PostRender(CameraStruct* p_camera) = 0;
 
 	private:
 		static JamgineEngine* m_jamgineEngine;		

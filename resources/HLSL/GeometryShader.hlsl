@@ -1,5 +1,11 @@
 #include "Util.fx"
 
+cbuffer PerFrame : register(b0)
+{
+	float4x4 ViewMatrix;
+};
+
+
 [maxvertexcount(6)]
 void GS(point VS_OUTPUT input[1], inout TriangleStream <GS_OUTPUT> triangle_stream)
 {

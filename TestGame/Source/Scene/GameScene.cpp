@@ -28,9 +28,9 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	using namespace Jamgine;
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
-	m_camera = Jamgine::Camera(0,0);
+	m_camera = Jamgine::CameraStruct(0, 0);
 	Jamgine::Texture2DInterface* a;
-	m_engine->LoadTexture(&a, "Circle.dds");
+	m_engine->LoadTexture(&a, "ball_alpha.dds");
 	for (unsigned int i = 0; i < 5; i++)
 	{
 		m_renderEntities.push_back(new RenderEntity());

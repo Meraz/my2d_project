@@ -2,11 +2,12 @@
 #include <exception>
 #include <algorithm>  
 
+// Official in-project includes 
 #include <DirectXColors.h>
 
 // Project files
 #include <Jamgine/Include/DirectX/JDirectXEngine.h>
-#include <Jamgine/Include/DirectX/JDirectXShared.h>
+#include <Jamgine/Include/DirectX/JDirectXDataSend.h>
 
 namespace Jamgine
 {
@@ -354,12 +355,15 @@ namespace Jamgine
 
 			float l_blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
 			m_deviceContext->OMSetBlendState(m_blendState, l_blendFactor, 0xffffffff);
+
+			// TODO return value
 		}
 
 		HRESULT DirectXEngine::CreateBuffer()
 		{
 			HRESULT l_hr = S_OK;
 
+			// Per frame buffer
 			D3D11_BUFFER_DESC bufferDesc;
 			bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			bufferDesc.Usage	 = D3D11_USAGE_DEFAULT;
@@ -372,6 +376,7 @@ namespace Jamgine
 				return l_hr;
 			}
 
+			// Per texture buffer
 			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
 			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perTextureBuffer);
 			if (FAILED(l_hr))
@@ -379,6 +384,8 @@ namespace Jamgine
 				return l_hr;
 			}
 			
+
+			// Per window buffer
 			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
 			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perWindowChangeBuffer);
 			if (FAILED(l_hr))
@@ -386,10 +393,19 @@ namespace Jamgine
 				return l_hr;
 			}
 
+			// Camera buffer
+			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4X4);
+			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_cameraBuffer);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
+
+			// Vertexbuffer
 			bufferDesc.BindFlags				= D3D11_BIND_VERTEX_BUFFER;
 			bufferDesc.Usage					= D3D11_USAGE_DYNAMIC;
 			bufferDesc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;
-			bufferDesc.ByteWidth				= sizeof(Vertex) * 300000; // LOL fix this maybe
+			bufferDesc.ByteWidth				= sizeof(Vertex) * 300000; // LOL fix this maybe // TODO
 			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_vertexBuffer);
 			if (FAILED(l_hr))
 			{
@@ -400,13 +416,26 @@ namespace Jamgine
 			UINT offset = 0;
 			m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 
-			m_deviceContext->GSSetConstantBuffers(0, 1, &m_perFrameBuffer);			// maybe fix array? yes
-			m_deviceContext->GSSetConstantBuffers(1, 1, &m_perTextureBuffer);
-			m_deviceContext->VSSetConstantBuffers(2, 1, &m_perWindowChangeBuffer);
+			m_deviceContext->GSSetConstantBuffers(0, 1, &m_perFrameBuffer);			// maybe fix array? yes // TODO
+	//		m_deviceContext->GSSetConstantBuffers(1, 1, &m_perTextureBuffer);
+			m_deviceContext->VSSetConstantBuffers(0, 1, &m_perWindowChangeBuffer);
 
-			DirectX::XMFLOAT4 PerWindowChange = DirectX::XMFLOAT4(static_cast<float>(m_clientWidth), static_cast<float>(m_clientHeight), 0, 0);
+			// Camera code
+			DirectX::XMMATRIX a = DirectX::XMMatrixIdentity();
+	//		DirectX::XMFLOAT4X4 b;
+	//		DirectX::XMStoreFloat4x4(&b, a);
+	//		b._41 = 100;
+	//		b._42 = 100;
+	//		b._43 = 100;
+			m_deviceContext->VSSetConstantBuffers(1, 1, &m_cameraBuffer);	// TODO camera
+			m_deviceContext->UpdateSubresource(m_cameraBuffer, 0, nullptr, &a, 0, 0);
+			// end of camera code
+
+
+			DirectX::XMFLOAT4 PerWindowChange = DirectX::XMFLOAT4(static_cast<float>(m_clientWidth), static_cast<float>(m_clientHeight), 1, 1);
 			m_deviceContext->UpdateSubresource(m_perWindowChangeBuffer, 0, nullptr, &PerWindowChange, 0, 0); // UPDATE
 
+			// TODO return value
 		}
 
 		HRESULT DirectXEngine::LoadShaders()
@@ -487,7 +516,7 @@ namespace Jamgine
 			m_renderData.push_back(p_spriteData);
 		}
 			
-		void DirectXEngine::PostRender(Camera* p_camera)
+		void DirectXEngine::PostRender(CameraStruct* p_camera)
 		{
 			int max = m_renderData.size() - 1;
 			if (max < 0)
@@ -531,8 +560,8 @@ namespace Jamgine
 					ID3D11ShaderResourceView* a = dynamic_cast<Texture2D*>(m_renderData[i].texture)->GetShaderResourceView();	// change name
 					m_deviceContext->PSSetShaderResources(0, 1, &a);
 
-					DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
-					m_deviceContext->UpdateSubresource(m_perTextureBuffer, 0, nullptr, &PerTexture, 0, 0); // UPDATE
+	//				DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
+	//				m_deviceContext->UpdateSubresource(m_perTextureBuffer, 0, nullptr, &PerTexture, 0, 0); // TODO, this is not used
 	
 					m_deviceContext->Draw(l_amount,l_currentIndex);
 					l_currentIndex += l_amount;
@@ -542,13 +571,18 @@ namespace Jamgine
 			ID3D11ShaderResourceView* b = dynamic_cast<Texture2D*>(m_renderData[l_currentIndex].texture)->GetShaderResourceView();	// change name
 			m_deviceContext->PSSetShaderResources(0, 1, &b);
 
-			DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
-			m_deviceContext->UpdateSubresource(m_perTextureBuffer, 0, nullptr, &PerTexture, 0, 0); // UPDATE
+	//		DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
+	//		m_deviceContext->UpdateSubresource(m_perTextureBuffer, 0, nullptr, &PerTexture, 0, 0); // TODO, this is not used
 			m_deviceContext->Draw(l_amount, l_currentIndex);			
 
 
 			m_swapChain->Present(0, 0);
 			m_renderData.clear();
+		}
+
+		void DirectXEngine::updateCameraMatrix()
+		{
+
 		}
 
 		bool SortTransparentAlgorithm(Jamgine::SpriteData p_a, Jamgine::SpriteData p_b)

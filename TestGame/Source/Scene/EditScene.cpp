@@ -33,7 +33,7 @@ void EditScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 {
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
-	m_camera = Jamgine::Camera(0,0);
+	m_camera = Jamgine::CameraStruct(0, 0);
 
 
 	m_texturePath.push_back("dirt_texture.dds");
