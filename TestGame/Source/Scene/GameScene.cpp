@@ -30,11 +30,11 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_camera = Jamgine::CameraStruct(0, 0);
 	Jamgine::Texture2DInterface* a;
-	m_engine->LoadTexture(&a, "ball_alpha.dds");
-	for (unsigned int i = 0; i < 5; i++)
+	m_engine->LoadTexture(&a, "ball.dds");
+	for (unsigned int i = 0; i <100; i++)
 	{
 		m_renderEntities.push_back(new RenderEntity());
-		m_renderEntities.at(i)->Initialize(Jamgine::Rectangle(25*i, 0, 50, 50), a, m_engine);
+		m_renderEntities.at(i)->Initialize(Jamgine::Rectangle(25*i, 0, 5000, 5000), a, m_engine);
 	}
 	
 	//	playerEntity = new RenderEntity();

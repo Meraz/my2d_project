@@ -8,11 +8,15 @@
 // Project files
 #include <Jamgine/Include/DirectX/JDirectXEngine.h>
 #include <Jamgine/Include/DirectX/JDirectXDataSend.h>
+#include <Jamgine/Include/DirectX/JDirectXCamera2.h>
+
+
 
 namespace Jamgine
 {
 	namespace JDirectX
 	{		
+	
 		struct Vertex
 		{
 			DirectX::XMFLOAT3 position;
@@ -41,14 +45,31 @@ namespace Jamgine
 		};
 
 		DirectXEngine::DirectXEngine()
-			: m_device(nullptr), m_deviceContext(nullptr), m_swapChain(nullptr), 
-			  m_backBuffer_RTV(nullptr), m_backBuffer_UAV(nullptr), m_depthStencil(nullptr), m_depthStencilState(nullptr),
-			  m_depthStencilView(nullptr), m_perFrameBuffer(nullptr), m_perTextureBuffer(nullptr), m_perWindowChangeBuffer(nullptr),
-			  m_vertexBuffer(nullptr), m_samplerState(nullptr), m_rasterizerState(nullptr), m_blendState(nullptr),
-			  m_texture2DManager(nullptr), 	m_shaderLoader(nullptr), m_vertexShader(nullptr), m_pixelShader(nullptr), m_geometryShader(nullptr),
-			  m_inputLayout(nullptr)
+			:	m_device(nullptr), 
+				m_deviceContext(nullptr), 
+				m_swapChain(nullptr), 
+				m_backBuffer_RTV(nullptr), 
+				m_backBuffer_UAV(nullptr), 
+				m_depthStencil(nullptr), 
+				m_depthStencilState(nullptr),
+				m_depthStencilView(nullptr), 
+				m_perTextureBuffer(nullptr), 
+				m_vertexBuffer(nullptr), 
+				m_samplerState(nullptr), 
+				m_rasterizerState(nullptr), 
+				m_blendState(nullptr),
+				m_texture2DManager(nullptr), 	
+				m_shaderLoader(nullptr),
+				m_vertexShader(nullptr), 
+				m_pixelShader(nullptr),
+				m_geometryShader(nullptr),
+				m_inputLayout(nullptr)
 		{
 			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
+			m_camera2 = Camera2::GetCamera(0);
+			m_camera2->rebuildView();
+			aStruct.m_view = m_camera2->GetView();
+			aStruct.m_proj = m_camera2->GetProj();
 		}
 
 		DirectXEngine::~DirectXEngine()
@@ -363,20 +384,8 @@ namespace Jamgine
 		{
 			HRESULT l_hr = S_OK;
 
-			// Per frame buffer
-			D3D11_BUFFER_DESC bufferDesc;
-			bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			bufferDesc.Usage	 = D3D11_USAGE_DEFAULT;
-			bufferDesc.CPUAccessFlags = 0;
-			bufferDesc.MiscFlags = 0;
-			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4X4);
-			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perFrameBuffer);
-			if (FAILED(l_hr))
-			{
-				return l_hr;
-			}
-
 			// Per texture buffer
+			D3D11_BUFFER_DESC bufferDesc;
 			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
 			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perTextureBuffer);
 			if (FAILED(l_hr))
@@ -384,28 +393,11 @@ namespace Jamgine
 				return l_hr;
 			}
 			
-
-			// Per window buffer
-			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
-			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perWindowChangeBuffer);
-			if (FAILED(l_hr))
-			{
-				return l_hr;
-			}
-
-			// Camera buffer
-			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4X4);
-			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_cameraBuffer);
-			if (FAILED(l_hr))
-			{
-				return l_hr;
-			}
-
 			// Vertexbuffer
 			bufferDesc.BindFlags				= D3D11_BIND_VERTEX_BUFFER;
 			bufferDesc.Usage					= D3D11_USAGE_DYNAMIC;
 			bufferDesc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;
-			bufferDesc.ByteWidth				= sizeof(Vertex) * 300000; // LOL fix this maybe // TODO
+			bufferDesc.ByteWidth				= sizeof(Vertex) * 10000; // LOL fix this maybe // TODO
 			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_vertexBuffer);
 			if (FAILED(l_hr))
 			{
@@ -416,54 +408,15 @@ namespace Jamgine
 			UINT offset = 0;
 			m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 
-			m_deviceContext->GSSetConstantBuffers(0, 1, &m_perFrameBuffer);			// maybe fix array? yes // TODO
-	//		m_deviceContext->GSSetConstantBuffers(1, 1, &m_perTextureBuffer);
-			m_deviceContext->VSSetConstantBuffers(0, 1, &m_perWindowChangeBuffer);
-
-			// Camera code
-			DirectX::XMMATRIX a = DirectX::XMMatrixIdentity();
-	//		DirectX::XMFLOAT4X4 b;
-	//		DirectX::XMStoreFloat4x4(&b, a);
-	//		b._41 = 100;
-	//		b._42 = 100;
-	//		b._43 = 100;
-			m_deviceContext->VSSetConstantBuffers(1, 1, &m_cameraBuffer);	// TODO camera
-			m_deviceContext->UpdateSubresource(m_cameraBuffer, 0, nullptr, &a, 0, 0);
-			// end of camera code
-
-
-			DirectX::XMFLOAT4 PerWindowChange = DirectX::XMFLOAT4(static_cast<float>(m_clientWidth), static_cast<float>(m_clientHeight), 1, 1);
-			m_deviceContext->UpdateSubresource(m_perWindowChangeBuffer, 0, nullptr, &PerWindowChange, 0, 0); // UPDATE
-
 			// TODO return value
 		}
 
 		HRESULT DirectXEngine::LoadShaders()
 		{
 			HRESULT l_hr;
-			l_hr = m_shaderLoader->CreateGeometryShader	(L"GeometryShader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
-			l_hr = m_shaderLoader->CreatePixelShader	(L"PixelShader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
 
-			D3D11_INPUT_ELEMENT_DESC l_desc[] =
-			{
-				{ "POSITION",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "ORIGIN",			0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "SIZE",			0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "SUB_TEX_POS",	0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "SUB_TEX_SIZE",	0, DXGI_FORMAT_R32G32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "ROTATION",		0, DXGI_FORMAT_R32_FLOAT,			0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{ "FLIP",			0, DXGI_FORMAT_R32_UINT,			0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
-			};
-			unsigned int l_numElements = ARRAYSIZE(l_desc);
-			l_hr = m_shaderLoader->CreateVertexShaderWithInputLayout(L"VertexShader.hlsl", "VS", "vs_5_0", m_device, &m_vertexShader, l_desc, l_numElements, &m_inputLayout);
-			if (FAILED(l_hr))
-			{
-				return l_hr;
-			}
 
-			m_deviceContext->VSSetShader(m_vertexShader,	nullptr, 0);
-			m_deviceContext->PSSetShader(m_pixelShader,		nullptr, 0);
-			m_deviceContext->GSSetShader(m_geometryShader,	nullptr, 0);
+
 			m_deviceContext->IASetInputLayout(m_inputLayout);	
 			m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 			
@@ -544,10 +497,8 @@ namespace Jamgine
 			
 			
 			m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Black);
+			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Gray);
 
-			// Update per frame buffer
-			m_deviceContext->UpdateSubresource(m_perFrameBuffer, 0, nullptr, &m_view, 0, 0); // Transposse?
 			
 			unsigned int l_currentIndex = 0;
 			unsigned int l_amount = 1;
@@ -560,9 +511,6 @@ namespace Jamgine
 					ID3D11ShaderResourceView* a = dynamic_cast<Texture2D*>(m_renderData[i].texture)->GetShaderResourceView();	// change name
 					m_deviceContext->PSSetShaderResources(0, 1, &a);
 
-	//				DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
-	//				m_deviceContext->UpdateSubresource(m_perTextureBuffer, 0, nullptr, &PerTexture, 0, 0); // TODO, this is not used
-	
 					m_deviceContext->Draw(l_amount,l_currentIndex);
 					l_currentIndex += l_amount;
 					l_amount = 1;
@@ -570,11 +518,7 @@ namespace Jamgine
 			}
 			ID3D11ShaderResourceView* b = dynamic_cast<Texture2D*>(m_renderData[l_currentIndex].texture)->GetShaderResourceView();	// change name
 			m_deviceContext->PSSetShaderResources(0, 1, &b);
-
-	//		DirectX::XMFLOAT4 PerTexture = DirectX::XMFLOAT4(1.0f, 1.0f, 0, 0);
-	//		m_deviceContext->UpdateSubresource(m_perTextureBuffer, 0, nullptr, &PerTexture, 0, 0); // TODO, this is not used
-			m_deviceContext->Draw(l_amount, l_currentIndex);			
-
+			m_deviceContext->Draw(l_amount, l_currentIndex);	
 
 			m_swapChain->Present(0, 0);
 			m_renderData.clear();

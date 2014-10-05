@@ -17,6 +17,8 @@ namespace Jamgine
 {
 	namespace JDirectX
 	{
+
+		class Camera2;
 		struct SpriteData;
 
 		class DirectXEngine : public JamgineEngine
@@ -65,11 +67,8 @@ namespace Jamgine
 			ID3D11Texture2D*			m_depthStencil;
 			ID3D11DepthStencilState*	m_depthStencilState;
 			ID3D11DepthStencilView*		m_depthStencilView;
-			ID3D11Buffer*				m_perFrameBuffer;
 			ID3D11Buffer*				m_perTextureBuffer;
-			ID3D11Buffer*				m_perWindowChangeBuffer;
 			ID3D11Buffer*				m_vertexBuffer;
-			ID3D11Buffer*				m_cameraBuffer;
 			ID3D11SamplerState*			m_samplerState;
 			ID3D11RasterizerState*		m_rasterizerState;
 			ID3D11BlendState*			m_blendState;
@@ -99,12 +98,21 @@ namespace Jamgine
 			HRESULT CreateBuffer();
 			HRESULT LoadShaders();
 
+			// Other functions
+			void SortSprites();
 
 			// Camera functions
 			void updateCameraMatrix();
 
-			// Other functions
-			void SortSprites();
+			// Test Camera
+			Camera2* m_camera2;
+			struct CameraMatrix
+			{
+				DirectX::XMFLOAT4X4 m_view;
+				DirectX::XMFLOAT4X4 m_proj;
+			};
+			CameraMatrix aStruct;
+
 		};
 	}
 }
