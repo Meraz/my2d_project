@@ -35,10 +35,3 @@ return 0;
 /* Error, both can't be defined or undefined same time */
 
 #endif
-
-
-
-
-/*
-
-*/

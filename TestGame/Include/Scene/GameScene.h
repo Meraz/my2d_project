@@ -20,7 +20,7 @@ public:
 	void Render();
 
 private:
-	std::vector<RenderEntity*>		m_renderEntities;
+	std::vector<RenderEntity*>	m_renderEntities;
 
 	Jamgine::Camera m_camera;
 	void SaveCurrentSetup(char* p_filename);
@@ -38,5 +38,4 @@ private:
 	int m_life;
 	
 	Node* m_quadTreeRootNode;
-
 };

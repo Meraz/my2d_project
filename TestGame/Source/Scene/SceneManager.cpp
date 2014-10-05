@@ -5,11 +5,12 @@
 
 
 SceneManager::SceneManager()
-	: m_currentSceneState(SceneState::NONE), m_currentScene(nullptr), m_exit(false)
+	:	m_currentSceneState(SceneState::NONE), 
+		m_currentScene(nullptr),
+		m_exit(false)
 {
 
 }
-
 
 void SceneManager::Initialize(Jamgine::JamgineEngine* p_engine, float width, float height)
 {

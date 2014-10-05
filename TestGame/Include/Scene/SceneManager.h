@@ -1,6 +1,5 @@
 #pragma once
 
-//#include <TestGame/Include/Scene/SceneManagerInterface.h>
 #include <TestGame/Include/Scene/BaseScene.h>
 
 class SceneManager : public SceneManagerInterface

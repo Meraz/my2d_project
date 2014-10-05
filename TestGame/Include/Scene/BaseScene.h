@@ -1,12 +1,8 @@
 #pragma once
 
 #include <Jamgine/Include/Jamgine.h>
-
 #include <TestGame/Include/Scene/SceneState.h>
-
 #include <TestGame/Include/Scene/SceneManagerInterface.h>
-
-#include <TestGame/Include/XBOXController.h>
 
 class BaseScene
 {
