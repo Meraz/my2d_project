@@ -1,10 +1,3 @@
-DV2549 Game engine Architecture 
-
+Personal hobbyproject
 
 Rasmus Tilljander
-
-Joel Begnert
-
-Erik Hörlin
-
-Kim Hansson
