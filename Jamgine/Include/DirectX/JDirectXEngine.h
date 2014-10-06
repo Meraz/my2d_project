@@ -4,42 +4,46 @@
 #include <vector>
 
 // Official in-project includes 
-#include <Jamgine/Include/DirectX/JDirectXShared.h>
+//#include <Jamgine/Include/DirectX/JDirectXShared.h>
 #include <DirectXMath.h>	// DOsen't work to include via DirectX/DirectXMath. No idea why, I think I might have done something wrong with cMake
 
 // Project files
 #include <Jamgine/Include/Jamgine.h>
 #include <Jamgine/Include/DirectX/JDirectXTexture2DManager.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
-#include <Jamgine/Include/CameraStruct.h>
 
 namespace Jamgine
 {
 	namespace JDirectX
 	{
 
-		class Camera2;
+		// 
 		struct SpriteData;
+		struct CameraMatrix
+		{
+			DirectX::XMFLOAT4X4 m_view;
+			DirectX::XMFLOAT4X4 m_proj;
+		};
 
 		class DirectXEngine : public JamgineEngine
 		{
 		public:
 			DirectXEngine();
-			~DirectXEngine();
+			virtual~DirectXEngine();
 			
-			virtual ErrorMessage Initialize(void* p_data);			
-			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data);
-			virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath);
+			virtual ErrorMessage Initialize(void* p_data) override;
+			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data) override;
+			virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath) override;
 			
-			virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture);
-			virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture, float p_depth);
-			virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture);
-			virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture, float p_depth);
+			virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture) override;
+			virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture, float p_depth) override;
+			virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture) override;
+			virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture, float p_depth) override;
 
 			// Render with a pre-filled SpriteData struct
-			virtual void Render(Jamgine::SpriteData p_spriteData);
+			virtual void Render(Jamgine::SpriteData p_spriteData) override;
 
-			virtual void PostRender(CameraStruct* p_camera);
+			virtual void PostRender() override;
 		
 		private:
 			///////////
@@ -106,13 +110,8 @@ namespace Jamgine
 			void updateCameraMatrix();
 
 			// Test Camera
-			Camera2* m_camera2;
-			struct CameraMatrix
-			{
-				DirectX::XMFLOAT4X4 m_view;
-				DirectX::XMFLOAT4X4 m_proj;
-			};
-			CameraMatrix aStruct;
+			JCamera* m_camera;
+			CameraMatrix m_cameraMatrix;
 
 		};
 	}

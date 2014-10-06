@@ -8,7 +8,7 @@
 // Project files
 #include <Jamgine/Include/DirectX/JDirectXEngine.h>
 #include <Jamgine/Include/DirectX/JDirectXDataSend.h>
-#include <Jamgine/Include/DirectX/JDirectXCamera2.h>
+#include <Jamgine/Include/DirectX/JDirectXCamera.h>
 #include <DirectXMath.h>
 
 
@@ -67,11 +67,9 @@ namespace Jamgine
 				m_inputLayout(nullptr)
 		{
 			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
-			
 
-
-			m_camera2 = Camera2::GetCamera(0);
-			m_camera2->rebuildView();
+			m_camera = new JDirectXCamera();
+			m_camera->rebuildView();
 			//	DirectX::XMStoreFloat4x4(&aStruct.m_proj, DirectX::XMMatrixOrthographicLH(m_clientWidth, m_clientHeight, 0.5f, 2000.0f));
 
 		}
@@ -435,9 +433,9 @@ namespace Jamgine
 			m_deviceContext->Map(m_matrices, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		
 			using namespace DirectX;
-			XMStoreFloat4x4(&aStruct.m_proj, XMMatrixTranspose(DirectX::XMLoadFloat4x4(&m_camera2->GetProj())));
-			XMStoreFloat4x4(&aStruct.m_view, XMMatrixTranspose(DirectX::XMLoadFloat4x4(&m_camera2->GetView())));
-			*(CameraMatrix*)mappedResource.pData = aStruct;
+			XMStoreFloat4x4(&m_cameraMatrix.m_proj, XMMatrixTranspose(DirectX::XMLoadFloat4x4(&m_camera->getProjectionMatrix())));
+			XMStoreFloat4x4(&m_cameraMatrix.m_view, XMMatrixTranspose(DirectX::XMLoadFloat4x4(&m_camera->getViewMatrix())));
+			*(CameraMatrix*)mappedResource.pData = m_cameraMatrix;
 
 			m_deviceContext->Unmap(m_matrices, 0);
 
@@ -520,7 +518,7 @@ namespace Jamgine
 			m_renderData.push_back(p_spriteData);
 		}
 			
-		void DirectXEngine::PostRender(CameraStruct* p_camera)
+		void DirectXEngine::PostRender()
 		{
 			int max = m_renderData.size() - 1;
 			if (max < 0)
@@ -536,7 +534,7 @@ namespace Jamgine
 
 			for (int i = 0; i < max + 1; i++)
 			{
-				m_renderData[i].rectangle.position -= p_camera->position;
+			//	m_renderData[i].rectangle.position -= p_camera->position;
 				a[i] = Vertex(m_renderData[i]);
 			}
 

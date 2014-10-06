@@ -138,7 +138,7 @@ void RenderEntity::Render()
 	//m_engine->Render(m_rectangle, m_texture);
 	//float m_rectangle.position.x;
 	//if ((int)m_rectangle.position.x % 2 ´>== 0)
-		m_engine->Render(Jamgine::SpriteData(m_rectangle, Point(), Jamgine::Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, Jamgine::SpriteEffect::FLIP_NONE, 0.5, 0, true));
+	m_engine->Render(Jamgine::SpriteData(m_rectangle, Point(200.0f, 200.0f), Jamgine::Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, Jamgine::SpriteEffect::FLIP_NONE, 0.0, 0.0f, true));
 	//else
 	//	m_engine->Render(Jamgine::SpriteData(m_rectangle, Point(), Jamgine::Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, Jamgine::SpriteEffect::FLIP_NONE, 0.6, 0, false));
 }
