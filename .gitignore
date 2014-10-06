@@ -17,6 +17,7 @@
 *.vcxproj
 *.exe
 *.sln.docstates
+*.db
 
 # Build results
 
