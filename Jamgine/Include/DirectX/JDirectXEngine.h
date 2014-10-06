@@ -67,8 +67,9 @@ namespace Jamgine
 			ID3D11Texture2D*			m_depthStencil;
 			ID3D11DepthStencilState*	m_depthStencilState;
 			ID3D11DepthStencilView*		m_depthStencilView;
-			ID3D11Buffer*				m_perTextureBuffer;
-			ID3D11Buffer*				m_vertexBuffer;
+			ID3D11Buffer*				m_perTextureBuffer;		// not sure
+			ID3D11Buffer*				m_vertexBuffer;			// Vertex data
+			ID3D11Buffer*				m_matrices;				// view and proj for gshader
 			ID3D11SamplerState*			m_samplerState;
 			ID3D11RasterizerState*		m_rasterizerState;
 			ID3D11BlendState*			m_blendState;

@@ -67,9 +67,8 @@ namespace Jamgine
 		{
 			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
 			m_camera2 = Camera2::GetCamera(0);
-			m_camera2->rebuildView();
-			aStruct.m_view = m_camera2->GetView();
 			aStruct.m_proj = m_camera2->GetProj();
+			aStruct.m_view = m_camera2->GetView();
 		}
 
 		DirectXEngine::~DirectXEngine()
@@ -333,7 +332,7 @@ namespace Jamgine
 			desc.FillMode = D3D11_FILL_SOLID;
 			desc.CullMode = D3D11_CULL_NONE;
 			desc.FrontCounterClockwise = false;
-			desc.DepthBias = 0;
+			desc.DepthBias				= 0;
 			desc.SlopeScaledDepthBias = 0.0f;
 			desc.DepthBiasClamp = 0.0f;
 			desc.DepthClipEnable = true;
@@ -386,6 +385,10 @@ namespace Jamgine
 
 			// Per texture buffer
 			D3D11_BUFFER_DESC bufferDesc;
+			bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+			bufferDesc.CPUAccessFlags = 0;
+			bufferDesc.MiscFlags = 0;
 			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4);
 			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_perTextureBuffer);
 			if (FAILED(l_hr))
@@ -403,10 +406,24 @@ namespace Jamgine
 			{
 				return l_hr;
 			}
+
+			// view n proj for gshader
+			bufferDesc.BindFlags				= D3D11_BIND_VERTEX_BUFFER;
+			bufferDesc.Usage					= D3D11_USAGE_DYNAMIC;
+			bufferDesc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;
+			bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4)*2;
+			l_hr = m_device->CreateBuffer(&bufferDesc, nullptr, &m_matrices);
+			if (FAILED(l_hr))
+			{
+				return l_hr;
+			}
 			
 			UINT stride = sizeof(Vertex);
 			UINT offset = 0;
 			m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+
+
+			m_deviceContext->UpdateSubresource(m_matrices, 0, nullptr, &m_camera2, 0, 0);
 
 			// TODO return value
 		}
@@ -415,7 +432,24 @@ namespace Jamgine
 		{
 			HRESULT l_hr;
 
+			m_shaderLoader = new ShaderLoader();
+			
+			m_shaderLoader->CreatePixelShader(L"PixelShader.hlsl", "PS", "ps_5_0", m_device, &m_pixelShader);
 
+
+			D3D11_INPUT_ELEMENT_DESC l_desc[] =
+			{
+				{ "POSITION",			0, DXGI_FORMAT_R32G32B32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "ORIGIN",				0, DXGI_FORMAT_R32G32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "SIZE",				0, DXGI_FORMAT_R32G32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "SUB_TEX_POS",		0, DXGI_FORMAT_R32G32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "SUB_TEX_SIZE",		0, DXGI_FORMAT_R32G32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "ROTATION",			0, DXGI_FORMAT_R32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "FLIP",				0, DXGI_FORMAT_R32_UINT,		0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+			};
+
+			m_shaderLoader->CreateVertexShaderWithInputLayout(L"VertexShader.hlsl", "VS", "vs_5_0", m_device, &m_vertexShader, l_desc, 7, &m_inputLayout);
+			m_shaderLoader->CreateGeometryShader(L"GeometryShader.hlsl", "GS", "gs_5_0", m_device, &m_geometryShader);
 
 			m_deviceContext->IASetInputLayout(m_inputLayout);	
 			m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
@@ -498,7 +532,6 @@ namespace Jamgine
 			
 			m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 			m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Gray);
-
 			
 			unsigned int l_currentIndex = 0;
 			unsigned int l_amount = 1;
