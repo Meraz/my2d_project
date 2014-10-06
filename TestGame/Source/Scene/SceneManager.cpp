@@ -1,7 +1,5 @@
 #include <TestGame/Include/Scene/SceneManager.h>
 #include <TestGame/Include/Scene/GameScene.h>
-#include <TestGame/Include/Scene/MainMenuScene.h>
-#include <TestGame/Include/Scene/EditScene.h>
 
 
 SceneManager::SceneManager()
@@ -54,7 +52,7 @@ void SceneManager::SwapSceneState(SceneState p_sceneState)
 	// Check for new screen
 	if (p_sceneState == SceneState::MAIN_MENU)
 	{
-		m_currentScene = new MainMenuScene();
+//		m_currentScene = new MainMenuScene();
 	}
 	else if (p_sceneState == SceneState::GAME)
 	{
@@ -62,7 +60,7 @@ void SceneManager::SwapSceneState(SceneState p_sceneState)
 	}
 	else if (p_sceneState == SceneState::EDIT)
 	{
-		m_currentScene = new EditScene();
+//		m_currentScene = new EditScene();
 	}
 	else // Nothing to do, return
 	{
