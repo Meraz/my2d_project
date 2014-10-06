@@ -22,7 +22,7 @@ public:
 private:
 	std::vector<RenderEntity*>	m_renderEntities;
 
-	Jamgine::Camera m_camera;
+	Jamgine::CameraStruct m_camera;
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
 

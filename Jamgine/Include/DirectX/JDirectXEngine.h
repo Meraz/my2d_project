@@ -1,19 +1,24 @@
 #pragma once
 
+// Official libs
+#include <vector>
+
+// Official in-project includes 
+#include <Jamgine/Include/DirectX/JDirectXShared.h>
+#include <DirectXMath.h>	// DOsen't work to include via DirectX/DirectXMath. No idea why, I think I might have done something wrong with cMake
+
+// Project files
 #include <Jamgine/Include/Jamgine.h>
 #include <Jamgine/Include/DirectX/JDirectXTexture2DManager.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
-#include <Jamgine/Include/Camera.h>
-#include <d3d11_1.h>
-#include <DirectXMath.h>
-
-#include <vector>
-
+#include <Jamgine/Include/CameraStruct.h>
 
 namespace Jamgine
 {
 	namespace JDirectX
 	{
+
+		class Camera2;
 		struct SpriteData;
 
 		class DirectXEngine : public JamgineEngine
@@ -34,7 +39,7 @@ namespace Jamgine
 			// Render with a pre-filled SpriteData struct
 			virtual void Render(Jamgine::SpriteData p_spriteData);
 
-			virtual void PostRender(Camera* p_camera);
+			virtual void PostRender(CameraStruct* p_camera);
 		
 		private:
 			///////////
@@ -62,10 +67,9 @@ namespace Jamgine
 			ID3D11Texture2D*			m_depthStencil;
 			ID3D11DepthStencilState*	m_depthStencilState;
 			ID3D11DepthStencilView*		m_depthStencilView;
-			ID3D11Buffer*				m_perFrameBuffer;
-			ID3D11Buffer*				m_perTextureBuffer;
-			ID3D11Buffer*				m_perWindowChangeBuffer;
-			ID3D11Buffer*				m_vertexBuffer;
+			ID3D11Buffer*				m_perTextureBuffer;		// not sure
+			ID3D11Buffer*				m_vertexBuffer;			// Vertex data
+			ID3D11Buffer*				m_matrices;				// view and proj for gshader
 			ID3D11SamplerState*			m_samplerState;
 			ID3D11RasterizerState*		m_rasterizerState;
 			ID3D11BlendState*			m_blendState;
@@ -97,6 +101,19 @@ namespace Jamgine
 
 			// Other functions
 			void SortSprites();
+
+			// Camera functions
+			void updateCameraMatrix();
+
+			// Test Camera
+			Camera2* m_camera2;
+			struct CameraMatrix
+			{
+				DirectX::XMFLOAT4X4 m_view;
+				DirectX::XMFLOAT4X4 m_proj;
+			};
+			CameraMatrix aStruct;
+
 		};
 	}
 }

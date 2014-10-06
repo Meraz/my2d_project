@@ -1,19 +1,6 @@
 Texture2D Texture;
 
-cbuffer PerFrame : register(b0)
-{
-	float4x4 ViewMatrix;
-};
-
-cbuffer PerWindowChange :  register(b2)
-{
-	float ClientWidth;
-	float ClientHeight;
-	float2 padding2;
-};
-
 SamplerState Sampler : register(s0);
-
 
 struct VS_OUTPUT
 {
@@ -29,5 +16,5 @@ struct VS_OUTPUT
 struct GS_OUTPUT
 {
 	float4 position : SV_POSITION;
-	float2 uvCoord	: TEX_COORD;
+	float2 uvCoord	: TEXCOORD;
 };
