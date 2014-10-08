@@ -22,6 +22,11 @@ target_link_libraries(${PROJECT_NAME_TESTGAME} d3dcompiler.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} dxguid.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} Xinput9_1_0.lib)
 target_link_libraries(${PROJECT_NAME_TESTGAME} fmod_vc.lib)
+target_link_libraries(${PROJECT_NAME_TESTGAME} lzma.lib)
+target_link_libraries(${PROJECT_NAME_TESTGAME} ZipLib.lib)
+target_link_libraries(${PROJECT_NAME_TESTGAME} bzip2.lib)
+target_link_libraries(${PROJECT_NAME_TESTGAME} zlib.lib)
+
 
 target_link_libraries(${PROJECT_NAME_TESTGAME} Jamgine.lib)
 
