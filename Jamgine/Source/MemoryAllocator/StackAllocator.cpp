@@ -1,25 +1,38 @@
-#include "engine\Include\SingleFrameStack.h"
+#include "Jamgine\Include\MemoryAllocator\StackAllocator.h"
 #include <stdlib.h>
 
 
-SingleFrameStack::SingleFrameStack(unsigned p_stacksize, bool p_shared, bool p_custom)
+StackAllocator::StackAllocator(unsigned p_stacksize, bool p_shared)
 {
 	m_size = p_stacksize;
-	if(p_custom)
-		m_start = (size_t*)malloc(p_stacksize);
+	m_start = (size_t*)malloc(p_stacksize);
 	m_current = m_start;
 	m_nonCustomMemFinder = 0;
 	m_lock.clear();
 	m_shared = p_shared;
-	m_custom = p_custom;
 	m_currentMarker = m_current;
+
 }
 
 
-SingleFrameStack::~SingleFrameStack()
+StackAllocator::~StackAllocator()
 {
 	//delete all
-	if(m_custom)
-		free(m_start);
+	free(m_start);
 }
 
+bool StackAllocator::Free(Marker p_marker)
+{
+	if (p_marker > m_current)
+		return false;
+	else
+		m_current = p_marker;
+	return true;
+}
+
+Marker StackAllocator::GetMarker()
+{
+	m_currentMarker = m_current;
+
+	return m_currentMarker;
+}

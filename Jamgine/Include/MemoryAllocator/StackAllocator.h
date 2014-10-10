@@ -4,13 +4,13 @@
 #include <atomic>
 #include <iostream>
 
-typedef Marker size_t*;
+typedef size_t* Marker;
 
 namespace
 {
 	std::atomic_flag flag = ATOMIC_FLAG_INIT;
 }
-class SingleFrameStack
+class StackAllocator
 {
 private:
 	size_t* m_start;
@@ -22,19 +22,16 @@ private:
 	std::atomic_flag m_lock;
 	
 	bool m_shared;
-	bool m_custom;
 public:	
-	SingleFrameStack(unsigned int p_stacksize, bool p_shared, bool p_custom);
+	StackAllocator(unsigned int p_stacksize, bool p_shared);
 
-	~SingleFrameStack();
+	~StackAllocator();
 
 	void Wipe();
 
 	template <class T>
 	T* Push(unsigned p_alignment)
 	{
-		if(m_custom)
-		{
 			while(m_shared && m_lock.test_and_set(std::memory_order_acquire))
 			{
 				//Keep on spinning in the free world
@@ -63,15 +60,6 @@ public:
 			m_current = (size_t*)(i + adjustment);
 			m_lock.clear(std::memory_order_release);
 			return returnblock; 
-		}
-		else
-		{
-			m_nonCustomMemFinder+= sizeof(T);
-			if(m_nonCustomMemFinder < m_size)
-				return new T();
-			else
-				return nullptr;
-		}
 	}
 	
 
