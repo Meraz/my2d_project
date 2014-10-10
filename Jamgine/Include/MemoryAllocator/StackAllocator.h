@@ -18,7 +18,6 @@ private:
 	size_t* m_current;
 	Marker m_currentMarker;
 	unsigned m_nonCustomMemFinder;
-	//std::atomic_flag m_lock =  ATOMIC_FLAG_INIT;
 	std::atomic_flag m_lock;
 	
 	bool m_shared;

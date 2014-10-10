@@ -1,27 +1,23 @@
 #pragma once
 
+#include "Jamgine\Include\MemoryAllocator\StackAllocator.h"
+
 #include <stdint.h>
 #include <atomic>
 #include <iostream>
-namespace
-{
-	std::atomic_flag flag = ATOMIC_FLAG_INIT;
-}
+
 class SingleFrameStack
 {
 private:
 	size_t* m_start;
 	size_t m_size;
 	size_t* m_current;
-	//Marker m_currentMarker;
 	unsigned m_nonCustomMemFinder;
-	//std::atomic_flag m_lock =  ATOMIC_FLAG_INIT;
 	std::atomic_flag m_lock;
 	
 	bool m_shared;
-	bool m_custom;
 public:	
-	SingleFrameStack(unsigned int p_stacksize, bool p_shared, bool p_custom);
+	SingleFrameStack(unsigned int p_stacksize, bool p_shared);
 
 	~SingleFrameStack();
 
@@ -30,8 +26,7 @@ public:
 	template <class T>
 	T* Push(unsigned p_alignment)
 	{
-		if(m_custom)
-		{
+
 			while(m_shared && m_lock.test_and_set(std::memory_order_acquire))
 			{
 				//Keep on spinning in the free world
@@ -60,20 +55,7 @@ public:
 			m_current = (size_t*)(i + adjustment);
 			m_lock.clear(std::memory_order_release);
 			return returnblock; 
-		}
-		else
-		{
-			m_nonCustomMemFinder+= sizeof(T);
-			if(m_nonCustomMemFinder < m_size)
-				return new T();
-			else
-				return nullptr;
-		}
 	}
-	
 
-	//bool Free(Marker p_marker);
-
-	//Marker GetMarker();
 
 };
