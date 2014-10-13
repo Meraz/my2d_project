@@ -29,6 +29,27 @@ namespace Jamgine
 
 		return tempRes.memoryLocation;
 	}
+
+	void* JWinResourceManager::LoadRaw(std::string p_zipFile, std::string p_fileName)
+	{
+
+	}
+
+	void* JWinResourceManager::LoadTexture(std::string p_zipFile, std::string p_fileName)
+	{
+
+	}
+
+	void* JWinResourceManager::LoadScript(std::string p_zipFile, std::string p_fileName)
+	{
+
+	}
+
+	void* JWinResourceManager::LoadShader(std::string p_zipFile, std::string p_fileName)
+	{
+
+	}
+
 	void* JWinResourceManager::GetResource(std::string p_path)
 	{
 		return nullptr; //Getting rid om them angry must return errors

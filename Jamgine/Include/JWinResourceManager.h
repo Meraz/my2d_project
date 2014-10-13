@@ -29,10 +29,10 @@ namespace Jamgine
 		void FreeResources(unsigned p_lifeTime) override;
 	private:
 
-		void LoadRaw(std::string p_zipFile, std::string p_fileName);
-		void LoadTexture(std::string p_zipFile, std::string p_fileName);
-		void LoadScript(std::string p_zipFile, std::string p_fileName);
-		void LoadShader(std::string p_zipFile, std::string p_fileName);
+		void* LoadRaw(std::string p_zipFile, std::string p_fileName);
+		void* LoadTexture(std::string p_zipFile, std::string p_fileName);
+		void* LoadScript(std::string p_zipFile, std::string p_fileName);
+		void* LoadShader(std::string p_zipFile, std::string p_fileName);
 
 
 
