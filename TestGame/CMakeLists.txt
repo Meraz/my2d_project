@@ -11,7 +11,11 @@ file(GLOB_RECURSE HEADERS Include/*.h)
 
 # Set library search path
 link_directories(${EXTERNAL_LIBRARIES})
-link_directories(${OUTPUT_DIRECTORY}/Debug)
+if (NOT COMPILE_RELEASE_BUILD)
+	link_directories(${OUTPUT_DIRECTORY}/Debug)
+else()
+	link_directories(${OUTPUT_DIRECTORY}/Release)
+endif()
 
 # Add the target
 add_executable(${PROJECT_NAME_TESTGAME} ${HEADERS} ${SOURCES})
