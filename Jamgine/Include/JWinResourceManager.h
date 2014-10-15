@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Jamgine/Include/JResourceManager.h>
-#include "Jamgine\Include\MemoryAllocator\MemoryAllocator.h"
+#include <External\Include\ziplib\ZipFile.h>
 #include <hash_map>
 #include <string>
 #include <map>
@@ -27,10 +27,10 @@ namespace Jamgine
 		void FreeResources(LifeTime p_lifeTime, Marker p_marker) override;
 	private:
 
-		void* LoadRaw(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime);
-		void* LoadTexture(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime);
-		void* LoadScript(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime);
-		void* LoadShader(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime);
+		void* LoadRaw(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
+		void* LoadTexture(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
+		void* LoadScript(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
+		void* LoadShader(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
 
 
 

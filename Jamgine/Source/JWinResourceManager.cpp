@@ -35,20 +35,42 @@ namespace Jamgine
 		//Hash path to int
 		//m_resources[p_path] = tempRes.memoryLocation;
 
-		
+		StackAllocator* stack;
+
+		switch (p_lifeTime)
+		{
+		case Jamgine::GLOBAL:
+			stack = m_gameStack;
+			break;
+		case Jamgine::LEVEL:
+			stack = m_levelStack;
+			break;
+		case Jamgine::EVENT:
+			stack = m_eventStack;
+			break;
+		default:
+			break;
+		}
+
+		ZipArchive::Ptr archive = ZipFile::Open(p_zipFile);
+		ZipArchiveEntry::Ptr entry = archive->GetEntry(p_fileName);
+		if (entry == NULL)
+		{
+			return nullptr;
+		}
 		switch (p_type)
 		{
 		case(RAW) :
-			tempRes.memoryLocation = LoadRaw(p_zipFile, p_fileName, p_lifeTime);
+			tempRes.memoryLocation = LoadRaw(entry, stack);
 			break;
 		case(TEXTURE) :
-			tempRes.memoryLocation = LoadTexture(p_zipFile, p_fileName, p_lifeTime);
+			tempRes.memoryLocation = LoadTexture(entry, stack);
 			break;
 		case(SCRIPT) :
-			tempRes.memoryLocation = LoadScript(p_zipFile, p_fileName, p_lifeTime);
+			tempRes.memoryLocation = LoadScript(entry, stack);
 			break;
 		case(SHADER) :
-			tempRes.memoryLocation = LoadShader(p_zipFile, p_fileName, p_lifeTime);
+			tempRes.memoryLocation = LoadShader(entry, stack);
 			break;
 		}
 		size_t hash = m_asher(p_fileName);
@@ -57,24 +79,45 @@ namespace Jamgine
 		return tempRes.memoryLocation;
 	}
 
-	void* JWinResourceManager::LoadRaw(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime)
+	void* JWinResourceManager::LoadRaw(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
 	{
+		std::istream* data = p_entry->GetDecompressionStream();
+		size_t dataSize = p_entry->GetSize();
+		char* supersmellypointer = p_stack->Push<char>(dataSize, 1);
+		if (supersmellypointer != nullptr)
+		{
+			return nullptr;
+		}
+		else
+		{
+			data->read(supersmellypointer, dataSize);
+		}
 
+		
+		return supersmellypointer;
 	}
 
-	void* JWinResourceManager::LoadTexture(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime)
+	void* JWinResourceManager::LoadTexture(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
 	{
+		std::istream* data = p_entry->GetDecompressionStream();
+		size_t dataSize = p_entry->GetSize();
+		char* supersmellypointer = p_stack->Push<char>(dataSize, 1);
+		if (supersmellypointer != nullptr)
+		{
+			return nullptr;
+		}
 
+		return 0;
 	}
 
-	void* JWinResourceManager::LoadScript(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime)
+	void* JWinResourceManager::LoadScript(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
 	{
-
+		return 0;
 	}
 
-	void* JWinResourceManager::LoadShader(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime)
+	void* JWinResourceManager::LoadShader(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
 	{
-
+		return LoadRaw(p_entry, p_stack); //D3DCompile uses a raw data pointer for compiling the HLSL code
 	}
 
 	void* JWinResourceManager::GetResource(std::string p_path)
