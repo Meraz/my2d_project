@@ -9,11 +9,7 @@
 namespace Jamgine
 {
 
-	struct Resource
-	{
-		void* memoryLocation;
-		unsigned refCount;
-	};
+	typedef void* Resource;
 
 
 	class JWinResourceManager : public JResourceManager
@@ -35,14 +31,10 @@ namespace Jamgine
 
 
 		std::map<size_t, Resource> m_resources;
-		MemoryAllocator* m_memAllocator;
 		StackAllocator* m_gameStack;
 		StackAllocator* m_levelStack;
+		StackAllocator* m_nextLevelStack;
 		StackAllocator* m_eventStack;
-
-		Marker m_gameStackMarker;
-		Marker m_levelStackMarker;
-		Marker m_eventStackMarker;
 
 		std::hash<std::string> m_asher;
 	};

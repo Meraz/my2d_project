@@ -7,22 +7,26 @@ namespace Jamgine
 	{
 		m_gameStack = nullptr;
 		m_levelStack = nullptr;
+		m_nextLevelStack = nullptr;
 		m_eventStack = nullptr;
 	}
 	JWinResourceManager::~JWinResourceManager()
 	{
 		delete m_gameStack;
 		delete m_levelStack;
+		delete m_nextLevelStack;
 		delete m_eventStack;
 
 	}
 	void JWinResourceManager::Init(unsigned p_globalMemory, unsigned p_levelMemory, unsigned p_eventMemory)
 	{
-		m_gameStack = m_memAllocator->CreateStack(p_globalMemory, true);
+		m_gameStack = MemoryAllocator::GetMe().CreateStack(p_globalMemory, true);
 
-		m_levelStack = m_memAllocator->CreateStack(p_levelMemory, true);
+		//Design problem, should they share p_levelMemory or duplicate it?
+		m_levelStack = MemoryAllocator::GetMe().CreateStack(p_levelMemory, true);
+		m_nextLevelStack = MemoryAllocator::GetMe().CreateStack(p_levelMemory, true);
 
-		m_eventStack = m_memAllocator->CreateStack(p_eventMemory, true);
+		m_eventStack = MemoryAllocator::GetMe().CreateStack(p_eventMemory, true);
 	}
 	void* JWinResourceManager::LoadResource(std::string p_zipFile, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type)
 	{
@@ -30,7 +34,6 @@ namespace Jamgine
 		//Else check if memory is enough
 		Resource tempRes;
 		tempRes.memoryLocation;
-		tempRes.refCount++;
 
 		//Hash path to int
 		//m_resources[p_path] = tempRes.memoryLocation;
@@ -73,6 +76,10 @@ namespace Jamgine
 			tempRes.memoryLocation = LoadShader(entry, stack);
 			break;
 		}
+		if (tempRes.memoryLocation == nullptr)
+		{
+			//No more memory, write to logg
+		}
 		size_t hash = m_asher(p_fileName);
 		m_resources.insert(std::pair<size_t, Resource>(hash, tempRes));
 
@@ -83,18 +90,18 @@ namespace Jamgine
 	{
 		std::istream* data = p_entry->GetDecompressionStream();
 		size_t dataSize = p_entry->GetSize();
-		char* supersmellypointer = p_stack->Push<char>(dataSize, 1);
-		if (supersmellypointer != nullptr)
+		char* memoryPointer = p_stack->Push<char>(dataSize, 1);
+		if (memoryPointer != nullptr)
 		{
 			return nullptr;
 		}
 		else
 		{
-			data->read(supersmellypointer, dataSize);
+			data->read(memoryPointer, dataSize);
 		}
 
 		
-		return supersmellypointer;
+		return memoryPointer;
 	}
 
 	void* JWinResourceManager::LoadTexture(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
