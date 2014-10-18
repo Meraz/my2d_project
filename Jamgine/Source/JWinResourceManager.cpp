@@ -33,7 +33,7 @@ namespace Jamgine
 		//Check if already existing
 		//Else check if memory is enough
 		Resource tempRes;
-		tempRes.memoryLocation;
+		tempRes;
 
 		//Hash path to int
 		//m_resources[p_path] = tempRes.memoryLocation;
@@ -64,26 +64,26 @@ namespace Jamgine
 		switch (p_type)
 		{
 		case(RAW) :
-			tempRes.memoryLocation = LoadRaw(entry, stack);
+			tempRes = LoadRaw(entry, stack);
 			break;
 		case(TEXTURE) :
-			tempRes.memoryLocation = LoadTexture(entry, stack);
+			tempRes = LoadTexture(entry, stack);
 			break;
 		case(SCRIPT) :
-			tempRes.memoryLocation = LoadScript(entry, stack);
+			tempRes = LoadScript(entry, stack);
 			break;
 		case(SHADER) :
-			tempRes.memoryLocation = LoadShader(entry, stack);
+			tempRes = LoadShader(entry, stack);
 			break;
 		}
-		if (tempRes.memoryLocation == nullptr)
+		if (tempRes == nullptr)
 		{
 			//No more memory, write to logg
 		}
 		size_t hash = m_asher(p_fileName);
 		m_resources.insert(std::pair<size_t, Resource>(hash, tempRes));
 
-		return tempRes.memoryLocation;
+		return tempRes;
 	}
 
 	void* JWinResourceManager::LoadRaw(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
@@ -108,13 +108,18 @@ namespace Jamgine
 	{
 		std::istream* data = p_entry->GetDecompressionStream();
 		size_t dataSize = p_entry->GetSize();
-		char* supersmellypointer = p_stack->Push<char>(dataSize, 1);
-		if (supersmellypointer != nullptr)
+		char* memoryPointer = p_stack->Push<char>(dataSize, 1);
+		if (memoryPointer != nullptr)
 		{
 			return nullptr;
 		}
+		else
+		{
+			data->read(memoryPointer, dataSize);
+			memoryPointer = m_TextureConverter->Convert(memoryPointer, dataSize);
+		}
 
-		return 0;
+		return memoryPointer;
 	}
 
 	void* JWinResourceManager::LoadScript(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
@@ -130,7 +135,7 @@ namespace Jamgine
 	void* JWinResourceManager::GetResource(std::string p_path)
 	{
 		size_t hash = m_asher(p_path);
-		return m_resources[hash].memoryLocation;
+		return m_resources[hash];
 	}
 	void JWinResourceManager::FreeResources(LifeTime p_lifeTime, Marker p_marker)
 	{
@@ -146,6 +151,11 @@ namespace Jamgine
 			m_eventStack->Free(p_marker);
 			break;
 		}
+	}
+
+	void JWinResourceManager::AttatchTextureConverter(JTextureConverter* p_converter)
+	{
+		m_TextureConverter = p_converter;
 	}
 	
 }

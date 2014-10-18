@@ -21,6 +21,8 @@ namespace Jamgine
 		void* LoadResource(std::string p_zipFile, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) override;
 		void* GetResource(std::string p_guid) override;
 		void FreeResources(LifeTime p_lifeTime, Marker p_marker) override;
+
+		void AttatchTextureConverter(JTextureConverter* p_converter) override;
 	private:
 
 		void* LoadRaw(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
@@ -37,5 +39,6 @@ namespace Jamgine
 		StackAllocator* m_eventStack;
 
 		std::hash<std::string> m_asher;
+		JTextureConverter* m_TextureConverter;
 	};
 }

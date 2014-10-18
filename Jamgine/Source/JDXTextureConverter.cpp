@@ -14,11 +14,8 @@ namespace Jamgine
 	}
 
 
-	void* JDXTextureConverter::Convert(void* p_data, unsigned int p_size)
+	void* JDXTextureConverter::Convert(void* p_data, void* p_out, unsigned int p_size)
 	{
-		ID3D11ShaderResourceView* SRV;
-		DirectX::CreateDDSTextureFromMemory(m_device, (uint8_t*)p_data, p_size, nullptr /* We don't need this, hopefully....*/, &SRV);
-
-		return SRV;
+		DirectX::CreateDDSTextureFromMemory(m_device, (uint8_t*)p_data, p_size, nullptr /* We don't need this, hopefully....*/, &(ID3D11ShaderResourceView)p_out);
 	}
 }

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <Jamgine\Include\MemoryAllocator\MemoryAllocator.h>
+#include <Jamgine\Include\JTextureConverter.h>
 namespace Jamgine
 {
 
@@ -29,6 +30,8 @@ namespace Jamgine
 		virtual void* LoadResource(std::string p_zipFile, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) = 0;
 		virtual void* GetResource(std::string p_guid) = 0;
 		virtual void FreeResources(LifeTime p_lifeTime, Marker p_marker) = 0;
+
+		virtual void AttatchTextureConverter(JTextureConverter* p_converter) = 0;
 
 	private:
 
