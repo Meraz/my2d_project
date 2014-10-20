@@ -10,7 +10,7 @@ namespace Jamgine
 		JDXTextureConverter(ID3D11Device* p_device);
 		~JDXTextureConverter();
 
-		void* Convert(void* p_data, unsigned int p_size) override;
+		void* Convert(void* p_data, unsigned int p_size, StackAllocator* p_stack) override;
 	private:
 		ID3D11Device* m_device;
 	};
