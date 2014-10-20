@@ -11,6 +11,7 @@
 #include <Jamgine/Include/Jamgine.h>
 #include <Jamgine/Include/DirectX/JDirectXTexture2DManager.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
+#include <Jamgine/Include/MemoryAllocator/SingleFrameStack.h>
 
 namespace Jamgine
 {
@@ -102,6 +103,7 @@ namespace Jamgine
 
 			HRESULT CreateBuffer();
 			HRESULT LoadShaders();
+			HRESULT AllocateMemory();
 
 			// Other functions
 			void SortSprites();
@@ -113,6 +115,8 @@ namespace Jamgine
 			JCamera* m_camera;
 			CameraMatrix m_cameraMatrix;
 
+			// Memory stuff
+			SingleFrameStack* m_singleFrameStack;
 		};
 	}
 }

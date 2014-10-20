@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Jamgine\Include\MemoryAllocator\StackAllocator.h"
+#include "Jamgine/Include/MemoryAllocator/StackAllocator.h"
 
 #include <stdint.h>
 #include <atomic>
@@ -37,7 +37,7 @@ public:
 			size_t adjustment = p_alignment - misalignment;
 
 			
-			if (((size_t)m_current + (size_t)adjustment + sizeof(p_size)) >= ((size_t)m_start + (size_t)m_size))
+			if (((size_t)m_current + (size_t)adjustment + p_size) >= ((size_t)m_start + (size_t)m_size))
 			{
 				m_lock.clear();
 				return nullptr;
@@ -45,7 +45,7 @@ public:
 
 			T* returnblock = (T*)((size_t)m_current + adjustment);
 		
-			int i = sizeof(p_size);
+			int i = p_size;
 			int j = m_size;
 			char* metadata = (char*)((size_t)returnblock-1);
 			*metadata = static_cast<char>(adjustment);
@@ -56,6 +56,4 @@ public:
 			m_lock.clear(std::memory_order_release);
 			return returnblock; 
 	}
-
-
 };

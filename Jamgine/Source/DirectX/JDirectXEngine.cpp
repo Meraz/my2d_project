@@ -64,7 +64,8 @@ namespace Jamgine
 				m_vertexShader(nullptr), 
 				m_pixelShader(nullptr),
 				m_geometryShader(nullptr),
-				m_inputLayout(nullptr)
+				m_inputLayout(nullptr),
+				m_singleFrameStack(nullptr)
 		{
 			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
 
@@ -134,7 +135,8 @@ namespace Jamgine
 			LoadShaders();
 			CreateBuffer();
 			
-
+			// Memory stuff
+			AllocateMemory();
 
 			return l_errorMessage;
 		}
@@ -488,6 +490,16 @@ namespace Jamgine
 			return l_hr;
 		}
 		
+		HRESULT DirectXEngine::AllocateMemory()
+		{
+			HRESULT l_hr = S_OK;
+
+			m_singleFrameStack = new SingleFrameStack(sizeof(Vertex)* 10000, false); // TODO, fix hardcoded size
+
+
+			return l_hr;
+		}
+
 		ErrorMessage DirectXEngine::LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath)
 		{
 			return m_texture2DManager->GetTexture(p_texture2DInterface, p_filePath);
@@ -517,7 +529,6 @@ namespace Jamgine
 		{
 			m_renderData.push_back(p_spriteData);
 		}
-			
 		void DirectXEngine::PostRender()
 		{
 			int max = m_renderData.size() - 1;
@@ -529,20 +540,20 @@ namespace Jamgine
 
 			// Sort sprites after textures
 			SortSprites();		
-
-			Vertex* a = new Vertex[max + 1];
-
-			for (int i = 0; i < max + 1; i++)
+			
+			// Do it once before loop to acquire first memory adress
+			Vertex* l_firstMemorySpace = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 4);
+			*l_firstMemorySpace = Vertex(m_renderData[0]);
+			for (int i = 1; i < max + 1; i++)
 			{
-			//	m_renderData[i].rectangle.position -= p_camera->position;
-				a[i] = Vertex(m_renderData[i]);
+				Vertex* aName = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 4);
+				*aName = Vertex(m_renderData[i]);
 			}
 
 			D3D11_MAPPED_SUBRESOURCE mappedResource;
 			m_deviceContext->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-			memcpy(mappedResource.pData, a, (max+1) * sizeof(Vertex));
+			memcpy(mappedResource.pData, l_firstMemorySpace, (max + 1) * sizeof(Vertex));
 			m_deviceContext->Unmap(m_vertexBuffer, 0);
-			delete[] a;
 			
 			
 			m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -570,6 +581,7 @@ namespace Jamgine
 
 			m_swapChain->Present(0, 0);
 			m_renderData.clear();
+			m_singleFrameStack->Wipe();
 		}
 
 		void DirectXEngine::updateCameraMatrix()
