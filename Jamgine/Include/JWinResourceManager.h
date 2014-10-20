@@ -27,7 +27,7 @@ namespace Jamgine
 		void LoadResource(std::string p_zipFile, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) override;
 		void* GetResource(std::string p_guid) override;
 		void FreeResources(LifeTime p_lifeTime, Marker p_marker) override;
-
+		void SwapLevelBuffers();
 		void AttatchTextureConverter(JTextureConverter* p_converter) override;
 
 		void Update();

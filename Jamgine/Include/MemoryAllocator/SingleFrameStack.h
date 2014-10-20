@@ -19,7 +19,7 @@ private:
 public:	
 	SingleFrameStack(unsigned int p_stacksize, bool p_shared);
 
-	~SingleFrameStack();
+	virtual ~SingleFrameStack();
 
 	void Wipe();
 

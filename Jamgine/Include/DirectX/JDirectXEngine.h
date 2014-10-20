@@ -30,7 +30,7 @@ namespace Jamgine
 		{
 		public:
 			DirectXEngine();
-			virtual~DirectXEngine();
+			virtual ~DirectXEngine();
 			
 			virtual ErrorMessage Initialize(void* p_data) override;
 			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data) override;
