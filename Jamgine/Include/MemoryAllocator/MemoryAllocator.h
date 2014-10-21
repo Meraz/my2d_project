@@ -7,7 +7,6 @@
 class MemoryAllocator
 {
 public:
-	MemoryAllocator();
 	~MemoryAllocator();
 
 	template <class T>
@@ -22,5 +21,9 @@ public:
 
 	StackAllocator* CreateStack(unsigned int p_stacksize, bool p_shared);
 
-
+	static MemoryAllocator& GetMe() { static MemoryAllocator M; return M; }
+private:
+	MemoryAllocator(){};
+	MemoryAllocator(MemoryAllocator const&);
+	void operator=(MemoryAllocator const&);
 };

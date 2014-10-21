@@ -8,14 +8,17 @@
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
+	/*
 	ZipArchive::Ptr archive = ZipFile::Open("archive.zip");
 
-	ZipArchiveEntry::Ptr entry = archive->CreateEntry("file.dat");
+	ZipArchiveEntry::Ptr entry = archive->GetEntry("file.dat");
 
+	size_t t = entry->GetCompressedSize();
 	// if entry is nullptr, it means the file already exists in the archive
 	assert(entry != nullptr);
 
 	std::ifstream contentStream("file.dat", std::ios::binary);
+	
 	entry->SetCompressionStream(contentStream);
 
 	// you may of course save it somewhere else
@@ -23,6 +26,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// if you want to read the stream before saving of the archive,
 	// it is need to set Immediate mode in SetCompressionStream method (see below)
 	ZipFile::SaveAndClose(archive, "archive.zip");
+	*/
 
 	Jamgame* l_jamgame = new Jamgame();
 	l_jamgame->Initialize(hInstance, lpCmdLine, nCmdShow);

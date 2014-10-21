@@ -2,7 +2,6 @@
 
 // Definition of forward declaration
 #include <TestGame/Include/Entity/RenderEntity.h>
-#include <TestGame/Include/Sound/FMODHandler.h>
 
 // Custom lib include
 
@@ -30,7 +29,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 
 	Jamgine::Texture2DInterface* a;
-	m_engine->LoadTexture(&a, "SpaceShip.dds");
+	m_engine->LoadTexture(&a, "SQUARE.dds");
 	for (unsigned int i = 0; i < 2; i++)
 	{
 		m_renderEntities.push_back(new RenderEntity());
