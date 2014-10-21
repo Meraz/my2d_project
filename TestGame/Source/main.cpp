@@ -10,12 +10,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 {
 	ZipArchive::Ptr archive = ZipFile::Open("archive.zip");
 
-	ZipArchiveEntry::Ptr entry = archive->CreateEntry("file.dat");
+	ZipArchiveEntry::Ptr entry = archive->GetEntry("file.dat");
 
+	size_t t = entry->GetCompressedSize();
 	// if entry is nullptr, it means the file already exists in the archive
 	assert(entry != nullptr);
 
 	std::ifstream contentStream("file.dat", std::ios::binary);
+	
 	entry->SetCompressionStream(contentStream);
 
 	// you may of course save it somewhere else

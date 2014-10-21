@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Jamgine/Include/JResourceManager.h>
-#include "Jamgine\Include\MemoryAllocator\MemoryAllocator.h"
+#include <External\Include\ziplib\ZipFile.h>
 #include <hash_map>
 #include <string>
 #include <map>
@@ -11,9 +11,11 @@ namespace Jamgine
 
 	struct Resource
 	{
-		void* memoryLocation;
-		unsigned refCount;
+		void* memoryAdress;
+		std::string filePath;
+		std::string packagePath;
 	};
+	
 
 
 	class JWinResourceManager : public JResourceManager
@@ -22,28 +24,31 @@ namespace Jamgine
 		JWinResourceManager();
 		virtual ~JWinResourceManager();
 		void Init(unsigned p_globalMemory, unsigned p_levelMemory, unsigned p_eventMemory) override;
-		void* LoadResource(std::string p_zipFile, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) override;
+		void LoadResource(std::string p_zipFile, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) override;
 		void* GetResource(std::string p_guid) override;
 		void FreeResources(LifeTime p_lifeTime, Marker p_marker) override;
+		void SwapLevelBuffers();
+		void AttatchTextureConverter(JTextureConverter* p_converter) override;
+
+		void Update();
 	private:
 
-		void* LoadRaw(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime);
-		void* LoadTexture(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime);
-		void* LoadScript(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime);
-		void* LoadShader(std::string p_zipFile, std::string p_fileName, LifeTime p_lifeTime);
+		void* LoadRaw(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
+		void* LoadTexture(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
+		void* LoadScript(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
+		void* LoadShader(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
 
-
+		void DumpMemoryToFile();
 
 		std::map<size_t, Resource> m_resources;
-		MemoryAllocator* m_memAllocator;
 		StackAllocator* m_gameStack;
 		StackAllocator* m_levelStack;
+		StackAllocator* m_nextLevelStack;
 		StackAllocator* m_eventStack;
 
-		Marker m_gameStackMarker;
-		Marker m_levelStackMarker;
-		Marker m_eventStackMarker;
+		SingleFrameStack* m_singleFrameStack;
 
 		std::hash<std::string> m_asher;
+		JTextureConverter* m_TextureConverter;
 	};
 }

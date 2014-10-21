@@ -1,9 +1,5 @@
 #include <Jamgine\Include\MemoryAllocator\MemoryAllocator.h>
 
-MemoryAllocator::MemoryAllocator()
-{
-}
-
 MemoryAllocator::~MemoryAllocator()
 {
 
