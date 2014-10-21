@@ -5,7 +5,8 @@ cmake_minimum_required(VERSION 2.8)
 set(SOLUTION_NAME Jamgine)
 project(${SOLUTION_NAME})
 
-option(COMPILE_RELEASE_BUILD "Release build" OFF)
+option(COMPILE_RELEASE_BUILD "Release build (Unchecked is debug)" OFF)
+option(COMPILE_64_BIT "Release build (Unchecked is 32)" OFF)
 
 # SET OUTPUTFOLDER FOR ALL SUBPROJECTS
 set(OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
@@ -17,19 +18,17 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/Modules/")
 
 find_package(DIRECTX11 REQUIRED)
 find_package(FMOD REQUIRED)
-find_package(ZIPLIB REQUIRED)
+
 
 set(EXTERNAL_INCLUDE_DIRS 
 	${DIRECTX11_INCLUDE_DIRS}
 	${FMOD_INCLUDE_DIRS}
-	${ZIPLIB_INCLUDE_DIRS}
 		
 )
 	
 set(EXTERNAL_LIBRARIES
 	${DIRECTX11_LIBRARY}
 	${FMOD_LIBRARY_PATH}
-	${ZIPLIB_LIBRARY}
 )
 
 # Set global compiler options
@@ -41,3 +40,9 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Add subdirectories
 add_subdirectory(Jamgine)
 add_subdirectory(TestGame)
+
+#ziplib, lazy include. Could pack em in one folder etc etc
+add_subdirectory(ZipLib)
+add_subdirectory(bzip2)
+add_subdirectory(lzma)
+add_subdirectory(zlib)
