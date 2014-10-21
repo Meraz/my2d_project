@@ -5,7 +5,8 @@ cmake_minimum_required(VERSION 2.8)
 set(SOLUTION_NAME Jamgine)
 project(${SOLUTION_NAME})
 
-option(COMPILE_RELEASE_BUILD "Release build" OFF)
+option(COMPILE_RELEASE_BUILD "Release build (Unchecked is debug)" OFF)
+option(COMPILE_RELEASE_BUILD "64 bit build (Unchecked is 64bit)" OFF)
 
 # SET OUTPUTFOLDER FOR ALL SUBPROJECTS
 set(OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
@@ -41,3 +42,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Add subdirectories
 add_subdirectory(Jamgine)
 add_subdirectory(TestGame)
+add_subdirectory(bzip2)
+add_subdirectory(lzma)
+add_subdirectory(ZipLib)
+add_subdirectory(zlib)

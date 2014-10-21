@@ -8,6 +8,7 @@
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
+	/*
 	ZipArchive::Ptr archive = ZipFile::Open("archive.zip");
 
 	ZipArchiveEntry::Ptr entry = archive->GetEntry("file.dat");
@@ -25,6 +26,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// if you want to read the stream before saving of the archive,
 	// it is need to set Immediate mode in SetCompressionStream method (see below)
 	ZipFile::SaveAndClose(archive, "archive.zip");
+	*/
 
 	Jamgame* l_jamgame = new Jamgame();
 	l_jamgame->Initialize(hInstance, lpCmdLine, nCmdShow);
