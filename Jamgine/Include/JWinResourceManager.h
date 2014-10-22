@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Jamgine/Include/JResourceManager.h>
+#include <Jamgine/Include/JPackageHandler.h>
 #include <ziplib/ZipFile.h>
 #include <hash_map>
 #include <string>
@@ -24,7 +25,7 @@ namespace Jamgine
 		JWinResourceManager();
 		virtual ~JWinResourceManager();
 		void Init(unsigned p_globalMemory, unsigned p_levelMemory, unsigned p_eventMemory) override;
-		void LoadResource(std::string p_zipFile, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) override;
+		void LoadResource(std::string p_package, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) override;
 		void* GetResource(std::string p_guid) override;
 		void FreeResources(LifeTime p_lifeTime, Marker p_marker) override;
 		void SwapLevelBuffers();
@@ -33,10 +34,10 @@ namespace Jamgine
 		void Update();
 	private:
 
-		void* LoadRaw(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
-		void* LoadTexture(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
-		void* LoadScript(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
-		void* LoadShader(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack);
+		void* LoadRaw(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler);
+		void* LoadTexture(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler);
+		void* LoadScript(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler);
+		void* LoadShader(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler);
 
 		void DumpMemoryToFile();
 
@@ -50,5 +51,8 @@ namespace Jamgine
 
 		std::hash<std::string> m_asher;
 		JTextureConverter* m_TextureConverter;
+
+		JPackageHandler* m_zipHandler;
+		JPackageHandler* m_tejpHandler;
 	};
 }

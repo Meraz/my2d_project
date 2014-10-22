@@ -1,6 +1,5 @@
 #include <Jamgine/Include/JWinResourceManager.h>
 #include <fstream>
-
 namespace Jamgine
 {
 	JWinResourceManager::JWinResourceManager()
@@ -10,6 +9,8 @@ namespace Jamgine
 		m_nextLevelStack = nullptr;
 		m_eventStack = nullptr;
 	}
+
+
 	JWinResourceManager::~JWinResourceManager()
 	{
 		delete m_gameStack;
@@ -18,6 +19,8 @@ namespace Jamgine
 		delete m_eventStack;
 
 	}
+
+
 	void JWinResourceManager::Init(unsigned p_globalMemory, unsigned p_levelMemory, unsigned p_eventMemory)
 	{
 		m_gameStack = MemoryAllocator::GetMe().CreateStack(p_globalMemory, true);
@@ -30,8 +33,17 @@ namespace Jamgine
 
 		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(56, true);
 	}
-	void JWinResourceManager::LoadResource(std::string p_zipFile, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type)
+
+
+	void JWinResourceManager::LoadResource(std::string p_package, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type)
 	{
+		JPackageHandler* packageHandler;
+		std::size_t findTheDot = p_package.find(".");
+		std::string rightOfDot = &p_package[findTheDot];
+		if (strcmp(rightOfDot.c_str(), ".zip") == 0)
+			packageHandler = m_zipHandler;
+		else if (strcmp(rightOfDot.c_str(), ".silvertejp") == 0)
+			packageHandler = m_tejpHandler;
 		//Check if already existing
 		//Else check if memory is enough
 		Resource tempRes;
@@ -57,26 +69,27 @@ namespace Jamgine
 			break;
 		}
 
-		ZipArchive::Ptr archive = ZipFile::Open(p_zipFile);
+		//TODO move to JZipPackageHandler
+		/*ZipArchive::Ptr archive = ZipFile::Open(p_zipFile);
 		ZipArchiveEntry::Ptr entry = archive->GetEntry(p_fileName);
 		if (entry == NULL)
 		{
 			std::cout << "ERROR ERROR ERROR package not found!" << std::endl;
 			return;
-		}
+		}*/
 		switch (p_type)
 		{
 		case(RAW) :
-			tempRes.memoryAdress = LoadRaw(entry, stack);
+			tempRes.memoryAdress = LoadRaw(p_package, p_fileName, stack, packageHandler);
 			break;
 		case(TEXTURE) :
-			tempRes.memoryAdress = LoadTexture(entry, stack);
+			tempRes.memoryAdress = LoadTexture(p_package, p_fileName, stack, packageHandler);
 			break;
 		case(SCRIPT) :
-			tempRes.memoryAdress = LoadScript(entry, stack);
+			tempRes.memoryAdress = LoadScript(p_package, p_fileName, stack, packageHandler);
 			break;
 		case(SHADER) :
-			tempRes.memoryAdress = LoadShader(entry, stack);
+			tempRes.memoryAdress = LoadShader(p_package, p_fileName, stack, packageHandler);
 			break;
 		}
 		if (tempRes.memoryAdress == nullptr)
@@ -87,16 +100,19 @@ namespace Jamgine
 		}
 		size_t hash = m_asher(p_fileName);
 		tempRes.filePath = p_fileName;
-		tempRes.packagePath = p_zipFile;
+		tempRes.packagePath = p_package;
 		m_resources.insert(std::pair<size_t, Resource>(hash, tempRes));
 
 	}
 
-	void* JWinResourceManager::LoadRaw(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
+	void* JWinResourceManager::LoadRaw(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
 	{
-		std::istream* data = p_entry->GetDecompressionStream();
-		size_t dataSize = p_entry->GetSize();
-		char* memoryPointer = p_stack->Push<char>(dataSize, 1);
+		std::istream* data = p_handler->ReadFile(p_package, p_fileName);
+		data->seekg(0, data->end);
+		size_t dataSize = data->tellg();
+		data->seekg(0, data->beg);
+		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
+		char* memoryPointer = nullptr;
 		if (memoryPointer != nullptr)
 		{
 			return nullptr;
@@ -110,10 +126,12 @@ namespace Jamgine
 		return memoryPointer;
 	}
 
-	void* JWinResourceManager::LoadTexture(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
+	void* JWinResourceManager::LoadTexture(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
 	{
-		std::istream* data = p_entry->GetDecompressionStream();
-		size_t dataSize = p_entry->GetSize();
+		std::istream* data = p_handler->ReadFile(p_package, p_fileName);
+		data->seekg(0, data->end);
+		size_t dataSize = data->tellg();
+		data->seekg(0, data->beg);
 		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
 		void* memoryPointer = nullptr;
 		if (singleFrameMemory != nullptr)
@@ -129,14 +147,14 @@ namespace Jamgine
 		return memoryPointer;
 	}
 
-	void* JWinResourceManager::LoadScript(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
+	void* JWinResourceManager::LoadScript(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
 	{
 		return 0;
 	}
 
-	void* JWinResourceManager::LoadShader(ZipArchiveEntry::Ptr p_entry, StackAllocator* p_stack)
+	void* JWinResourceManager::LoadShader(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
 	{
-		return LoadRaw(p_entry, p_stack); //D3DCompile uses a raw data pointer for compiling the HLSL code
+		return LoadRaw(p_package, p_fileName, p_stack, p_handler); //D3DCompile uses a raw data pointer for compiling the HLSL code
 	}
 
 	void* JWinResourceManager::GetResource(std::string p_path)
