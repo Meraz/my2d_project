@@ -45,10 +45,9 @@ namespace Jamgine
 			stream->seekg(pos);
 			char* buffer = new char[size];
 			stream->read(buffer, size);
+			
+			//TODO read the stream into a char* returnparameter
 			stream->close();
-			std::istream* dakka;
-			dakka = reinterpret_cast<std::istream*>(buffer);
-			return dakka;
 		}
 		else
 		{
