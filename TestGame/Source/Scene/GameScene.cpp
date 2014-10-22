@@ -41,9 +41,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 		m_renderEntities.at(0)->Initialize(Jamgine::Rectangle(0.0f, 0.0f, 400.0f, 400.0f), a, m_engine);
 	//	m_renderEntities.at(1)->Initialize(Jamgine::Rectangle(100.0f, 100.0f, 800.0f, 800.0f), a, m_engine);
 	//	m_renderEntities.at(2)->Initialize(Jamgine::Rectangle(200.0f, 200.0f, 800.0f, 800.0f), a, m_engine);
-	//	m_renderEntities.at(3)->Initialize(Jamgine::Rectangle(300.0f, 300.0f, 800.0f, 800.0f), a, m_engine);
-
-		
+	//	m_renderEntities.at(3)->Initialize(Jamgine::Rectangle(300.0f, 300.0f, 800.0f, 800.0f), a, m_engine);		
 	}
 }
 
