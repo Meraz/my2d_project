@@ -1,5 +1,5 @@
 #include <Jamgine\Include\JTejpPackageHandler.h>
-
+#include <sstream>
 
 namespace Jamgine
 {
@@ -13,7 +13,7 @@ namespace Jamgine
 	{
 	}
 
-	std::istream* ReadFile(std::string p_package, std::string p_file)
+	std::istream* ReadFile(std::string p_package, std::string p_file, char* p_out)
 	{
 		int firstColon = 0;
 		int secondColon = 0;
@@ -22,6 +22,7 @@ namespace Jamgine
 		int tableSize = 0;
 		std::string line;
 		std::ifstream* stream;
+		std::istream* returnStream;
 		stream->open(p_package);
 		stream->getline(line.c_str, 256);
 		if (line.compare("TABLE_START") == 0)
@@ -45,9 +46,10 @@ namespace Jamgine
 			stream->seekg(pos);
 			char* buffer = new char[size];
 			stream->read(buffer, size);
-			
+			std::stringbuf stringbuffer;
+			returnStream = new std::istream(&stringbuffer);
+			returnStream->rdbuf()->sputn(buffer, size);
 			//TODO read the stream into a char* returnparameter
-			stream->close();
 		}
 		else
 		{
@@ -55,10 +57,10 @@ namespace Jamgine
 			
 		}
 		stream->close();
-		return stream;
+		return returnStream;
 	}
 
-	std::istream* ReadPoint(std::string p_package, unsigned p_point, size_t p_size)
+	std::istream* ReadPoint(std::string p_package, unsigned p_point, size_t p_size, char* p_out)
 	{
 
 	}
