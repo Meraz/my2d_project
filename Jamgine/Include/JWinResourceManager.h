@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Jamgine/Include/JResourceManager.h>
-#include <External\Include\ziplib\ZipFile.h>
+#include <ziplib/ZipFile.h>
 #include <hash_map>
 #include <string>
 #include <map>

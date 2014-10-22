@@ -2,7 +2,6 @@
 
 // Definition of forward declaration
 #include <TestGame/Include/Entity/RenderEntity.h>
-#include <TestGame/Include/Sound/FMODHandler.h>
 
 // Custom lib include
 
