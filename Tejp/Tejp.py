@@ -16,7 +16,8 @@ def Buildtable(p_outputFile, p_targetPath):
     for filename in iglob(os.path.join(p_targetPath, '*.*')):
         if(os.path.basename(filename) !=  p_outputFile.name):
             file_size = str(os.path.getsize(filename))
-            table_size += len(file_size + filename) +2 # +2 to account for the space and \n
+            table_size += len(file_size + filename) +1 # +2 to account for the space and \n
+            table_size += len(str(readpoint)) +2 #+2 to accunt for :
             p_outputFile.write(bytes(filename.replace('\\','/')+":", 'UTF-8')+bytes(file_size+":",'UTF-8')+bytes(str(readpoint),'UTF-8')+bytes('\n','UTF-8'))
             readpoint += os.path.getsize(filename)
     p_outputFile.write(bytes("TABLE_END\n", 'UTF-8'))

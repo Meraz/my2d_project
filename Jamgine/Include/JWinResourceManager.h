@@ -2,7 +2,6 @@
 
 #include <Jamgine/Include/JResourceManager.h>
 #include <Jamgine/Include/JPackageHandler.h>
-#include <ziplib/ZipFile.h>
 #include <hash_map>
 #include <string>
 #include <map>

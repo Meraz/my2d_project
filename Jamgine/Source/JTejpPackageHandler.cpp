@@ -13,7 +13,7 @@ namespace Jamgine
 	{
 	}
 
-	std::istream* ReadFile(std::string p_package, std::string p_file, char* p_out)
+	std::istream* ReadFile(std::string p_package, std::string p_file)
 	{
 		int firstColon = 0;
 		int secondColon = 0;
@@ -40,6 +40,8 @@ namespace Jamgine
 					pos = atoi(line.substr(secondColon + 1, line.find('\n')).c_str);
 				}
 			}
+			if (pos == 0 && size == 0)
+				return nullptr;
 			//found end of table, read size
 			tableSize = atoi(line.substr(line.find(':'), line.find('\n')).c_str);
 			pos += tableSize;
@@ -49,19 +51,34 @@ namespace Jamgine
 			std::stringbuf stringbuffer;
 			returnStream = new std::istream(&stringbuffer);
 			returnStream->rdbuf()->sputn(buffer, size);
-			//TODO read the stream into a char* returnparameter
+
+			delete buffer;
 		}
 		else
 		{
 			//no table
-			
+			return nullptr;
 		}
 		stream->close();
 		return returnStream;
 	}
 
-	std::istream* ReadPoint(std::string p_package, unsigned p_point, size_t p_size, char* p_out)
+	std::istream* ReadPoint(std::string p_package, unsigned p_point, size_t p_size)
 	{
+		std::ifstream stream;
+		std::istream* returnStream;
+		char* buffer = new char[p_size];
+		stream.open(p_package);
 
+		stream.seekg(p_point);
+		stream.read(buffer, p_size);
+
+		std::stringbuf stringbuffer;
+		returnStream = new std::istream(&stringbuffer);
+		returnStream->rdbuf()->sputn(buffer, p_size);
+
+		delete buffer;
+
+		return returnStream;
 	}
 }
