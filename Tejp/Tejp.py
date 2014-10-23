@@ -4,22 +4,27 @@ import os
 
 ## PACKING FUNCTIONS
 def Concatenate(p_outputFile ,p_targetPath):
-    
-    for filename in iglob(os.path.join(p_targetPath, '*.*')):
-        shutil.copyfileobj(open(filename, 'rb'), p_outputFile)
+    for root, dirs, files in os.walk(p_targetPath, topdown=False):
+        for file in files:
+            file = os.path.join(root, file)
+            shutil.copyfileobj(open(file, 'rb'), p_outputFile)
+
     
 def Buildtable(p_outputFile, p_targetPath):
     table_size = 0
     p_outputFile.write(bytes("TABLE_START\n", 'UTF-8'))
     table_size+= 12 #TABLE_START\n
     readpoint = 0
-    for filename in iglob(os.path.join(p_targetPath, '*.*')):
-        if(os.path.basename(filename) !=  p_outputFile.name):
-            file_size = str(os.path.getsize(filename))
-            table_size += len(file_size + filename) +1 # +2 to account for the space and \n
+    for root, dirs, files in os.walk(p_targetPath, topdown=False):
+        for file in files:
+            file = os.path.join(root, file)
+            subpath = file.split(p_targetPath+"\\")
+            file_size = str(os.path.getsize(file))
+            table_size += len(file_size + subpath[1]) +1 # +1 to account for the  \n
             table_size += len(str(readpoint)) +2 #+2 to accunt for :
-            p_outputFile.write(bytes(filename.replace('\\','/')+":", 'UTF-8')+bytes(file_size+":",'UTF-8')+bytes(str(readpoint),'UTF-8')+bytes('\n','UTF-8'))
-            readpoint += os.path.getsize(filename)
+            p_outputFile.write(bytes(subpath[1]+":", 'UTF-8')+bytes(file_size+":",'UTF-8')+bytes(str(readpoint),'UTF-8')+bytes('\n','UTF-8'))
+            readpoint += os.path.getsize(file)
+        
     p_outputFile.write(bytes("TABLE_END\n", 'UTF-8'))
     table_size+= 10 #TABLE_END\n
     table_size+= 12 #TABLE_SIZE: + \n
@@ -36,9 +41,9 @@ def CreateFile():
     while not os.path.isdir(path):
        print("Path not found")
        path = input("Path to target folder: ")
-    filename = input("Name of concatenated file(.silvertejp will be automagically appended): ")
+    filename = input("Name of concatenated file(.tejp will be automagically appended): ")
 
-    destination = open(filename+".silvertejp", 'wb')
+    destination = open(filename+".tejp", 'wb')
     Buildtable(destination, path)
     Concatenate(destination, path)
     destination.close()
@@ -110,7 +115,7 @@ def UnpackFile():
     
 #Add this when unpacker is finished, if ever
 
-option = input("Concatenate file or unpack a .silvertejp file(C or U): ")
+option = input("Concatenate file or unpack a .tejp file(C or U): ")
 if option == 'C' or option == 'c':
     CreateFile()
 elif option == 'U' or option == 'u':
