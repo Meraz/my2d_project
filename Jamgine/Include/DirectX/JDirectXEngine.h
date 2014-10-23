@@ -12,6 +12,8 @@
 #include <Jamgine/Include/DirectX/JDirectXTexture2DManager.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
 #include <Jamgine/Include/MemoryAllocator/SingleFrameStack.h>
+#include <Jamgine/Include/JWinResourceManager.h>
+#include <Jamgine/Include/JDXTextureConverter.h>
 
 namespace Jamgine
 {
@@ -45,6 +47,8 @@ namespace Jamgine
 			virtual void Render(Jamgine::SpriteData p_spriteData) override;
 
 			virtual void PostRender() override;
+
+			virtual JResourceManager* GetResourceManager() override;
 		
 		private:
 			///////////
@@ -117,6 +121,8 @@ namespace Jamgine
 
 			// Memory stuff
 			SingleFrameStack* m_singleFrameStack;
+			JWinResourceManager* m_resourceManager;
+			JDXTextureConverter* m_textureConverter;
 		};
 	}
 }

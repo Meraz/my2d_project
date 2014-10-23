@@ -11,8 +11,6 @@
 #include <Jamgine/Include/DirectX/JDirectXCamera.h>
 #include <DirectXMath.h>
 
-
-
 namespace Jamgine
 {
 	namespace JDirectX
@@ -65,7 +63,9 @@ namespace Jamgine
 				m_pixelShader(nullptr),
 				m_geometryShader(nullptr),
 				m_inputLayout(nullptr),
-				m_singleFrameStack(nullptr)
+				m_singleFrameStack(nullptr),
+				m_resourceManager(nullptr),
+				m_textureConverter(nullptr)
 		{
 			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
 
@@ -495,7 +495,10 @@ namespace Jamgine
 			HRESULT l_hr = S_OK;
 
 			m_singleFrameStack = new SingleFrameStack(sizeof(Vertex)* 10000, false); // TODO, fix hardcoded size
-
+			
+			m_resourceManager = new JWinResourceManager();
+			m_textureConverter = new JDXTextureConverter(m_device);
+			m_resourceManager->AttatchTextureConverter(m_textureConverter);
 
 			return l_hr;
 		}
@@ -659,6 +662,11 @@ namespace Jamgine
 			}
 			std::sort(m_renderData.begin(), m_renderData.begin() + transparentStart, &SortTextureAlgorithm);
 			std::sort(m_renderData.begin() + transparentStart, m_renderData.end(), &SortDepthAlgorithm);
+		}
+
+		JResourceManager* DirectXEngine::GetResourceManager() 
+		{
+			return m_resourceManager;
 		}
 	}
 }

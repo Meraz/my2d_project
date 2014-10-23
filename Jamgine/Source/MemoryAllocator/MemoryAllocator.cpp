@@ -5,7 +5,6 @@ MemoryAllocator::~MemoryAllocator()
 
 }
 
-
 SingleFrameStack* MemoryAllocator::CreateSingleFrameStack(unsigned int p_stacksize, bool p_shared)
 {
 	return new SingleFrameStack(p_stacksize, p_shared);

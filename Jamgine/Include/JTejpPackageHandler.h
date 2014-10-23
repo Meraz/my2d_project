@@ -4,12 +4,11 @@
 
 namespace Jamgine
 {
-
 	class JTejpPackageHandler : public JPackageHandler
 	{
 	public:
 		JTejpPackageHandler();
-		~JTejpPackageHandler();
+		virtual ~JTejpPackageHandler();
 
 		std::istream* ReadFile(std::string p_package, std::string p_file) override;
 		std::istream* ReadPoint(std::string p_package, unsigned p_point, size_t p_size) override;

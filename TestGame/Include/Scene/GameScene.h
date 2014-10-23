@@ -1,6 +1,7 @@
 #pragma once
 
 #include <TestGame/Include/Scene/BaseScene.h>
+#include <TestGame/Include/Level.h>
 
 class RenderEntity;
 class Node;
@@ -37,4 +38,7 @@ private:
 	int m_life;
 	
 	Node* m_quadTreeRootNode;
+
+	Level* m_currentLevel;
+	Level* m_nextLevel;
 };

@@ -1,5 +1,8 @@
 #include <Jamgine/Include/JWinResourceManager.h>
 #include <fstream>
+#include <Jamgine/Include/JTejpPackageHandler.h>
+#include <Jamgine/Include/JZipPackageHandler.h>
+
 namespace Jamgine
 {
 	JWinResourceManager::JWinResourceManager()
@@ -10,16 +13,13 @@ namespace Jamgine
 		m_eventStack = nullptr;
 	}
 
-
 	JWinResourceManager::~JWinResourceManager()
 	{
 		delete m_gameStack;
 		delete m_levelStack;
 		delete m_nextLevelStack;
 		delete m_eventStack;
-
 	}
-
 
 	void JWinResourceManager::Init(unsigned p_globalMemory, unsigned p_levelMemory, unsigned p_eventMemory)
 	{
@@ -32,6 +32,9 @@ namespace Jamgine
 		m_eventStack = MemoryAllocator::GetMe().CreateStack(p_eventMemory, true);
 
 		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(56, true);
+
+		m_tejpHandler = new JTejpPackageHandler();
+		m_zipHandler = new JZipPackageHandler();
 	}
 
 
@@ -42,7 +45,7 @@ namespace Jamgine
 		std::string rightOfDot = &p_package[findTheDot];
 		if (strcmp(rightOfDot.c_str(), ".zip") == 0)
 			packageHandler = m_zipHandler;
-		else if (strcmp(rightOfDot.c_str(), ".silvertejp") == 0)
+		else if (strcmp(rightOfDot.c_str(), ".tejp") == 0)
 			packageHandler = m_tejpHandler;
 		//Check if already existing
 		//Else check if memory is enough
@@ -56,13 +59,13 @@ namespace Jamgine
 
 		switch (p_lifeTime)
 		{
-		case Jamgine::GLOBAL:
+		case Jamgine::LifeTime::GLOBAL:
 			stack = m_gameStack;
 			break;
-		case Jamgine::LEVEL:
+		case Jamgine::LifeTime::LEVEL:
 			stack = m_nextLevelStack;
 			break;
-		case Jamgine::EVENT:
+		case Jamgine::LifeTime::EVENT:
 			stack = m_eventStack;
 			break;
 		default:
@@ -79,16 +82,16 @@ namespace Jamgine
 		}*/
 		switch (p_type)
 		{
-		case(RAW) :
+		case(ResourceType::RAW) :
 			tempRes.memoryAdress = LoadRaw(p_package, p_fileName, stack, packageHandler);
 			break;
-		case(TEXTURE) :
+		case(ResourceType::TEXTURE) :
 			tempRes.memoryAdress = LoadTexture(p_package, p_fileName, stack, packageHandler);
 			break;
-		case(SCRIPT) :
+		case(ResourceType::SCRIPT) :
 			tempRes.memoryAdress = LoadScript(p_package, p_fileName, stack, packageHandler);
 			break;
-		case(SHADER) :
+		case(ResourceType::SHADER) :
 			tempRes.memoryAdress = LoadShader(p_package, p_fileName, stack, packageHandler);
 			break;
 		}
@@ -166,13 +169,13 @@ namespace Jamgine
 	{
 		switch (p_lifeTime)
 		{
-		case(GLOBAL) :
+		case(LifeTime::GLOBAL) :
 			m_gameStack->Free(p_marker);
 			break;
-		case(LEVEL) :
+		case(LifeTime::LEVEL) :
 			m_levelStack->Free(p_marker);
 			break;
-		case(EVENT) :
+		case(LifeTime::EVENT) :
 			m_eventStack->Free(p_marker);
 			break;
 		}
@@ -202,7 +205,6 @@ namespace Jamgine
 	{
 		m_singleFrameStack->Wipe();
 	}
-
 
 	void JWinResourceManager::SwapLevelBuffers()
 	{

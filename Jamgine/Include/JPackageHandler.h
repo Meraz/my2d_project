@@ -1,9 +1,10 @@
 #pragma once
+
 #include <istream>
 #include <string>
+
 namespace Jamgine
 {
-
 	class JPackageHandler
 	{
 	public:

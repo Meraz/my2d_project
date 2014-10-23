@@ -1,5 +1,6 @@
 #include <Jamgine/Include/JZipPackageHandler.h>
 #include <ziplib/ZipFile.h>
+
 namespace Jamgine
 {
 
@@ -7,11 +8,9 @@ namespace Jamgine
 	{
 	}
 
-
 	JZipPackageHandler::~JZipPackageHandler()
 	{
 	}
-
 
 	std::istream* JZipPackageHandler::ReadFile(std::string p_package, std::string p_file)
 	{
