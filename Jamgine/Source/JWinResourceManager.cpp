@@ -3,6 +3,8 @@
 #include <Jamgine/Include/JTejpPackageHandler.h>
 #include <Jamgine/Include/JZipPackageHandler.h>
 
+#define KimsSillyStackSize 10128 + 4
+
 namespace Jamgine
 {
 	JWinResourceManager::JWinResourceManager()
@@ -26,12 +28,12 @@ namespace Jamgine
 		m_gameStack = MemoryAllocator::GetMe().CreateStack(p_globalMemory, true);
 
 		//Design problem, should they share p_levelMemory or duplicate it?
-		m_levelStack = MemoryAllocator::GetMe().CreateStack(p_levelMemory - 56, true); // the fuck is -56 doing?
-		m_nextLevelStack = MemoryAllocator::GetMe().CreateStack(p_levelMemory - 56, true);
+		m_levelStack = MemoryAllocator::GetMe().CreateStack(p_levelMemory, true); 
+		m_nextLevelStack = MemoryAllocator::GetMe().CreateStack(p_levelMemory, true);
 
 		m_eventStack = MemoryAllocator::GetMe().CreateStack(p_eventMemory, true);
 
-		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(56, true);
+		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(KimsSillyStackSize, true);
 
 		m_tejpHandler = new JTejpPackageHandler();
 		m_zipHandler = new JZipPackageHandler();
@@ -50,7 +52,6 @@ namespace Jamgine
 		//Check if already existing
 		//Else check if memory is enough
 		Resource tempRes;
-		tempRes;
 
 		//Hash path to int
 		//m_resources[p_path] = tempRes.memoryLocation;
@@ -110,13 +111,14 @@ namespace Jamgine
 
 	void* JWinResourceManager::LoadRaw(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
 	{
-		std::istream* data = p_handler->ReadFile(p_package, p_fileName);
-		data->seekg(0, data->end);
+		size_t dataSize = 0;
+		std::istream* data = p_handler->ReadFile(p_package, p_fileName, dataSize);
+		/*data->seekg(0, data->end);
 		size_t dataSize = data->tellg();
-		data->seekg(0, data->beg);
+		data->seekg(0, data->beg);*/
 		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
 		char* memoryPointer = nullptr;
-		if (memoryPointer != nullptr)
+		if (memoryPointer == nullptr)
 		{
 			return nullptr;
 		}
@@ -131,13 +133,16 @@ namespace Jamgine
 
 	void* JWinResourceManager::LoadTexture(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
 	{
-		std::istream* data = p_handler->ReadFile(p_package, p_fileName);
-		data->seekg(0, data->end);
-		size_t dataSize = data->tellg();
-		data->seekg(0, data->beg);
+		size_t size = 0;
+		std::istream* data = p_handler->ReadFile(p_package, p_fileName, size);
+		
+		/*data->seekg(0, data->end);
+		size_t dataSize = data->tellg(); //Something wrong here, very large dataSize
+		data->seekg(0, data->beg);*/
+		size_t dataSize = size;
 		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
 		void* memoryPointer = nullptr;
-		if (singleFrameMemory != nullptr)
+		if (singleFrameMemory == nullptr)
 		{
 			return nullptr;
 		}

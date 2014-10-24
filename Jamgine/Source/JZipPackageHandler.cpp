@@ -1,5 +1,4 @@
 #include <Jamgine/Include/JZipPackageHandler.h>
-#include <ziplib/ZipFile.h>
 
 namespace Jamgine
 {
@@ -12,18 +11,18 @@ namespace Jamgine
 	{
 	}
 
-	std::istream* JZipPackageHandler::ReadFile(std::string p_package, std::string p_file)
+	std::istream* JZipPackageHandler::ReadFile(std::string p_package, std::string p_file, size_t& p_size)
 	{
-		ZipArchive::Ptr archive = ZipFile::Open(p_package);
+		m_archive = ZipFile::Open(p_package);
 
-		if (archive == NULL)
+		if (m_archive == NULL)
 		{
 			return nullptr;
 		}
 		else
 		{
-			ZipArchiveEntry::Ptr entry = archive->GetEntry(p_file);
-
+			ZipArchiveEntry::Ptr entry = m_archive->GetEntry(p_file);
+			p_size = entry->GetSize();
 			if (entry == NULL)
 			{
 				return nullptr;

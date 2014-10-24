@@ -12,7 +12,7 @@ Level::Level(Jamgine::JResourceManager* p_resourceManager, unsigned int p_level,
 	if(p_level == 0)
 	{
 		m_requiredFiles = new std::string[5];
-		m_requiredFiles[0] = "ball.dds";
+		m_requiredFiles[0] = "SpaceShip.dds";
 		m_requiredFiles[1] = "Ball1.dds";
 		m_requiredFiles[2] = "Ball2.dds";
 		m_requiredFiles[3] = "Ball3.dds";
@@ -20,7 +20,8 @@ Level::Level(Jamgine::JResourceManager* p_resourceManager, unsigned int p_level,
 
 	//	for(unsigned int i = 0; i < 5; i++)
 		{
-			m_resourceManager->LoadResource("ball.zip", Jamgine::LifeTime::LEVEL, m_requiredFiles[0], Jamgine::ResourceType::TEXTURE);
+			//m_resourceManager->LoadResource("Multi.zip", Jamgine::LifeTime::LEVEL, m_requiredFiles[0], Jamgine::ResourceType::TEXTURE);
+			m_resourceManager->LoadResource("test.tejp", Jamgine::LifeTime::LEVEL, m_requiredFiles[0], Jamgine::ResourceType::TEXTURE);
 		}
 	
 		for(unsigned int y = 0; y < 10; ++y)

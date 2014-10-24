@@ -29,7 +29,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	using namespace Jamgine;
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
-	m_engine->GetResourceManager()->Init(sizeof(int)* 100, sizeof(int)* 1000, sizeof(int)*100);
+	m_engine->GetResourceManager()->Init(sizeof(int)* 100, sizeof(int)* 1000000, sizeof(int)*100);
 
 	m_currentLevel = new Level(m_engine->GetResourceManager(), 0, m_engine);
 }
