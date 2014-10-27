@@ -22,9 +22,9 @@ SingleFrameStack::~SingleFrameStack()
 void SingleFrameStack::Wipe()
 {
 	while( m_shared && m_lock.test_and_set(std::memory_order_acquire))
-			{
-				//Keep on spinning in the free world
-			}
+	{
+		//Keep on spinning in the free world
+	}
 	m_nonCustomMemFinder = 0;
 	m_lock.clear();
 	m_current = m_start;

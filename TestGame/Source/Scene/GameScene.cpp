@@ -10,10 +10,9 @@
 
 GameScene::GameScene(float width, float height)
 	:	m_quadTreeRootNode(nullptr),
-		m_currentLevel(nullptr),
-		m_nextLevel(nullptr)
+		m_currentLevel(nullptr)
 { 
-	m_renderEntities		= std::vector<RenderEntity*>();
+//	m_renderEntities		= std::vector<RenderEntity*>();
 	m_width = width;
 	m_height = height;
 }
@@ -21,7 +20,6 @@ GameScene::GameScene(float width, float height)
 GameScene::~GameScene()
 {
 	delete m_currentLevel;
-	delete m_nextLevel;
 }
 
 void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgine::JamgineEngine* p_engine)
@@ -29,13 +27,32 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	using namespace Jamgine;
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
-	m_engine->GetResourceManager()->Init(sizeof(int)* 100, sizeof(int)* 1000000, sizeof(int)*100);
+	m_engine->GetResourceManager()->Init(sizeof(int)* 100, sizeof(int)* 10000000, sizeof(int)*100);
 
-	m_currentLevel = new Level(m_engine->GetResourceManager(), 0, m_engine);
+	m_currentLevelNumber = 0;
+
+	m_currentLevel = new Level(m_engine->GetResourceManager(), m_currentLevelNumber++, m_engine);
+	m_engine->GetResourceManager()->SwapLevelBuffers();
+	
 }
 
+#include <Windows.h>
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	{
+		if (m_nextButtonWasClicked == false)
+		{
+			delete m_currentLevel;
+			m_currentLevel = new Level(m_engine->GetResourceManager(), m_currentLevelNumber++, m_engine);
+			m_engine->GetResourceManager()->SwapLevelBuffers();
+		}
+		m_nextButtonWasClicked = true;
+	}
+	else
+	{
+		m_nextButtonWasClicked = false;
+	}
 	m_currentLevel->Update(p_deltaTime);
 }
 

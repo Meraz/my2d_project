@@ -8,6 +8,7 @@ RenderEntity::RenderEntity()
 
 RenderEntity::~RenderEntity()
 {
+	delete m_texture;
 }
 
 void RenderEntity::Initialize(Point p_position, Point p_origin, Point p_currentSubImage, char* p_texturePath, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Point p_amountOfSubImages)
@@ -126,16 +127,16 @@ void RenderEntity::SetTexture(Texture2DInterface* p_texture)
 
 void RenderEntity::Update(double p_deltaTime)
 {
-	m_rectangle.position.x	= m_position.x;
-	m_rectangle.position.y	= m_position.y;
-	m_rectangle.width		= m_width;
-	m_rectangle.height		= m_height;
+//	m_rectangle.position.x	= m_position.x;
+//	m_rectangle.position.y	= m_position.y;
+//	m_rectangle.width		= m_width;
+//	m_rectangle.height		= m_height;
 }
 
 
 void RenderEntity::Render()
 {
-	m_engine->Render(Jamgine::SpriteData(m_rectangle, Point(200.0f, 200.0f), Jamgine::Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, Jamgine::SpriteEffect::FLIP_NONE, 0.0, 0.0f, true));
+	m_engine->Render(Jamgine::SpriteData(m_rectangle, Point(200.0f, 200.0f), Jamgine::Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, Jamgine::SpriteEffect::FLIP_NONE, 0.0, 0.0f, false));
 }
 
 std::stringstream RenderEntity::ToFile()

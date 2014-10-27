@@ -66,6 +66,7 @@ namespace Jamgine
 			return nullptr;
 		}
 		stream->close();
+		delete stream;
 		return returnStream;
 	}
 

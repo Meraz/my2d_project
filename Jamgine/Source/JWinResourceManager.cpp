@@ -3,7 +3,7 @@
 #include <Jamgine/Include/JTejpPackageHandler.h>
 #include <Jamgine/Include/JZipPackageHandler.h>
 
-#define KimsSillyStackSize 10128 + 4
+#define KimsSillyStackSize 1012800
 
 namespace Jamgine
 {
@@ -105,7 +105,10 @@ namespace Jamgine
 		size_t hash = m_asher(p_fileName);
 		tempRes.filePath = p_fileName;
 		tempRes.packagePath = p_package;
-		m_resources.insert(std::pair<size_t, Resource>(hash, tempRes));
+		if (!m_resources.insert(std::pair<size_t, Resource>(hash, tempRes)).second)
+		{
+			m_resources[hash] = tempRes;
+		}
 
 	}
 
@@ -126,7 +129,7 @@ namespace Jamgine
 		{
 			data->read(memoryPointer, dataSize);
 		}
-
+		//delete data;
 		
 		return memoryPointer;
 	}
@@ -151,7 +154,7 @@ namespace Jamgine
 			data->read(singleFrameMemory, dataSize);
 			memoryPointer = (char*)m_TextureConverter->Convert(singleFrameMemory, dataSize, p_stack);
 		}
-
+		//delete data;
 		return memoryPointer;
 	}
 
@@ -169,7 +172,9 @@ namespace Jamgine
 	{
 		size_t hash = m_asher(p_path);
 		return m_resources[hash].memoryAdress;
+		// Safety here mayhaps. maybe need dual maps
 	}
+
 	void JWinResourceManager::FreeResources(LifeTime p_lifeTime, Marker p_marker)
 	{
 		switch (p_lifeTime)
@@ -215,8 +220,7 @@ namespace Jamgine
 	{
 		void* temp = m_nextLevelStack;
 		m_nextLevelStack = m_levelStack;
-		m_levelStack = reinterpret_cast<StackAllocator*>(temp);
-		
+		m_nextLevelStack->Wipe();
+		m_levelStack = static_cast<StackAllocator*>(temp);		
 	}
-
 }

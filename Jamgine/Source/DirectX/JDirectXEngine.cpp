@@ -537,6 +537,8 @@ namespace Jamgine
 			int max = m_renderData.size() - 1;
 			if (max < 0)
 			{
+				m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+				m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Gray);
 				m_swapChain->Present(0, 0);
 				return; // DO NOTHING
 			}				
@@ -549,7 +551,7 @@ namespace Jamgine
 			*l_firstMemorySpace = Vertex(m_renderData[0]);
 			for (int i = 1; i < max + 1; i++)
 			{
-				Vertex* aName = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 4);
+				Vertex* aName = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 0);
 				*aName = Vertex(m_renderData[i]);
 			}
 
