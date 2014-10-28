@@ -20,8 +20,8 @@ Level::Level(Jamgine::JResourceManager* p_resourceManager, unsigned int p_level,
 
 		for(unsigned int i = 0; i < 5; i++)
 		{
-			m_resourceManager->LoadResource("Multi.zip", Jamgine::LifeTime::LEVEL, m_requiredFiles[i], Jamgine::ResourceType::TEXTURE);
-			//m_resourceManager->LoadResource("test.tejp", Jamgine::LifeTime::LEVEL, m_requiredFiles[i], Jamgine::ResourceType::TEXTURE);
+			//m_resourceManager->LoadResource("Multi.zip", Jamgine::LifeTime::LEVEL, m_requiredFiles[i], Jamgine::ResourceType::TEXTURE);
+			m_resourceManager->LoadResource("test.tejp", Jamgine::LifeTime::LEVEL, m_requiredFiles[i], Jamgine::ResourceType::TEXTURE);
 		}
 	
 		for(unsigned int y = 0; y < 5; ++y)
@@ -48,7 +48,7 @@ Level::Level(Jamgine::JResourceManager* p_resourceManager, unsigned int p_level,
 
 		for (unsigned int i = 0; i < 5; i++)
 		{
-			//m_resourceManager->LoadResource("Multi.zip", Jamgine::LifeTime::LEVEL, m_requiredFiles[0], Jamgine::ResourceType::TEXTURE);
+			//m_resourceManager->LoadResource("Multi.zip", Jamgine::LifeTime::LEVEL, m_requiredFiles[i], Jamgine::ResourceType::TEXTURE);
 			m_resourceManager->LoadResource("test.tejp", Jamgine::LifeTime::LEVEL, m_requiredFiles[i], Jamgine::ResourceType::TEXTURE);
 		}
 
@@ -69,7 +69,7 @@ Level::Level(Jamgine::JResourceManager* p_resourceManager, unsigned int p_level,
 
 Level::~Level()
 {
-	for (int i = 0; i < m_entity.size(); ++i)
+	for (unsigned int i = 0; i < m_entity.size(); ++i)
 	{
 		delete m_entity[i];
 	}

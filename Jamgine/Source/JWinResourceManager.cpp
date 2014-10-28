@@ -154,7 +154,7 @@ namespace Jamgine
 			data->read(singleFrameMemory, dataSize);
 			memoryPointer = (char*)m_TextureConverter->Convert(singleFrameMemory, dataSize, p_stack);
 		}
-		//delete data;
+		delete data; //might be leaking in .tejp
 		return memoryPointer;
 	}
 

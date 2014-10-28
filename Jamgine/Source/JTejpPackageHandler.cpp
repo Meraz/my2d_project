@@ -27,7 +27,7 @@ namespace Jamgine
 		stream->open(p_package);
 		stream->getline(chars, 256);
 		line = chars;
-
+		m_stringbuffer.str(std::string()); //Without this we will leak the size of the package file each read. Which is reeaaaaallly bad.
 	//	std::stringbuf stringbuffer;
 		if (line.compare("TABLE_START") == 0)
 		{
@@ -46,7 +46,11 @@ namespace Jamgine
 				line = chars;
 			}
 			if (pos == 0 && size == 0)
+			{
+				stream->close();
+				delete stream;
 				return nullptr;
+			}
 			//found end of table, read size
 			stream->getline(chars, 256);
 			line = chars;
@@ -55,17 +59,21 @@ namespace Jamgine
 			stream->seekg(pos);
 			char* buffer = new char[size];
 			stream->read(buffer, size);
-			returnStream = new std::istream(&stringbuffer);
+			returnStream = new std::istream(&m_stringbuffer);
 			returnStream->rdbuf()->sputn(buffer, size);
 			p_size = size;
-			//delete buffer;
+			delete buffer;
 		}
 		else
 		{
 			//no table
+			stream->close();
+			delete stream;
 			return nullptr;
 		}
+		stream->clear();
 		stream->close();
+		
 		delete stream;
 		return returnStream;
 	}
