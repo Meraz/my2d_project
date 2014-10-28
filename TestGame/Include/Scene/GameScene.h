@@ -26,7 +26,13 @@ private:
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
 
-	RenderEntity* playerEntity;
+	void InitGlobalStuff();
+	void StartEvent();
+	RenderEntity* m_playerEntity;
+
+	bool m_eventButtonClicked;
+	float m_eventTimer;
+	std::vector<RenderEntity*> m_eventities;
 	
 	void CheckCollision();
 	void CreateObject(int l_entity, char* l_data);

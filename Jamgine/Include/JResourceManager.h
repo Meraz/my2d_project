@@ -34,6 +34,7 @@ namespace Jamgine
 		virtual void LoadResource(std::string p_package, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) = 0;
 		virtual void* GetResource(std::string p_guid) = 0;
 		virtual void FreeResources(LifeTime p_lifeTime, Marker p_marker) = 0;
+		virtual void WipeResourceStack(LifeTime p_lifeTime) = 0;
 		virtual void SwapLevelBuffers() = 0;
 		virtual void AttatchTextureConverter(JTextureConverter* p_converter) = 0;
 		virtual void Update() = 0;

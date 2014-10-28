@@ -29,7 +29,6 @@ Level::Level(Jamgine::JResourceManager* p_resourceManager, unsigned int p_level,
 			for(unsigned int x = 0; x < 5; ++x)
 			{	
 				RenderEntity* temp = new RenderEntity();
-				using namespace Jamgine;
 				Texture2DInterface* aTexture = new Texture2D();
 				aTexture->LoadTexture(m_resourceManager->GetResource(m_requiredFiles[x % 5]));
 				temp->Initialize(Jamgine::Rectangle(x*35.0f, y*35.0f, 35.0f, 35.0f), aTexture, m_engine);
@@ -57,7 +56,6 @@ Level::Level(Jamgine::JResourceManager* p_resourceManager, unsigned int p_level,
 			for (unsigned int x = 0; x < 5; ++x)
 			{
 				RenderEntity* temp = new RenderEntity();
-				using namespace Jamgine;
 				Texture2DInterface* aTexture = new Texture2D();
 				aTexture->LoadTexture(m_resourceManager->GetResource(m_requiredFiles[y % 5]));
 				temp->Initialize(Jamgine::Rectangle(x*50.0f, y*50.0f, 50.0f, 50.0f), aTexture, m_engine);

@@ -44,6 +44,7 @@ void StackAllocator::Wipe()
 		//Keep on spinning in the free world
 	}
 	m_nonCustomMemFinder = 0;
-	m_lock.clear();
+	
 	m_current = m_start;
+	m_lock.clear();
 }

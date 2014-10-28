@@ -109,7 +109,7 @@ namespace Jamgine
 		{
 			m_resources[hash] = tempRes;
 		}
-
+		
 	}
 
 	void* JWinResourceManager::LoadRaw(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
@@ -154,7 +154,7 @@ namespace Jamgine
 			data->read(singleFrameMemory, dataSize);
 			memoryPointer = (char*)m_TextureConverter->Convert(singleFrameMemory, dataSize, p_stack);
 		}
-		delete data; //might be leaking in .tejp
+		//delete data; //might be leaking in .tejp
 		return memoryPointer;
 	}
 
@@ -187,6 +187,22 @@ namespace Jamgine
 			break;
 		case(LifeTime::EVENT) :
 			m_eventStack->Free(p_marker);
+			break;
+		}
+	}
+
+	void JWinResourceManager::WipeResourceStack(LifeTime p_lifeTime)
+	{
+		switch (p_lifeTime)
+		{
+		case(LifeTime::GLOBAL) :
+			m_gameStack->Wipe();
+			break;
+		case(LifeTime::LEVEL) :
+			m_levelStack->Wipe();
+			break;
+		case(LifeTime::EVENT) :
+			m_eventStack->Wipe();
 			break;
 		}
 	}
