@@ -46,6 +46,7 @@ private:
 	Node* m_quadTreeRootNode;
 
 	Level* m_currentLevel;
+	Level* m_nextLevel;
 	
 	bool m_nextButtonWasClicked;
 	int m_currentLevelNumber;

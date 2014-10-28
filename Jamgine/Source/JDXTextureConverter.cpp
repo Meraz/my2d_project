@@ -24,4 +24,13 @@ namespace Jamgine
 
 		return SRV;
 	}
+
+	void* JDXTextureConverter::SwapData(void* p_data, unsigned int p_size, StackAllocator* p_stack)
+	{
+		ID3D11ShaderResourceView* SRV;
+		SRV = p_stack->Push<ID3D11ShaderResourceView>(p_size, 4);
+		memcpy(SRV, p_data, p_size);
+
+		return SRV;
+	}
 }

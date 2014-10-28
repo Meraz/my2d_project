@@ -35,9 +35,10 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 	m_currentLevelNumber = 0;
 
-	m_currentLevel = new Level(m_engine->GetResourceManager(), m_currentLevelNumber++, m_engine);
+	m_currentLevel = new Level(m_engine->GetResourceManager(), m_engine);
 	m_engine->GetResourceManager()->SwapLevelBuffers();
-	
+	m_nextLevel = new Level(m_engine->GetResourceManager(), m_engine);
+	m_currentLevel->Init(m_currentLevelNumber++);
 }
 
 void GameScene::InitGlobalStuff()
@@ -46,7 +47,7 @@ void GameScene::InitGlobalStuff()
 	m_engine->GetResourceManager()->LoadResource("Multi.zip", Jamgine::LifeTime::GLOBAL, name, Jamgine::ResourceType::TEXTURE);
 	m_playerEntity = new RenderEntity();
 	Texture2DInterface* aTexture = new Texture2D();
-	aTexture->LoadTexture(m_engine->GetResourceManager()->GetResource(name));
+	aTexture->LoadTexture(m_engine->GetResourceManager()->GetResource(name, Jamgine::LifeTime::GLOBAL));
 	m_playerEntity->Initialize(Jamgine::Rectangle(-35.0f, -35.0f, 75.0f, 75.0f), aTexture, m_engine);
 }
 
@@ -58,8 +59,10 @@ void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mouse
 		if (m_nextButtonWasClicked == false)
 		{
 			delete m_currentLevel;
-			m_currentLevel = new Level(m_engine->GetResourceManager(), m_currentLevelNumber++, m_engine);
+			m_currentLevel = m_nextLevel;
 			m_engine->GetResourceManager()->SwapLevelBuffers();
+			m_currentLevel->Init(m_currentLevelNumber++);
+			m_nextLevel = new Level(m_engine->GetResourceManager(), m_engine);
 		}
 		m_nextButtonWasClicked = true;
 	}
@@ -151,7 +154,7 @@ void GameScene::StartEvent()
 	m_engine->GetResourceManager()->LoadResource("Multi.zip", Jamgine::LifeTime::EVENT, name, Jamgine::ResourceType::TEXTURE);
 	RenderEntity* temp = new RenderEntity();
 	Texture2DInterface* aTexture = new Texture2D();
-	aTexture->LoadTexture(m_engine->GetResourceManager()->GetResource(name));
+	aTexture->LoadTexture(m_engine->GetResourceManager()->GetResource(name, Jamgine::LifeTime::EVENT));
 	temp->Initialize(Jamgine::Rectangle(m_playerEntity->m_rectangle.position.x, m_playerEntity->m_rectangle.position.y, 75.0f, 75.0f), aTexture, m_engine);
 	m_eventities.push_back(temp); //Lol => Lots of Leaks
 }

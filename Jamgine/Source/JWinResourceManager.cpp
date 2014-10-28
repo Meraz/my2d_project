@@ -9,29 +9,29 @@ namespace Jamgine
 {
 	JWinResourceManager::JWinResourceManager()
 	{
-		m_gameStack = nullptr;
-		m_levelStack = nullptr;
-		m_nextLevelStack = nullptr;
-		m_eventStack = nullptr;
+		m_gameMemory.Stack = nullptr;
+		m_levelMemory.Stack = nullptr;
+		m_nextLevelMemory.Stack = nullptr;
+		m_eventMemory.Stack = nullptr;
 	}
 
 	JWinResourceManager::~JWinResourceManager()
 	{
-		delete m_gameStack;
-		delete m_levelStack;
-		delete m_nextLevelStack;
-		delete m_eventStack;
+		delete m_gameMemory.Stack;
+		delete m_levelMemory.Stack;
+		delete m_nextLevelMemory.Stack;
+		delete m_eventMemory.Stack;
 	}
 
 	void JWinResourceManager::Init(unsigned p_globalMemory, unsigned p_levelMemory, unsigned p_eventMemory)
 	{
-		m_gameStack = MemoryAllocator::GetMe().CreateStack(p_globalMemory, true);
+		m_gameMemory.Stack = MemoryAllocator::GetMe().CreateStack(p_globalMemory, true);
 
 		//Design problem, should they share p_levelMemory or duplicate it?
-		m_levelStack = MemoryAllocator::GetMe().CreateStack(p_levelMemory, true); 
-		m_nextLevelStack = MemoryAllocator::GetMe().CreateStack(p_levelMemory, true);
+		m_levelMemory.Stack = MemoryAllocator::GetMe().CreateStack(p_levelMemory, true);
+		m_nextLevelMemory.Stack = MemoryAllocator::GetMe().CreateStack(p_levelMemory, true);
 
-		m_eventStack = MemoryAllocator::GetMe().CreateStack(p_eventMemory, true);
+		m_eventMemory.Stack = MemoryAllocator::GetMe().CreateStack(p_eventMemory, true);
 
 		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(KimsSillyStackSize, true);
 
@@ -56,44 +56,50 @@ namespace Jamgine
 		//Hash path to int
 		//m_resources[p_path] = tempRes.memoryLocation;
 
-		StackAllocator* stack;
+		MemoryHandle* memory;
 
 		switch (p_lifeTime)
 		{
 		case Jamgine::LifeTime::GLOBAL:
-			stack = m_gameStack;
+			memory = &m_gameMemory;
 			break;
 		case Jamgine::LifeTime::LEVEL:
-			stack = m_nextLevelStack;
+			memory = &m_nextLevelMemory;
 			break;
 		case Jamgine::LifeTime::EVENT:
-			stack = m_eventStack;
+			memory = &m_eventMemory;
 			break;
 		default:
 			break;
 		}
 
-		//TODO move to JZipPackageHandler
-		/*ZipArchive::Ptr archive = ZipFile::Open(p_zipFile);
-		ZipArchiveEntry::Ptr entry = archive->GetEntry(p_fileName);
-		if (entry == NULL)
+		size_t hash = m_asher(p_fileName);
+		if (memory->Resource.count(hash) == 1)
 		{
-			std::cout << "ERROR ERROR ERROR package not found!" << std::endl;
 			return;
-		}*/
+		}
+		if (p_lifeTime == Jamgine::LifeTime::LEVEL)
+		{
+			if (m_levelMemory.Resource.count(hash) == 1)
+			{
+				m_levelMemory.Resource[hash].refCount++;
+				return;
+			}
+		}
+
 		switch (p_type)
 		{
 		case(ResourceType::RAW) :
-			tempRes.memoryAdress = LoadRaw(p_package, p_fileName, stack, packageHandler);
+			tempRes.memoryAdress = LoadRaw(p_package, p_fileName, memory->Stack, packageHandler, tempRes.size);
 			break;
 		case(ResourceType::TEXTURE) :
-			tempRes.memoryAdress = LoadTexture(p_package, p_fileName, stack, packageHandler);
+			tempRes.memoryAdress = LoadTexture(p_package, p_fileName, memory->Stack, packageHandler, tempRes.size);
 			break;
 		case(ResourceType::SCRIPT) :
-			tempRes.memoryAdress = LoadScript(p_package, p_fileName, stack, packageHandler);
+			tempRes.memoryAdress = LoadScript(p_package, p_fileName, memory->Stack, packageHandler, tempRes.size);
 			break;
 		case(ResourceType::SHADER) :
-			tempRes.memoryAdress = LoadShader(p_package, p_fileName, stack, packageHandler);
+			tempRes.memoryAdress = LoadShader(p_package, p_fileName, memory->Stack, packageHandler, tempRes.size);
 			break;
 		}
 		if (tempRes.memoryAdress == nullptr)
@@ -102,23 +108,20 @@ namespace Jamgine
 			DumpMemoryToFile();
 			return;
 		}
-		size_t hash = m_asher(p_fileName);
+		
 		tempRes.filePath = p_fileName;
 		tempRes.packagePath = p_package;
-		if (!m_resources.insert(std::pair<size_t, Resource>(hash, tempRes)).second)
-		{
-			m_resources[hash] = tempRes;
-		}
+		tempRes.refCount = 1;
+
+		memory->Resource[hash] = tempRes;
 		
 	}
 
-	void* JWinResourceManager::LoadRaw(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
+	void* JWinResourceManager::LoadRaw(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
 	{
 		size_t dataSize = 0;
 		std::istream* data = p_handler->ReadFile(p_package, p_fileName, dataSize);
-		/*data->seekg(0, data->end);
-		size_t dataSize = data->tellg();
-		data->seekg(0, data->beg);*/
+		p_size = dataSize;
 		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
 		char* memoryPointer = nullptr;
 		if (memoryPointer == nullptr)
@@ -129,19 +132,17 @@ namespace Jamgine
 		{
 			data->read(memoryPointer, dataSize);
 		}
-		//delete data;
+		delete data;
 		
 		return memoryPointer;
 	}
 
-	void* JWinResourceManager::LoadTexture(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
+	void* JWinResourceManager::LoadTexture(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
 	{
 		size_t size = 0;
 		std::istream* data = p_handler->ReadFile(p_package, p_fileName, size);
-		
-		/*data->seekg(0, data->end);
-		size_t dataSize = data->tellg(); //Something wrong here, very large dataSize
-		data->seekg(0, data->beg);*/
+		p_size = size;
+
 		size_t dataSize = size;
 		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
 		void* memoryPointer = nullptr;
@@ -158,21 +159,35 @@ namespace Jamgine
 		return memoryPointer;
 	}
 
-	void* JWinResourceManager::LoadScript(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
+	void* JWinResourceManager::LoadScript(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
 	{
 		return 0;
 	}
 
-	void* JWinResourceManager::LoadShader(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler)
+	void* JWinResourceManager::LoadShader(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
 	{
-		return LoadRaw(p_package, p_fileName, p_stack, p_handler); //D3DCompile uses a raw data pointer for compiling the HLSL code
+		return LoadRaw(p_package, p_fileName, p_stack, p_handler, p_size); //D3DCompile uses a raw data pointer for compiling the HLSL code
 	}
 
-	void* JWinResourceManager::GetResource(std::string p_path)
+	void* JWinResourceManager::GetResource(std::string p_path, LifeTime p_lifeTime)
 	{
 		size_t hash = m_asher(p_path);
-		return m_resources[hash].memoryAdress;
-		// Safety here mayhaps. maybe need dual maps
+		MemoryHandle* handle;
+		switch (p_lifeTime)
+		{
+		case Jamgine::LifeTime::GLOBAL:
+			handle = &m_gameMemory;
+			break;
+		case Jamgine::LifeTime::LEVEL:
+			handle = &m_levelMemory;
+			break;
+		case Jamgine::LifeTime::EVENT:
+			handle = &m_eventMemory;
+			break;
+		default:
+			break;
+		}
+		return handle->Resource[hash].memoryAdress;
 	}
 
 	void JWinResourceManager::FreeResources(LifeTime p_lifeTime, Marker p_marker)
@@ -180,13 +195,13 @@ namespace Jamgine
 		switch (p_lifeTime)
 		{
 		case(LifeTime::GLOBAL) :
-			m_gameStack->Free(p_marker);
+			m_gameMemory.Stack->Free(p_marker);
 			break;
 		case(LifeTime::LEVEL) :
-			m_levelStack->Free(p_marker);
+			m_levelMemory.Stack->Free(p_marker);
 			break;
 		case(LifeTime::EVENT) :
-			m_eventStack->Free(p_marker);
+			m_eventMemory.Stack->Free(p_marker);
 			break;
 		}
 	}
@@ -196,13 +211,13 @@ namespace Jamgine
 		switch (p_lifeTime)
 		{
 		case(LifeTime::GLOBAL) :
-			m_gameStack->Wipe();
+			m_gameMemory.Stack->Wipe();
 			break;
 		case(LifeTime::LEVEL) :
-			m_levelStack->Wipe();
+			m_levelMemory.Stack->Wipe();
 			break;
 		case(LifeTime::EVENT) :
-			m_eventStack->Wipe();
+			m_eventMemory.Stack->Wipe();
 			break;
 		}
 	}
@@ -219,11 +234,22 @@ namespace Jamgine
 
 		dumpFile << "No more memory available for resource loading" << std::endl;
 		dumpFile << "The Following resources where loaded at the time, in order of allocation" << std::endl;
-		for (auto i : m_resources)
+		for (auto i : m_gameMemory.Resource)
 		{
 			dumpFile << "Package: " + i.second.packagePath + " FilePath: " + i.second.filePath << std::endl;
 		}
-
+		for (auto i : m_levelMemory.Resource)
+		{
+			dumpFile << "Package: " + i.second.packagePath + " FilePath: " + i.second.filePath << std::endl;
+		}
+		for (auto i : m_nextLevelMemory.Resource)
+		{
+			dumpFile << "Package: " + i.second.packagePath + " FilePath: " + i.second.filePath << std::endl;
+		}
+		for (auto i : m_eventMemory.Resource)
+		{
+			dumpFile << "Package: " + i.second.packagePath + " FilePath: " + i.second.filePath << std::endl;
+		}
 		dumpFile.close();
 	}
 
@@ -234,9 +260,24 @@ namespace Jamgine
 
 	void JWinResourceManager::SwapLevelBuffers()
 	{
-		void* temp = m_nextLevelStack;
-		m_nextLevelStack = m_levelStack;
-		m_nextLevelStack->Wipe();
-		m_levelStack = static_cast<StackAllocator*>(temp);		
+		Resource tempRes;
+		for (auto i : m_levelMemory.Resource)
+		{
+			i.second.refCount--;
+			if (i.second.refCount > 0)
+			{
+				tempRes = i.second;
+				tempRes.memoryAdress = m_TextureConverter->SwapData(i.second.memoryAdress, i.second.size, m_nextLevelMemory.Stack);
+				m_nextLevelMemory.Resource[i.first] = tempRes;
+			}
+			
+		}
+		m_levelMemory.Resource.erase(m_levelMemory.Resource.begin(), m_levelMemory.Resource.end());
+		m_levelMemory.Resource.clear();
+		m_levelMemory.Resource.swap(m_nextLevelMemory.Resource);
+		void* temp = m_nextLevelMemory.Stack;
+		m_nextLevelMemory.Stack = m_levelMemory.Stack;
+		m_nextLevelMemory.Stack->Wipe();
+		m_levelMemory.Stack = static_cast<StackAllocator*>(temp);		
 	}
 }

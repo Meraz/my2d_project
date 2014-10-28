@@ -10,9 +10,10 @@
 class Level
 {
 	public:
-		Level(Jamgine::JResourceManager* p_resourceManager, unsigned int p_level, Jamgine::JamgineEngine* p_engine);
+		Level(Jamgine::JResourceManager* p_resourceManager, Jamgine::JamgineEngine* p_engine);
 		virtual ~Level();
 
+		void Init(unsigned int p_level);
 		void Update(double p_deltaTime);
 		void Render();
 
