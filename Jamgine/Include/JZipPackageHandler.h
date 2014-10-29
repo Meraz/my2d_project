@@ -1,6 +1,7 @@
 #pragma once
 #include <Jamgine\Include\JPackageHandler.h>
 #include <ziplib/ZipFile.h>
+#include <atomic>
 namespace Jamgine
 {
 
@@ -14,6 +15,7 @@ namespace Jamgine
 		std::istream* ReadPoint(std::string p_package, unsigned p_point, size_t p_size) override;
 	private:
 		ZipArchive::Ptr m_archive;
+		std::atomic_flag m_lock;
 	};
 }
 

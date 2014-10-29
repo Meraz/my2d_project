@@ -6,8 +6,18 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <future>
 namespace Jamgine
 {
+
+	struct ThreadParams
+	{
+		std::string filePath;
+		std::string packagePath;
+		StackAllocator* Stack;
+		JPackageHandler* Handler;
+		LifeTime rifeRine;
+	};
 
 	struct Resource
 	{
@@ -16,6 +26,12 @@ namespace Jamgine
 		std::string packagePath;
 		std::size_t size;
 		int refCount;
+		LifeTime lifeType;
+
+		Resource()
+		{
+			memoryAdress = nullptr;
+		};
 	};
 	
 	struct MemoryHandle
@@ -40,10 +56,6 @@ namespace Jamgine
 		void Update();
 	private:
 
-		void* LoadRaw(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size);
-		void* LoadTexture(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size);
-		void* LoadScript(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size);
-		void* LoadShader(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size);
 
 		void DumpMemoryToFile();
 
@@ -59,5 +71,7 @@ namespace Jamgine
 
 		JPackageHandler* m_zipHandler;
 		JPackageHandler* m_tejpHandler;
+
+		std::vector<std::future<Resource>> m_threadPool;
 	};
 }

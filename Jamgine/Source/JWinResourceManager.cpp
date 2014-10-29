@@ -2,11 +2,93 @@
 #include <fstream>
 #include <Jamgine/Include/JTejpPackageHandler.h>
 #include <Jamgine/Include/JZipPackageHandler.h>
-
-#define KimsSillyStackSize 1012800
+#include <chrono>
+#define SingleFrameStackSize 1012800
 
 namespace Jamgine
 {
+	namespace
+	{
+		SingleFrameStack* frameStack;
+		JTextureConverter* textureConverter;
+		Resource LoadRaw(ThreadParams p_params)
+		{
+			Resource tempRes;
+			tempRes.filePath = p_params.filePath;
+			tempRes.packagePath = p_params.packagePath;
+			tempRes.refCount = 1;
+			tempRes.lifeType = p_params.rifeRine;
+			size_t dataSize = 0;
+			std::istream* data = p_params.Handler->ReadFile(p_params.packagePath, p_params.filePath, dataSize);
+			tempRes.size = dataSize;
+			void* memoryPointer = frameStack->Push<void>(dataSize, 1);
+			if (memoryPointer == nullptr)
+			{
+				//No more memory, write to logg
+				
+				Resource temp = Resource();
+				return temp;
+			}
+			else
+			{
+				data->read((char*)memoryPointer, dataSize);
+				tempRes.memoryAdress = memoryPointer;
+			}
+			delete data;
+
+			return tempRes;
+		}
+
+		Resource LoadTexture(ThreadParams p_params)
+		{
+			Resource tempRes;
+			tempRes.filePath = p_params.filePath;
+			tempRes.packagePath = p_params.packagePath;
+			tempRes.refCount = 1;
+			tempRes.lifeType = p_params.rifeRine;
+			size_t dataSize = 0;
+			std::istream* data = p_params.Handler->ReadFile(p_params.packagePath, p_params.filePath, dataSize);
+			tempRes.size = dataSize;
+			void* singleFrameMemory = frameStack->Push<void>(dataSize, 1);
+			void* memoryPointer = nullptr;
+			if (singleFrameMemory == nullptr)
+			{
+				
+				Resource temp = Resource();
+				return temp;
+			}
+			else
+			{
+				data->read((char*)singleFrameMemory, dataSize);
+				memoryPointer = textureConverter->Convert(singleFrameMemory, dataSize, p_params.Stack);
+				if (memoryPointer == nullptr)
+				{
+					//No more memory, write to logg
+					
+					Resource temp = Resource();
+					return temp;
+				}
+				else
+				{
+					tempRes.memoryAdress = memoryPointer;
+				}
+			}
+			//delete data; //might be leaking in .tejp
+			return tempRes;
+		}
+
+		Resource LoadScript(ThreadParams p_params)
+		{
+			Resource temp = Resource();
+			return temp;
+		}
+
+		Resource LoadShader(ThreadParams p_params)
+		{
+			return LoadRaw(p_params); //D3DCompile uses a raw data pointer for compiling the HLSL code
+		}
+	}
+
 	JWinResourceManager::JWinResourceManager()
 	{
 		m_gameMemory.Stack = nullptr;
@@ -33,12 +115,14 @@ namespace Jamgine
 
 		m_eventMemory.Stack = MemoryAllocator::GetMe().CreateStack(p_eventMemory, true);
 
-		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(KimsSillyStackSize, true);
+		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(SingleFrameStackSize, true);
 
 		m_tejpHandler = new JTejpPackageHandler();
 		m_zipHandler = new JZipPackageHandler();
-	}
 
+		frameStack = m_singleFrameStack;
+		textureConverter = m_TextureConverter;
+	}
 
 	void JWinResourceManager::LoadResource(std::string p_package, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type)
 	{
@@ -51,7 +135,7 @@ namespace Jamgine
 			packageHandler = m_tejpHandler;
 		//Check if already existing
 		//Else check if memory is enough
-		Resource tempRes;
+		
 
 		//Hash path to int
 		//m_resources[p_path] = tempRes.memoryLocation;
@@ -86,88 +170,31 @@ namespace Jamgine
 				return;
 			}
 		}
-
+		ThreadParams params;
+		params.filePath = p_fileName;
+		params.packagePath = p_package;
+		params.Handler = packageHandler;
+		params.Stack = memory->Stack;
+		params.rifeRine = p_lifeTime;
 		switch (p_type)
 		{
 		case(ResourceType::RAW) :
-			tempRes.memoryAdress = LoadRaw(p_package, p_fileName, memory->Stack, packageHandler, tempRes.size);
+			m_threadPool.push_back(std::async(LoadRaw, params));
 			break;
 		case(ResourceType::TEXTURE) :
-			tempRes.memoryAdress = LoadTexture(p_package, p_fileName, memory->Stack, packageHandler, tempRes.size);
+			m_threadPool.push_back(std::async(LoadTexture, params));
 			break;
 		case(ResourceType::SCRIPT) :
-			tempRes.memoryAdress = LoadScript(p_package, p_fileName, memory->Stack, packageHandler, tempRes.size);
+			m_threadPool.push_back(std::async(LoadScript, params));
 			break;
 		case(ResourceType::SHADER) :
-			tempRes.memoryAdress = LoadShader(p_package, p_fileName, memory->Stack, packageHandler, tempRes.size);
+			m_threadPool.push_back(std::async(LoadShader, params));
 			break;
 		}
-		if (tempRes.memoryAdress == nullptr)
-		{
-			//No more memory, write to logg
-			DumpMemoryToFile();
-			return;
-		}
-		
-		tempRes.filePath = p_fileName;
-		tempRes.packagePath = p_package;
-		tempRes.refCount = 1;
-
-		memory->Resource[hash] = tempRes;
 		
 	}
 
-	void* JWinResourceManager::LoadRaw(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
-	{
-		size_t dataSize = 0;
-		std::istream* data = p_handler->ReadFile(p_package, p_fileName, dataSize);
-		p_size = dataSize;
-		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
-		char* memoryPointer = nullptr;
-		if (memoryPointer == nullptr)
-		{
-			return nullptr;
-		}
-		else
-		{
-			data->read(memoryPointer, dataSize);
-		}
-		delete data;
-		
-		return memoryPointer;
-	}
-
-	void* JWinResourceManager::LoadTexture(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
-	{
-		size_t size = 0;
-		std::istream* data = p_handler->ReadFile(p_package, p_fileName, size);
-		p_size = size;
-
-		size_t dataSize = size;
-		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
-		void* memoryPointer = nullptr;
-		if (singleFrameMemory == nullptr)
-		{
-			return nullptr;
-		}
-		else
-		{
-			data->read(singleFrameMemory, dataSize);
-			memoryPointer = (char*)m_TextureConverter->Convert(singleFrameMemory, dataSize, p_stack);
-		}
-		//delete data; //might be leaking in .tejp
-		return memoryPointer;
-	}
-
-	void* JWinResourceManager::LoadScript(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
-	{
-		return 0;
-	}
-
-	void* JWinResourceManager::LoadShader(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
-	{
-		return LoadRaw(p_package, p_fileName, p_stack, p_handler, p_size); //D3DCompile uses a raw data pointer for compiling the HLSL code
-	}
+	
 
 	void* JWinResourceManager::GetResource(std::string p_path, LifeTime p_lifeTime)
 	{
@@ -256,10 +283,47 @@ namespace Jamgine
 	void JWinResourceManager::Update()
 	{
 		m_singleFrameStack->Wipe();
+
+		MemoryHandle* handle;
+		Resource tempRes;
+		for (unsigned int i = 0; i < m_threadPool.size(); i++)
+		{
+			std::chrono::microseconds time(1);
+			if (m_threadPool.at(i).wait_for(time) == std::future_status::ready)
+			{
+				tempRes = m_threadPool.at(i).get();
+				m_threadPool.erase(m_threadPool.begin() + i);
+				if (tempRes.memoryAdress == nullptr)
+				{
+					DumpMemoryToFile();
+					continue;
+				}
+					
+				switch (tempRes.lifeType)
+				{
+				case LifeTime::GLOBAL:
+					handle = &m_gameMemory;
+					break;
+				case LifeTime::LEVEL:
+					handle = &m_nextLevelMemory;
+					break;
+				case LifeTime::EVENT:
+					handle = &m_eventMemory;
+					break;
+				default:
+					break;
+				}
+				handle->Resource[m_asher(tempRes.filePath)] = tempRes;
+			}
+		}
 	}
 
 	void JWinResourceManager::SwapLevelBuffers()
 	{
+		while (m_threadPool.size() > 0)
+		{
+			Update();
+		}
 		Resource tempRes;
 		for (auto i : m_levelMemory.Resource)
 		{
@@ -267,7 +331,8 @@ namespace Jamgine
 			if (i.second.refCount > 0)
 			{
 				tempRes = i.second;
-				tempRes.memoryAdress = m_TextureConverter->SwapData(i.second.memoryAdress, i.second.size, m_nextLevelMemory.Stack);
+				tempRes.memoryAdress = m_nextLevelMemory.Stack->Push<void>(i.second.size, 4);
+				memcpy(tempRes.memoryAdress, i.second.memoryAdress, i.second.size);
 				m_nextLevelMemory.Resource[i.first] = tempRes;
 			}
 			

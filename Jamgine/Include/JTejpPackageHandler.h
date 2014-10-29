@@ -2,7 +2,7 @@
 #include <Jamgine\Include\JPackageHandler.h>
 #include <fstream>
 #include <sstream>
-
+#include <atomic>
 namespace Jamgine
 {
 	class JTejpPackageHandler : public JPackageHandler
@@ -16,5 +16,6 @@ namespace Jamgine
 	private:
 		//Must be member to deal with scope thingy
 		std::stringbuf m_stringbuffer;
+		std::atomic_flag m_lock;
 	};
 }
