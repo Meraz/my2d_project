@@ -17,6 +17,14 @@ namespace Jamgine
 		StackAllocator* Stack;
 		JPackageHandler* Handler;
 		LifeTime rifeRine;
+		ThreadParams()
+		{
+			filePath = "";
+			packagePath = "";
+			Stack = nullptr;
+			Handler = nullptr;
+			rifeRine = LifeTime::UNDEFINED;
+		};
 	};
 
 	struct Resource
@@ -31,6 +39,11 @@ namespace Jamgine
 		Resource()
 		{
 			memoryAdress = nullptr;
+			filePath = "";
+			packagePath = "";
+			size = 0;
+			refCount = 0;
+			lifeType = LifeTime::UNDEFINED;
 		};
 	};
 	

@@ -18,6 +18,7 @@ namespace Jamgine
 		GLOBAL,
 		LEVEL,
 		EVENT,
+		UNDEFINED,
 	};
 
 	class JResourceManager
