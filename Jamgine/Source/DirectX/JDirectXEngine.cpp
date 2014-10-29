@@ -498,7 +498,7 @@ namespace Jamgine
 			
 			m_resourceManager = new JWinResourceManager();
 			m_textureConverter = new JDXTextureConverter(m_device);
-			m_resourceManager->AttatchTextureConverter(m_textureConverter);
+			m_resourceManager->AttachTextureConverter(m_textureConverter);
 
 			return l_hr;
 		}

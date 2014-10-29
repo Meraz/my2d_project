@@ -17,7 +17,7 @@ Level::Level(Jamgine::JResourceManager* p_resourceManager, Jamgine::JamgineEngin
 	m_requiredFiles[3] = "Circle.dds";
 	m_requiredFiles[4] = "ball.dds";
 
-	for(unsigned int i = 0; i < 5; i++)
+	for(unsigned int i = 0; i < 5; i++) //Start load of textures for the "level"
 	{
 		//m_resourceManager->LoadResource("Multi.zip", Jamgine::LifeTime::LEVEL, m_requiredFiles[i], Jamgine::ResourceType::TEXTURE);
 		m_resourceManager->LoadResource("test.tejp", Jamgine::LifeTime::LEVEL, m_requiredFiles[i], Jamgine::ResourceType::TEXTURE);
@@ -32,8 +32,7 @@ Level::~Level()
 	{
 		delete m_entity[i];
 	}
-//	for (auto i : m_entity)
-//		delete i;
+
 	m_entity.clear();
 	delete[] m_requiredFiles;
 
@@ -41,7 +40,7 @@ Level::~Level()
 
 void Level::Init(unsigned int p_level)
 {
-	if (p_level % 2 == 0)
+	if (p_level % 2 == 0) //Level 1,3,5 etc init
 	{
 		for (unsigned int y = 0; y < 5; ++y)
 		{
@@ -55,7 +54,7 @@ void Level::Init(unsigned int p_level)
 			}
 		}
 	}
-	else
+	else //level 2,4,6 etc init
 	{
 		for (unsigned int y = 0; y < 5; ++y)
 		{

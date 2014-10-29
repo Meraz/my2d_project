@@ -51,4 +51,9 @@ namespace Jamgine
 		std::cout << "reading from point in a .zip file is not allowed" << std::endl;
 		return nullptr;
 	}
+
+	void JZipPackageHandler::WipeBuffers()
+	{
+
+	}
 }

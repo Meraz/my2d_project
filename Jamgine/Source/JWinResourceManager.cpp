@@ -17,14 +17,13 @@ namespace Jamgine
 			tempRes.filePath = p_params.filePath;
 			tempRes.packagePath = p_params.packagePath;
 			tempRes.refCount = 1;
-			tempRes.lifeType = p_params.rifeRine;
+			tempRes.lifeType = p_params.lifeType;
 			size_t dataSize = 0;
 			std::istream* data = p_params.Handler->ReadFile(p_params.packagePath, p_params.filePath, dataSize);
 			tempRes.size = dataSize;
 			void* memoryPointer = frameStack->Push<void>(dataSize, 1);
 			if (memoryPointer == nullptr)
-			{
-				//No more memory, write to logg
+			{	
 				
 				Resource temp = Resource();
 				return temp;
@@ -32,7 +31,7 @@ namespace Jamgine
 			else
 			{
 				data->read((char*)memoryPointer, dataSize);
-				tempRes.memoryAdress = memoryPointer;
+				tempRes.memoryAddress = memoryPointer;
 			}
 			delete data;
 
@@ -45,7 +44,7 @@ namespace Jamgine
 			tempRes.filePath = p_params.filePath;
 			tempRes.packagePath = p_params.packagePath;
 			tempRes.refCount = 1;
-			tempRes.lifeType = p_params.rifeRine;
+			tempRes.lifeType = p_params.lifeType;
 			size_t dataSize = 0;
 			std::istream* data = p_params.Handler->ReadFile(p_params.packagePath, p_params.filePath, dataSize);
 			tempRes.size = dataSize;
@@ -70,18 +69,14 @@ namespace Jamgine
 				}
 				else
 				{
-					tempRes.memoryAdress = memoryPointer;
+					tempRes.memoryAddress = memoryPointer;
 				}
 			}
 			//delete data; //might be leaking in .tejp
 			return tempRes;
 		}
 
-		Resource LoadScript(ThreadParams p_params)
-		{
-			Resource temp = Resource();
-			return temp;
-		}
+		
 
 		Resource LoadShader(ThreadParams p_params)
 		{
@@ -127,21 +122,19 @@ namespace Jamgine
 	void JWinResourceManager::LoadResource(std::string p_package, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type)
 	{
 		JPackageHandler* packageHandler;
+
+		//Check if it's a .zip or .tejp file and attach the proper handler
 		std::size_t findTheDot = p_package.find(".");
 		std::string rightOfDot = &p_package[findTheDot];
 		if (strcmp(rightOfDot.c_str(), ".zip") == 0)
 			packageHandler = m_zipHandler;
 		else if (strcmp(rightOfDot.c_str(), ".tejp") == 0)
 			packageHandler = m_tejpHandler;
-		//Check if already existing
-		//Else check if memory is enough
-		
 
-		//Hash path to int
-		//m_resources[p_path] = tempRes.memoryLocation;
 
 		MemoryHandle* memory;
 
+		//get handle to the right memorystack, depending on scope for loaded asset
 		switch (p_lifeTime)
 		{
 		case Jamgine::LifeTime::GLOBAL:
@@ -156,13 +149,13 @@ namespace Jamgine
 		default:
 			break;
 		}
-
+		//get hash from filename
 		size_t hash = m_asher(p_fileName);
-		if (memory->Resource.count(hash) == 1)
+		if (memory->Resource.count(hash) == 1) //Asset already loaded
 		{
 			return;
 		}
-		if (p_lifeTime == Jamgine::LifeTime::LEVEL)
+		if (p_lifeTime == Jamgine::LifeTime::LEVEL) //If levelscope and the asset is already loaded increase refCount
 		{
 			if (m_levelMemory.Resource.count(hash) == 1)
 			{
@@ -170,12 +163,16 @@ namespace Jamgine
 				return;
 			}
 		}
+
+		//Init threadparameters
 		ThreadParams params;
 		params.filePath = p_fileName;
 		params.packagePath = p_package;
 		params.Handler = packageHandler;
 		params.Stack = memory->Stack;
-		params.rifeRine = p_lifeTime;
+		params.lifeType = p_lifeTime;
+
+		//Launch async load for the asset type
 		switch (p_type)
 		{
 		case(ResourceType::RAW) :
@@ -183,9 +180,6 @@ namespace Jamgine
 			break;
 		case(ResourceType::TEXTURE) :
 			m_threadPool.push_back(std::async(LoadTexture, params));
-			break;
-		case(ResourceType::SCRIPT) :
-			m_threadPool.push_back(std::async(LoadScript, params));
 			break;
 		case(ResourceType::SHADER) :
 			m_threadPool.push_back(std::async(LoadShader, params));
@@ -198,8 +192,10 @@ namespace Jamgine
 
 	void* JWinResourceManager::GetResource(std::string p_path, LifeTime p_lifeTime)
 	{
-		size_t hash = m_asher(p_path);
-		MemoryHandle* handle;
+		size_t hash = m_asher(p_path); //get asset hash
+
+		//get handle to memorystack where the asset is stored
+		MemoryHandle* handle; 
 		switch (p_lifeTime)
 		{
 		case Jamgine::LifeTime::GLOBAL:
@@ -214,7 +210,8 @@ namespace Jamgine
 		default:
 			break;
 		}
-		return handle->Resource[hash].memoryAdress;
+		//Return pointer to asset
+		return handle->Resource[hash].memoryAddress;
 	}
 
 	void JWinResourceManager::FreeResources(LifeTime p_lifeTime, Marker p_marker)
@@ -249,7 +246,7 @@ namespace Jamgine
 		}
 	}
 
-	void JWinResourceManager::AttatchTextureConverter(JTextureConverter* p_converter)
+	void JWinResourceManager::AttachTextureConverter(JTextureConverter* p_converter)
 	{
 		m_TextureConverter = p_converter;
 	}
@@ -286,14 +283,16 @@ namespace Jamgine
 
 		MemoryHandle* handle;
 		Resource tempRes;
+		//Check if any active async load is finished
 		for (unsigned int i = 0; i < m_threadPool.size(); i++)
 		{
 			std::chrono::microseconds time(1);
+			//If finished store the data into the asset map, if not loaded continue
 			if (m_threadPool.at(i).wait_for(time) == std::future_status::ready)
 			{
-				tempRes = m_threadPool.at(i).get();
-				m_threadPool.erase(m_threadPool.begin() + i);
-				if (tempRes.memoryAdress == nullptr)
+				tempRes = m_threadPool.at(i).get(); //get data
+				m_threadPool.erase(m_threadPool.begin() + i); //remove thread from pool 
+				if (tempRes.memoryAddress == nullptr) //Out of memory, dump current memory to file
 				{
 					DumpMemoryToFile();
 					continue;
@@ -313,32 +312,41 @@ namespace Jamgine
 				default:
 					break;
 				}
-				handle->Resource[m_asher(tempRes.filePath)] = tempRes;
+				handle->Resource[m_asher(tempRes.filePath)] = tempRes; 
 			}
 		}
 	}
 
 	void JWinResourceManager::SwapLevelBuffers()
 	{
-		while (m_threadPool.size() > 0)
+		while (m_threadPool.size() > 0) //If assets are currently being loaded 
 		{
 			Update();
 		}
+		m_threadPool.clear();
 		Resource tempRes;
+		
 		for (auto i : m_levelMemory.Resource)
 		{
+			//Decrease refcount for all assets in current level
 			i.second.refCount--;
+
+			//If asset is still being used in next level move to next levelstack/map
 			if (i.second.refCount > 0)
 			{
 				tempRes = i.second;
-				tempRes.memoryAdress = m_nextLevelMemory.Stack->Push<void>(i.second.size, 4);
-				memcpy(tempRes.memoryAdress, i.second.memoryAdress, i.second.size);
+				tempRes.memoryAddress = m_nextLevelMemory.Stack->Push<void>(i.second.size, 4);
+				memcpy(tempRes.memoryAddress, i.second.memoryAddress, i.second.size);
 				m_nextLevelMemory.Resource[i.first] = tempRes;
 			}
 			
 		}
+		//Clear current level
 		m_levelMemory.Resource.erase(m_levelMemory.Resource.begin(), m_levelMemory.Resource.end());
 		m_levelMemory.Resource.clear();
+		m_tejpHandler->WipeBuffers();
+		
+		//Swap current and next level
 		m_levelMemory.Resource.swap(m_nextLevelMemory.Resource);
 		void* temp = m_nextLevelMemory.Stack;
 		m_nextLevelMemory.Stack = m_levelMemory.Stack;

@@ -32,7 +32,8 @@ namespace Jamgine
 		stream->open(p_package);
 		stream->getline(chars, 256);
 		line = chars;
-		m_stringbuffer.str(std::string()); //Without this we will leak the size of the package file each read. Which is reeaaaaallly bad.
+		
+		//m_stringbuffers.push_back.str(std::string()); //Without this we will leak the size of the package file each read. Which is reeaaaaallly bad.
 	//	std::stringbuf stringbuffer;
 		if (line.compare("TABLE_START") == 0)
 		{
@@ -65,7 +66,9 @@ namespace Jamgine
 			stream->seekg(pos);
 			char* buffer = new char[size];
 			stream->read(buffer, size);
-			returnStream = new std::istream(&m_stringbuffer);
+			std::stringbuf* buf= new std::stringbuf();
+			returnStream = new std::istream(buf);
+			m_stringbuffers.push_back(buf);
 			returnStream->rdbuf()->sputn(buffer, size);
 			p_size = size;
 			delete buffer;
@@ -104,4 +107,16 @@ namespace Jamgine
 
 		return returnStream;
 	}
+
+	void JTejpPackageHandler::WipeBuffers()
+	{
+		for (unsigned i = 0; i < m_stringbuffers.size(); i++)
+		{
+			delete m_stringbuffers.at(i);
+			m_stringbuffers.erase(m_stringbuffers.begin() + i);
+		}
+			
+		m_stringbuffers.clear();
+	}
 }
+

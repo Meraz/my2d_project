@@ -16,20 +16,20 @@ namespace Jamgine
 		std::string packagePath;
 		StackAllocator* Stack;
 		JPackageHandler* Handler;
-		LifeTime rifeRine;
+		LifeTime lifeType;
 		ThreadParams()
 		{
 			filePath = "";
 			packagePath = "";
 			Stack = nullptr;
 			Handler = nullptr;
-			rifeRine = LifeTime::UNDEFINED;
+			lifeType = LifeTime::UNDEFINED;
 		};
 	};
 
 	struct Resource
 	{
-		void* memoryAdress;
+		void* memoryAddress;
 		std::string filePath;
 		std::string packagePath;
 		std::size_t size;
@@ -38,7 +38,7 @@ namespace Jamgine
 
 		Resource()
 		{
-			memoryAdress = nullptr;
+			memoryAddress = nullptr;
 			filePath = "";
 			packagePath = "";
 			size = 0;
@@ -64,7 +64,7 @@ namespace Jamgine
 		void FreeResources(LifeTime p_lifeTime, Marker p_marker) override;
 		void WipeResourceStack(LifeTime p_lifeTime) override;
 		void SwapLevelBuffers();
-		void AttatchTextureConverter(JTextureConverter* p_converter) override;
+		void AttachTextureConverter(JTextureConverter* p_converter) override;
 
 		void Update();
 	private:
