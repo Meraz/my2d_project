@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <future>
 namespace Jamgine
 {
 
@@ -59,5 +60,7 @@ namespace Jamgine
 
 		JPackageHandler* m_zipHandler;
 		JPackageHandler* m_tejpHandler;
+
+		std::vector<std::future<Resource>> m_threadPool;
 	};
 }

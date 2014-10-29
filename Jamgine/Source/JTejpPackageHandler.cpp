@@ -6,6 +6,7 @@ namespace Jamgine
 
 	JTejpPackageHandler::JTejpPackageHandler()
 	{
+		m_lock.clear();
 	}
 
 
@@ -15,6 +16,10 @@ namespace Jamgine
 
 	std::istream* JTejpPackageHandler::ReadFile(std::string p_package, std::string p_file, size_t& p_size)
 	{
+		while (m_lock.test_and_set(std::memory_order_acquire))
+		{
+			//Keep on spinning in the free world
+		}
 		int firstColon = 0;
 		int secondColon = 0;
 		int size = 0;
@@ -49,6 +54,7 @@ namespace Jamgine
 			{
 				stream->close();
 				delete stream;
+				m_lock.clear();
 				return nullptr;
 			}
 			//found end of table, read size
@@ -69,12 +75,14 @@ namespace Jamgine
 			//no table
 			stream->close();
 			delete stream;
+			m_lock.clear();
 			return nullptr;
 		}
 		stream->clear();
 		stream->close();
 		
 		delete stream;
+		m_lock.clear();
 		return returnStream;
 	}
 

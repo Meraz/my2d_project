@@ -3,7 +3,7 @@
 #include <Jamgine/Include/JTejpPackageHandler.h>
 #include <Jamgine/Include/JZipPackageHandler.h>
 
-#define KimsSillyStackSize 1012800
+#define SingleFrameStackSize 1012800
 
 namespace Jamgine
 {
@@ -33,7 +33,7 @@ namespace Jamgine
 
 		m_eventMemory.Stack = MemoryAllocator::GetMe().CreateStack(p_eventMemory, true);
 
-		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(KimsSillyStackSize, true);
+		m_singleFrameStack = MemoryAllocator::GetMe().CreateSingleFrameStack(SingleFrameStackSize, true);
 
 		m_tejpHandler = new JTejpPackageHandler();
 		m_zipHandler = new JZipPackageHandler();
@@ -86,7 +86,7 @@ namespace Jamgine
 				return;
 			}
 		}
-
+		
 		switch (p_type)
 		{
 		case(ResourceType::RAW) :
@@ -139,11 +139,10 @@ namespace Jamgine
 
 	void* JWinResourceManager::LoadTexture(std::string p_package, std::string p_fileName, StackAllocator* p_stack, JPackageHandler* p_handler, size_t &p_size)
 	{
-		size_t size = 0;
-		std::istream* data = p_handler->ReadFile(p_package, p_fileName, size);
-		p_size = size;
+		size_t dataSize = 0;
+		std::istream* data = p_handler->ReadFile(p_package, p_fileName, dataSize);
+		p_size = dataSize;
 
-		size_t dataSize = size;
 		char* singleFrameMemory = m_singleFrameStack->Push<char>(dataSize, 1);
 		void* memoryPointer = nullptr;
 		if (singleFrameMemory == nullptr)
@@ -267,7 +266,8 @@ namespace Jamgine
 			if (i.second.refCount > 0)
 			{
 				tempRes = i.second;
-				tempRes.memoryAdress = m_TextureConverter->SwapData(i.second.memoryAdress, i.second.size, m_nextLevelMemory.Stack);
+				tempRes.memoryAdress = m_nextLevelMemory.Stack->Push<void>(i.second.size, 4);
+				memcpy(tempRes.memoryAdress, i.second.memoryAdress, i.second.size);
 				m_nextLevelMemory.Resource[i.first] = tempRes;
 			}
 			
