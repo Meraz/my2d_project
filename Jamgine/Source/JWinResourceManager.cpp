@@ -47,7 +47,6 @@ namespace Jamgine
 			tempRes.lifeType = p_params.lifeType;
 			size_t dataSize = 0;
 			std::istream* data = p_params.Handler->ReadFile(p_params.packagePath, p_params.filePath, dataSize);
-			tempRes.size = dataSize;
 			void* singleFrameMemory = frameStack->Push<void>(dataSize, 1);
 			void* memoryPointer = nullptr;
 			if (singleFrameMemory == nullptr)
@@ -59,7 +58,7 @@ namespace Jamgine
 			else
 			{
 				data->read((char*)singleFrameMemory, dataSize);
-				memoryPointer = textureConverter->Convert(singleFrameMemory, dataSize, p_params.Stack);
+				memoryPointer = textureConverter->Convert(singleFrameMemory, dataSize, p_params.Stack, tempRes.size);
 				if (memoryPointer == nullptr)
 				{
 					//No more memory, write to logg

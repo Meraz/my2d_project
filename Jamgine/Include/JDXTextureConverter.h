@@ -11,7 +11,7 @@ namespace Jamgine
 		JDXTextureConverter(ID3D11Device* p_device);
 		~JDXTextureConverter();
 
-		void* Convert(void* p_data, unsigned int p_size, StackAllocator* p_stack) override;
+		void* Convert(void* p_data, unsigned int p_size, StackAllocator* p_stack, size_t &p_sizeOut) override;
 	private:
 		ID3D11Device* m_device;
 		std::atomic_flag m_lock;
