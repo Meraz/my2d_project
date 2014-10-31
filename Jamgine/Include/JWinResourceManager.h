@@ -60,6 +60,7 @@ namespace Jamgine
 		virtual ~JWinResourceManager();
 		void Init(unsigned p_globalMemory, unsigned p_levelMemory, unsigned p_eventMemory) override;
 		void LoadResource(std::string p_package, LifeTime p_lifeTime, std::string p_fileName, ResourceType p_type) override;
+		void LoadResource(std::string p_package, LifeTime p_lifeTime, std::string p_identifier, unsigned p_point, size_t p_size) override;
 		void* GetResource(std::string p_guid, LifeTime p_lifeTime) override;
 		void FreeResources(LifeTime p_lifeTime, Marker p_marker) override;
 		void WipeResourceStack(LifeTime p_lifeTime) override;

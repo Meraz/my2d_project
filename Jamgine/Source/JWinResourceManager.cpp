@@ -187,7 +187,63 @@ namespace Jamgine
 		
 	}
 
-	
+	void JWinResourceManager::LoadResource(std::string p_package, LifeTime p_lifeTime, std::string p_identifier, unsigned p_point, size_t p_size)
+	{
+		JPackageHandler* packageHandler;
+
+		//Check if it's a .zip or .tejp file and attach the proper handler
+		std::size_t findTheDot = p_package.find(".");
+		std::string rightOfDot = &p_package[findTheDot];
+		if (strcmp(rightOfDot.c_str(), ".zip") == 0)
+			packageHandler = m_zipHandler;
+		else if (strcmp(rightOfDot.c_str(), ".tejp") == 0)
+			packageHandler = m_tejpHandler;
+
+
+		MemoryHandle* memory;
+
+		//get handle to the right memorystack, depending on scope for loaded asset
+		switch (p_lifeTime)
+		{
+		case Jamgine::LifeTime::GLOBAL:
+			memory = &m_gameMemory;
+			break;
+		case Jamgine::LifeTime::LEVEL:
+			memory = &m_nextLevelMemory;
+			break;
+		case Jamgine::LifeTime::EVENT:
+			memory = &m_eventMemory;
+			break;
+		default:
+			break;
+		}
+		//get hash from filename
+		size_t hash = m_asher(p_identifier);
+		if (memory->Resource.count(hash) == 1) //Asset already loaded
+		{
+			return;
+		}
+		if (p_lifeTime == Jamgine::LifeTime::LEVEL) //If levelscope and the asset is already loaded increase refCount
+		{
+			if (m_levelMemory.Resource.count(hash) == 1)
+			{
+				m_levelMemory.Resource[hash].refCount++;
+				return;
+			}
+		}
+
+		//Init threadparameters
+		ThreadParams params;
+		params.filePath = p_identifier;
+		params.packagePath = p_package;
+		params.Handler = packageHandler;
+		params.Stack = memory->Stack;
+		params.lifeType = p_lifeTime;
+
+		//Launch async load for the asset type
+		m_threadPool.push_back(std::async(LoadRaw, params));
+
+	}
 
 	void* JWinResourceManager::GetResource(std::string p_path, LifeTime p_lifeTime)
 	{
