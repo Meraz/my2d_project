@@ -6,6 +6,11 @@ namespace Jamgine
 	{
 		
 	}
+		
+	Texture2D::~Texture2D()
+	{
+
+	}	
 
 	ErrorMessage Texture2D::LoadTexture(ID3D11Device* p_device, std::string p_filePath)
 	{
@@ -21,10 +26,11 @@ namespace Jamgine
 		return J_OK;
 	}
 
-	Texture2D::~Texture2D()
+	ErrorMessage Texture2D::LoadTexture(void* p_memory)
 	{
-
-	}	
+		m_texture2D_SRV = static_cast<ID3D11ShaderResourceView*>(p_memory);
+		return J_OK;	// TODO
+	}
 
 	void* Texture2D::GetRawData()
 	{

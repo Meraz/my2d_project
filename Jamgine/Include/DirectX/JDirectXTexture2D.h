@@ -2,7 +2,6 @@
 
 #include <Jamgine/Include/Texture2DInterface.h>
 #include <Jamgine/Include/DDSTextureLoader/DDSTextureLoader.h>
-#include <Jamgine/Include/ErrorMessage.h>
 #include <string>
 
 namespace Jamgine
@@ -11,8 +10,10 @@ namespace Jamgine
 	{
 	public:
 		Texture2D();
-		ErrorMessage LoadTexture(ID3D11Device* p_device, std::string p_filepath);
 		virtual ~Texture2D();
+
+		ErrorMessage LoadTexture(ID3D11Device* p_device, std::string p_filepath);
+		ErrorMessage LoadTexture(void* p_memory) override;
 		virtual void* GetRawData();
 		ID3D11ShaderResourceView* GetShaderResourceView();
 	

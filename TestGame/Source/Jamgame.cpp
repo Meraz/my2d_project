@@ -91,7 +91,7 @@ int Jamgame::Run()
 
 void Jamgame::Update()
 {
-													// Convert from top left to topright origo
+													// Convert from top left to top right origo
 	m_sceneManager->Update(m_gameTimer->DeltaTime(), m_mousePositionX, (CLIENT_HEIGHT)-40 - m_mousePositionY, m_mouseClicked);
 	m_mouseClicked = false;
 }

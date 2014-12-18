@@ -1,26 +1,31 @@
 #include <TestGame/Include/Scene/GameScene.h>
+#include <Jamgine/Include/DirectX/JDirectXTexture2D.h>
 
+#include <Windows.h>
 // Definition of forward declaration
 #include <TestGame/Include/Entity/RenderEntity.h>
-#include <TestGame/Include/Sound/FMODHandler.h>
 
 // Custom lib include
 
 // c++ includes
 #include <fstream>
 
+#define GLOBALMEMORYSIZE 10000000
+#define LEVELMEMORYSIZE 10000000
+#define EVENTMEMORYSIZE 1000000
+
 GameScene::GameScene(float width, float height)
-	: m_quadTreeRootNode(nullptr)
+	:	m_quadTreeRootNode(nullptr),
+		m_currentLevel(nullptr)
 { 
-	m_renderEntities		= std::vector<RenderEntity*>();
+//	m_renderEntities		= std::vector<RenderEntity*>();
 	m_width = width;
 	m_height = height;
-
 }
 
 GameScene::~GameScene()
 {
-
+	delete m_currentLevel;
 }
 
 void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgine::JamgineEngine* p_engine)
@@ -28,43 +33,142 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	using namespace Jamgine;
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
+	m_engine->GetResourceManager()->Init(sizeof(int)* GLOBALMEMORYSIZE, sizeof(int)* LEVELMEMORYSIZE, sizeof(int)* EVENTMEMORYSIZE);
 
-	Jamgine::Texture2DInterface* a;
-	m_engine->LoadTexture(&a, "Alpha.dds");
-	for (unsigned int i = 0; i < 2; i++)
-	{
-		m_renderEntities.push_back(new RenderEntity());
 
-	}
-	{
-		m_renderEntities.at(1)->Initialize(Jamgine::Rectangle(-50.0f, -50.0f, 100.0f, 100.0f), a, m_engine);
-		m_renderEntities.at(0)->Initialize(Jamgine::Rectangle(0.0f, 0.0f, 400.0f, 400.0f), a, m_engine);
-	//	m_renderEntities.at(1)->Initialize(Jamgine::Rectangle(100.0f, 100.0f, 800.0f, 800.0f), a, m_engine);
-	//	m_renderEntities.at(2)->Initialize(Jamgine::Rectangle(200.0f, 200.0f, 800.0f, 800.0f), a, m_engine);
-	//	m_renderEntities.at(3)->Initialize(Jamgine::Rectangle(300.0f, 300.0f, 800.0f, 800.0f), a, m_engine);
+	m_currentLevelNumber = 0;
+	std::string name = "pow.dds";
 
-		
-	}
+	m_engine->GetResourceManager()->LoadResource("Multi.zip", Jamgine::LifeTime::EVENT, name, Jamgine::ResourceType::TEXTURE); //load event entity textures
+
+	name = "Player.dds";
+
+	m_engine->GetResourceManager()->LoadResource("Multi.zip", Jamgine::LifeTime::GLOBAL, name, Jamgine::ResourceType::TEXTURE); //Load player texture
+
+	m_currentLevel = new Level(m_engine->GetResourceManager(), m_engine); //load first level to nextlevelbuffer
+	m_engine->GetResourceManager()->SwapLevelBuffers();					//Swap level and nextlevel buffers
+	m_nextLevel = new Level(m_engine->GetResourceManager(), m_engine); // load second level to nextlevelbuffer
+	m_currentLevel->Init(m_currentLevelNumber++);					//Initialise first level
+
+	InitGlobalStuff(); //Init globalmemory, currently only player
+
+}
+
+void GameScene::InitGlobalStuff()
+{
+	m_playerEntity = new RenderEntity();
+	Texture2DInterface* aTexture = new Texture2D();
+	std::string playerName = "Player.dds";
+
+	aTexture->LoadTexture(m_engine->GetResourceManager()->GetResource(playerName, Jamgine::LifeTime::GLOBAL));
+	m_playerEntity->Initialize(Jamgine::Rectangle(-35.0f, -35.0f, 75.0f, 75.0f), aTexture, m_engine);
 }
 
 void GameScene::Update(double p_deltaTime, float p_mousePositionX, float p_mousePositionY, bool p_lMouseClicked)
 {
-	for (unsigned int i = 0; i < m_renderEntities.size(); ++i)
+	//Change between levels
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
-		//m_renderEntities.at(i)->Update(p_deltaTime);
+		if (m_nextButtonWasClicked == false)
+		{
+			delete m_currentLevel;
+			m_currentLevel = m_nextLevel;
+			m_engine->GetResourceManager()->SwapLevelBuffers();
+			m_currentLevel->Init(m_currentLevelNumber++);
+			m_nextLevel = new Level(m_engine->GetResourceManager(), m_engine);
+		}
+		m_nextButtonWasClicked = true;
 	}
-}
+	else
+	{
+		m_nextButtonWasClicked = false;
+	}
 
+	//spawn entities to event
+	float eventTime = 1.0f;
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		if (m_eventButtonClicked == false)
+		{
+			StartEvent();
+			m_eventTimer = eventTime;
+		}
+		m_eventButtonClicked = true;
+	}
+	else
+	{
+		m_eventButtonClicked = false;
+		if (m_eventTimer >= 0.0f)
+		{
+			m_eventTimer -= p_deltaTime;
+			if (m_eventTimer <= 0.0f)
+			{
+				for (auto i : m_eventities)
+				{
+					delete i;
+				}
+				m_eventities.clear();
+				m_engine->GetResourceManager()->WipeResourceStack(Jamgine::LifeTime::EVENT);
+			}
+		}
+	}
+	for (auto i : m_eventities) //update event entities
+	{
+		int test = rand();
+		if (test%4 == 0)
+			i->m_rectangle.position.x += 200.0f * p_deltaTime;
+		else if (test%4 == 1)
+			i->m_rectangle.position.x -= 200.0f * p_deltaTime;
+		else if (test % 4 == 2)
+			i->m_rectangle.position.y += 200.0f * p_deltaTime;
+		else if (test % 4 == 3)
+			i->m_rectangle.position.y -= 200.0f * p_deltaTime;
+	}
+		
+	
+	//Player update
+	float speed = 500.0f;
+	if (GetAsyncKeyState('W') & 0x8000)
+	{
+		m_playerEntity->m_rectangle.position.y += speed*p_deltaTime;
+	}
+	if (GetAsyncKeyState('A') & 0x8000)
+	{
+		m_playerEntity->m_rectangle.position.x -= speed*p_deltaTime;
+	}
+	if (GetAsyncKeyState('S') & 0x8000)
+	{
+		m_playerEntity->m_rectangle.position.y -= speed*p_deltaTime;
+	}
+	if (GetAsyncKeyState('D') & 0x8000)
+	{
+		m_playerEntity->m_rectangle.position.x += speed*p_deltaTime;
+	}
+	m_currentLevel->Update(p_deltaTime);
+}
 
 void GameScene::Render()
 {
-	for (unsigned int i = 0; i < m_renderEntities.size(); ++i)
+	for (auto i : m_eventities)
 	{
-		m_renderEntities.at(i)->Render();
+		i->Render();
 	}
+	m_playerEntity->Render();
+	m_currentLevel->Render();
 	m_engine->PostRender();
 }
 
+void GameScene::StartEvent()
+{
+	//In a different scenario the eventstack should maybe be cleared here instead of at time intervalls
+	
+	std::string name = "pow.dds";
+	RenderEntity* temp = new RenderEntity();
+	Texture2DInterface* aTexture = new Texture2D();
+	aTexture->LoadTexture(m_engine->GetResourceManager()->GetResource(name, Jamgine::LifeTime::EVENT));
+	temp->Initialize(Jamgine::Rectangle(m_playerEntity->m_rectangle.position.x, m_playerEntity->m_rectangle.position.y, 75.0f, 75.0f), aTexture, m_engine);
+	m_eventities.push_back(temp); //Might be leak here
+}
 
 void GameScene::SaveCurrentSetup(char* p_fileName)
 {

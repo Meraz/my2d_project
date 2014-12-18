@@ -1,6 +1,7 @@
 #pragma once
 
 #include <TestGame/Include/Scene/BaseScene.h>
+#include <TestGame/Include/Level.h>
 
 class RenderEntity;
 class Node;
@@ -25,7 +26,13 @@ private:
 	void SaveCurrentSetup(char* p_filename);
 	void LoadCurrentSetup(char* p_filename);
 
-	RenderEntity* playerEntity;
+	void InitGlobalStuff();
+	void StartEvent();
+	RenderEntity* m_playerEntity;
+
+	bool m_eventButtonClicked;
+	float m_eventTimer;
+	std::vector<RenderEntity*> m_eventities;
 	
 	void CheckCollision();
 	void CreateObject(int l_entity, char* l_data);
@@ -37,4 +44,10 @@ private:
 	int m_life;
 	
 	Node* m_quadTreeRootNode;
+
+	Level* m_currentLevel;
+	Level* m_nextLevel;
+	
+	bool m_nextButtonWasClicked;
+	int m_currentLevelNumber;
 };
