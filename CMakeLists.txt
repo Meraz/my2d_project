@@ -44,9 +44,3 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Add subdirectories
 add_subdirectory(Jamgine)
 add_subdirectory(TestGame)
-
-# ziplib, lazy include. Could pack em in one folder etc etc
-add_subdirectory(ZipLib)
-add_subdirectory(bzip2)
-add_subdirectory(lzma)
-add_subdirectory(zlib)

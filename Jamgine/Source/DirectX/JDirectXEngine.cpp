@@ -63,9 +63,7 @@ namespace Jamgine
 				m_pixelShader(nullptr),
 				m_geometryShader(nullptr),
 				m_inputLayout(nullptr),
-				m_singleFrameStack(nullptr),
-				m_resourceManager(nullptr),
-				m_textureConverter(nullptr)
+				m_singleFrameStack(nullptr)
 		{
 			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
 
@@ -495,10 +493,6 @@ namespace Jamgine
 			HRESULT l_hr = S_OK;
 
 			m_singleFrameStack = new SingleFrameStack(sizeof(Vertex)* 10000, false); // TODO, fix hardcoded size
-			
-			m_resourceManager = new JWinResourceManager();
-			m_textureConverter = new JDXTextureConverter(m_device);
-			m_resourceManager->AttachTextureConverter(m_textureConverter);
 
 			return l_hr;
 		}
@@ -532,6 +526,7 @@ namespace Jamgine
 		{
 			m_renderData.push_back(p_spriteData);
 		}
+
 		void DirectXEngine::PostRender()
 		{
 			int max = m_renderData.size() - 1;
@@ -539,19 +534,20 @@ namespace Jamgine
 			{
 				m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 				m_deviceContext->ClearRenderTargetView(m_backBuffer_RTV, DirectX::Colors::Gray);
-				m_swapChain->Present(0, 0);
-				return; // DO NOTHING
+				m_swapChain->Present(0, 0);			// if this exists inside an if-statement, it could be used to pause the game without the need to keep rendering anything
+				return; // return, there's nothing to do
 			}				
 
 			// Sort sprites after textures
-			SortSprites();		
+			SortSprites();					// TODO Use a bucketsort/double linked list to sort. Sort on depth/texture and put thoose in a linked node list. 
+																								//	if any of the same depth/texture appears, put them in a list the other way (think 2d)
 			
 			// Do it once before loop to acquire first memory adress
 			Vertex* l_firstMemorySpace = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 4);
 			*l_firstMemorySpace = Vertex(m_renderData[0]);
 			for (int i = 1; i < max + 1; i++)
 			{
-				Vertex* aName = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 0);
+				Vertex* aName = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 0);			// TODO name
 				*aName = Vertex(m_renderData[i]);
 			}
 
@@ -572,7 +568,7 @@ namespace Jamgine
 					l_amount++;
 				else
 				{
-					ID3D11ShaderResourceView* a = dynamic_cast<Texture2D*>(m_renderData[i].texture)->GetShaderResourceView();	// change name
+					ID3D11ShaderResourceView* a = dynamic_cast<Texture2D*>(m_renderData[i].texture)->GetShaderResourceView();	// TODO change name
 					m_deviceContext->PSSetShaderResources(0, 1, &a);
 
 					m_deviceContext->Draw(l_amount,l_currentIndex);
@@ -580,7 +576,7 @@ namespace Jamgine
 					l_amount = 1;
 				}	
 			}
-			ID3D11ShaderResourceView* b = dynamic_cast<Texture2D*>(m_renderData[l_currentIndex].texture)->GetShaderResourceView();	// change name
+			ID3D11ShaderResourceView* b = dynamic_cast<Texture2D*>(m_renderData[l_currentIndex].texture)->GetShaderResourceView();	// TODO change name
 			m_deviceContext->PSSetShaderResources(0, 1, &b);
 			m_deviceContext->Draw(l_amount, l_currentIndex);	
 
@@ -664,11 +660,6 @@ namespace Jamgine
 			}
 			std::sort(m_renderData.begin(), m_renderData.begin() + transparentStart, &SortTextureAlgorithm);
 			std::sort(m_renderData.begin() + transparentStart, m_renderData.end(), &SortDepthAlgorithm);
-		}
-
-		JResourceManager* DirectXEngine::GetResourceManager() 
-		{
-			return m_resourceManager;
 		}
 	}
 }

@@ -77,8 +77,7 @@ namespace Jamgine {
 			mDefaultUp = mUp;
 			mLook = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 			mDefaultLook = mLook;
-
-
+			
 			XMStoreFloat4x4(&m_view, XMMatrixIdentity());
 			XMStoreFloat4x4(&m_proj, XMMatrixIdentity());
 			setLens(3.1415f/4.0f, 1.0f, 1.0f, 10000.0f );

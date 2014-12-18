@@ -35,9 +35,6 @@ namespace Jamgine
 		// This function is called once per draw, this call actually renders the sprites to the backbuffer.
 		virtual void PostRender() = 0;
 
-		// Create a resourcemananger
-		virtual JResourceManager* GetResourceManager() = 0;
-
 	private:
 		static JamgineEngine* m_jamgineEngine;		
 	

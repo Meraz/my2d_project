@@ -1,4 +1,3 @@
-#include <ziplib/ZipFile.h>
 #include <TestGame/Include/Jamgame.h>
 #if defined(WIN32) && !defined(UNIX)
 /* Do windows stuff */
