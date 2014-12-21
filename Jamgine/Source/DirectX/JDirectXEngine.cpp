@@ -10,12 +10,12 @@
 #include <Jamgine/Include/DirectX/JDirectXDataSend.h>
 #include <Jamgine/Include/DirectX/JDirectXCamera.h>
 #include <DirectXMath.h>
+#include <Jamgine/Include/DirectX/Node.h>
 
 namespace Jamgine
 {
 	namespace JDirectX
-	{		
-	
+	{			
 		struct Vertex
 		{
 			DirectX::XMFLOAT3 position;
@@ -63,14 +63,14 @@ namespace Jamgine
 				m_pixelShader(nullptr),
 				m_geometryShader(nullptr),
 				m_inputLayout(nullptr),
-				m_singleFrameStack(nullptr)
+				m_vertexDataStack(nullptr),
+				m_nodeStack(nullptr),
+				m_memoryStack(nullptr)
 		{
 			DirectX::XMStoreFloat4x4(&m_view, DirectX::XMMatrixIdentity());
 
 			m_camera = new JDirectXCamera();
 			m_camera->rebuildView();
-			//	DirectX::XMStoreFloat4x4(&aStruct.m_proj, DirectX::XMMatrixOrthographicLH(m_clientWidth, m_clientHeight, 0.5f, 2000.0f));
-
 		}
 
 		DirectXEngine::~DirectXEngine()
@@ -492,7 +492,9 @@ namespace Jamgine
 		{
 			HRESULT l_hr = S_OK;
 
-			m_singleFrameStack = new SingleFrameStack(sizeof(Vertex)* 10000, false); // TODO, fix hardcoded size
+			m_vertexDataStack = new SingleFrameStack(sizeof(Vertex)* 5000); // TODO, fix hardcoded size
+			//m_nodeStack = new SingleFrameStack(sizeof(Jamgine::Node)* 5000); // TODO, fix hardcoded size
+			//m_memoryStack
 
 			return l_hr;
 		}
@@ -543,11 +545,11 @@ namespace Jamgine
 																								//	if any of the same depth/texture appears, put them in a list the other way (think 2d)
 			
 			// Do it once before loop to acquire first memory adress
-			Vertex* l_firstMemorySpace = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 4);
+			Vertex* l_firstMemorySpace = m_vertexDataStack->Push<Vertex>(sizeof(Vertex), 4);
 			*l_firstMemorySpace = Vertex(m_renderData[0]);
 			for (int i = 1; i < max + 1; i++)
 			{
-				Vertex* aName = m_singleFrameStack->Push<Vertex>(sizeof(Vertex), 0);			// TODO name
+				Vertex* aName = m_vertexDataStack->Push<Vertex>(sizeof(Vertex), 0);			// TODO name
 				*aName = Vertex(m_renderData[i]);
 			}
 
@@ -582,7 +584,7 @@ namespace Jamgine
 
 			m_swapChain->Present(0, 0);
 			m_renderData.clear();
-			m_singleFrameStack->Wipe();
+			m_vertexDataStack->Wipe();
 		}
 
 		void DirectXEngine::updateCameraMatrix()

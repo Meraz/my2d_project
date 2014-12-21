@@ -7,6 +7,7 @@
 namespace Jamgine
 {
 	#define STANDARD_SPRITE_DEPTH 0.5f
+
 	struct SpriteData
 	{
 		Rectangle rectangle;
@@ -117,7 +118,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = Rectangle(p_position, p_width, p_height);
-			origin = JFloat2(0.0f, 0.0f);
+			origin = JFloat2();
 			subTexture = p_subTexture;
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;
@@ -135,7 +136,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = p_rectangle;
-			origin = JFloat2(0.0f, 0.0f);
+			origin = JFloat2();
 			subTexture = p_subTexture;
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;

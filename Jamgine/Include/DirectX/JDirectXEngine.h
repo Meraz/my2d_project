@@ -12,12 +12,15 @@
 #include <Jamgine/Include/DirectX/JDirectXTexture2DManager.h>
 #include <Jamgine/Include/Shader/ShaderLoader.h>
 #include <Jamgine/Include/MemoryAllocator/SingleFrameStack.h>
+#include <Jamgine/Include/MemoryAllocator/MemoryStack.h>
+
 
 namespace Jamgine
 {
 	namespace JDirectX
 	{
 		struct SpriteData;
+		struct Node;
 		struct CameraMatrix
 		{
 			DirectX::XMFLOAT4X4 m_view;
@@ -114,7 +117,9 @@ namespace Jamgine
 			CameraMatrix m_cameraMatrix;
 
 			// Memory stuff
-			SingleFrameStack* m_singleFrameStack;
+			SingleFrameStack* m_vertexDataStack;
+			SingleFrameStack* m_nodeStack;
+			MemoryStack* m_memoryStack;
 		};
 	}
 }
