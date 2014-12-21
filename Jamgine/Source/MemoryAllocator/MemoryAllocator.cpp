@@ -14,4 +14,3 @@ StackAllocator* MemoryAllocator::CreateStack(unsigned int p_stacksize, bool p_sh
 {
 	return new StackAllocator(p_stacksize, p_shared);
 }
-

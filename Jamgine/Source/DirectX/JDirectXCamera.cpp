@@ -1,7 +1,5 @@
 #include <Jamgine/Include/DirectX/JDirectXCamera.h>
 
-
-
 using namespace DirectX;
 
 XMFLOAT4 operator*(const XMFLOAT4 &l, const XMFLOAT4 &r)

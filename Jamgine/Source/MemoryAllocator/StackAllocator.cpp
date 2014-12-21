@@ -11,9 +11,7 @@ StackAllocator::StackAllocator(unsigned p_stacksize, bool p_shared)
 	m_lock.clear();
 	m_shared = p_shared;
 	m_currentMarker = m_current;
-
 }
-
 
 StackAllocator::~StackAllocator()
 {

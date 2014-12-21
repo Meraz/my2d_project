@@ -1,7 +1,6 @@
 #include "Jamgine\Include\MemoryAllocator\SingleFrameStack.h"
 #include <stdlib.h>
 
-
 SingleFrameStack::SingleFrameStack(unsigned p_stacksize, bool p_shared)
 {
 	m_size = p_stacksize;

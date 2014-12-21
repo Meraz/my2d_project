@@ -48,7 +48,6 @@ HRESULT ShaderLoader::CreateVertexShaderWithInputLayout(WCHAR* fileName,
     return hr;
 }
 
-
 HRESULT ShaderLoader::CreateHullShader(WCHAR* fileName, LPCSTR entryPoint, LPCSTR shaderModel, ID3D11Device* device, ID3D11HullShader** shaderOut)
 {
 	HRESULT hr = S_OK;
@@ -183,8 +182,6 @@ HRESULT ShaderLoader::CreateComputeShader(WCHAR* fileName, LPCSTR entryPoint, LP
 
 	return hr;
 }
-
-
 
 HRESULT ShaderLoader::CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut )
 {

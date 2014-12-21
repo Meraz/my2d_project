@@ -31,7 +31,5 @@ namespace Jamgine
 			I så fall returneras en pekare till dne redan inladdade texturen
 			annars så laddas texturen in och en pekare returneras till den nyinladdade texturen.
 		*/
-
-
 	};
 }
