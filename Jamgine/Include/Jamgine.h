@@ -26,8 +26,8 @@ namespace Jamgine
 
 		virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture) = 0;
 		virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture, float p_depth) = 0;
-		virtual	void Render(Point p_position, float p_width, float p_height, Texture2D* p_texture) = 0;
-		virtual	void Render(Point p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth) = 0;
+		virtual	void Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture) = 0;
+		virtual	void Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth) = 0;
 
 		// Render with a pre-filled SpriteData struct
 		virtual void Render(Jamgine::SpriteData p_spriteData) = 0;

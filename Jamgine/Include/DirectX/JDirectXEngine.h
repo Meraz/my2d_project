@@ -36,8 +36,8 @@ namespace Jamgine
 			
 			virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture) override;
 			virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture, float p_depth) override;
-			virtual	void Render(Point p_position, float p_width, float p_height, Texture2D* p_texture) override;
-			virtual	void Render(Point p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth) override;
+			virtual	void Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture) override;
+			virtual	void Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth) override;
 
 			// Render with a pre-filled SpriteData struct
 			virtual void Render(Jamgine::SpriteData p_spriteData) override;

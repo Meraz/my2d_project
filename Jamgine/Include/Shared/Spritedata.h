@@ -10,7 +10,7 @@ namespace Jamgine
 	struct SpriteData
 	{
 		Rectangle rectangle;
-		Point origin;
+		JFloat2 origin;
 		Rectangle subTexture;
 		Texture2D* texture;
 		SpriteEffect spriteEffect;
@@ -20,10 +20,10 @@ namespace Jamgine
 
 		// All variables, but no rectangle
 		SpriteData(
-			Point p_position,
+			JFloat2 p_position,
 			float p_width,
 			float p_height,
-			Point p_origin,
+			JFloat2 p_origin,
 			Rectangle p_subTexture,
 			Texture2D* p_texture,
 			SpriteEffect p_spriteEffect,
@@ -45,7 +45,7 @@ namespace Jamgine
 		// All variables, with rectangle
 		SpriteData(
 			Rectangle p_rectangle,
-			Point p_origin,
+			JFloat2 p_origin,
 			Rectangle p_subTexture,
 			Texture2D* p_texture,
 			SpriteEffect p_spriteEffect,
@@ -67,10 +67,10 @@ namespace Jamgine
 		// Without flip or transparant, without rectangle
 		SpriteData
 			(
-			Point p_position,
+			JFloat2 p_position,
 			float p_width,
 			float p_height,
-			Point p_origin,
+			JFloat2 p_origin,
 			Rectangle p_subTexture,
 			Texture2D* p_texture,
 			float p_depth,
@@ -90,7 +90,7 @@ namespace Jamgine
 		SpriteData
 			(
 			Rectangle p_rectangle, 
-			Point p_origin,
+			JFloat2 p_origin,
 			Rectangle p_subTexture,
 			Texture2D* p_texture,
 			float p_depth,
@@ -108,7 +108,7 @@ namespace Jamgine
 
 		// without flip and origin, without rectangle
 		SpriteData(
-			Point p_position,
+			JFloat2 p_position,
 			float p_width,
 			float p_height,
 			Rectangle p_subTexture,
@@ -117,7 +117,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = Rectangle(p_position, p_width, p_height);
-			origin = Point(0, 0);
+			origin = JFloat2(0.0f, 0.0f);
 			subTexture = p_subTexture;
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;
@@ -135,7 +135,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = p_rectangle;
-			origin = Point(0, 0);
+			origin = JFloat2(0.0f, 0.0f);
 			subTexture = p_subTexture;
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;
@@ -146,7 +146,7 @@ namespace Jamgine
 		
 		// Without origin and rotation, without rectangle
 		SpriteData(
-			Point p_position,
+			JFloat2 p_position,
 			float p_width,
 			float p_height,
 			Rectangle p_subTexture,
@@ -156,7 +156,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = Rectangle(p_position, p_width, p_height);
-			origin = Point(0, 0);
+			origin = JFloat2(0, 0);
 			subTexture = p_subTexture;
 			texture = p_texture;
 			spriteEffect = p_spriteEffect;
@@ -175,7 +175,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = p_rectangle;
-			origin = Point(0, 0);
+			origin = JFloat2();
 			subTexture = p_subTexture;
 			texture = p_texture;
 			spriteEffect = p_spriteEffect;
@@ -186,14 +186,14 @@ namespace Jamgine
 
 		// As small as possible, but no rectangle
 		SpriteData(
-			Point p_position,
+			JFloat2 p_position,
 			float p_width,
 			float p_height,
 			Texture2D* p_texture
 			)
 		{
 			rectangle = Rectangle(p_position, p_width, p_height);
-			origin = Point(0, 0);
+			origin = JFloat2();
 			subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;
@@ -209,7 +209,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = p_rectangle;
-			origin = Point(0, 0);
+			origin = JFloat2();
 			subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;
@@ -220,7 +220,7 @@ namespace Jamgine
 		
 		// As small as possible with depth, but no rectangle
 		SpriteData(
-			Point p_position,
+			JFloat2 p_position,
 			float p_width,
 			float p_height,
 			Texture2D* p_texture,
@@ -228,7 +228,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = Rectangle(p_position, p_width, p_height);
-			origin = Point(0, 0);
+			origin = JFloat2();
 			subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;
@@ -245,7 +245,7 @@ namespace Jamgine
 			)
 		{
 			rectangle = p_rectangle;
-			origin = Point(0, 0);
+			origin = JFloat2();
 			subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);	// Entire texture
 			texture = p_texture;
 			spriteEffect = SpriteEffect::FLIP_NONE;

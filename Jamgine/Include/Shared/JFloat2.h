@@ -4,44 +4,44 @@
 
 namespace Jamgine
 {
-	struct Point
+	struct JFloat2
 	{
 		float x;
 		float y;
 
-		Point() : x(0), y(0) {}
-		Point(float _x, float _y) : x(_x), y(_y) {}
-		Point(const Point& _vector) : x(_vector.x), y(_vector.y) {};
+		JFloat2() : x(0), y(0) {}
+		JFloat2(float _x, float _y) : x(_x), y(_y) {}
+		JFloat2(const JFloat2& _vector) : x(_vector.x), y(_vector.y) {};
 
-		Point& operator+(Point p_position)
+		JFloat2& operator+(JFloat2 p_position)
 		{
 			x += p_position.x;
 			y += p_position.y;
 			return *this;
 		}
 
-		Point& operator-(Point p_position)
+		JFloat2& operator-(JFloat2 p_position)
 		{
 			x -= p_position.x;
 			y -= p_position.y;
 			return *this;
 		}
 
-		Point& operator-=(Point p_position)
+		JFloat2& operator-=(JFloat2 p_position)
 		{
 			x -= p_position.x;
 			y -= p_position.y;
 			return *this;
 		}
 
-		Point& operator+=(Point p_position)
+		JFloat2& operator+=(JFloat2 p_position)
 		{
 			x += p_position.x;
 			y += p_position.y;
 			return *this;
 		}
 
-		Point& operator=(const Point& p_position)
+		JFloat2& operator=(const JFloat2& p_position)
 		{
 			x = p_position.x;
 			y = p_position.y;

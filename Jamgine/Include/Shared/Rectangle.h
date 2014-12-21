@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Jamgine/Include/Shared/Point.h>
+#include <Jamgine/Include/Shared/JFloat2.h>
 
 namespace Jamgine
 {
 	struct Rectangle
 	{
-		Point position;
+		JFloat2 position;
 		float width;
 		float height;
 
@@ -16,7 +16,7 @@ namespace Jamgine
 	
 		};
 
-		Rectangle(Point p_position, float p_width, float p_height)
+		Rectangle(JFloat2 p_position, float p_width, float p_height)
 			: position(p_position), width(p_width), height(p_height)
 		{
 	

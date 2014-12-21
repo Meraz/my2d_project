@@ -512,12 +512,12 @@ namespace Jamgine
 			m_renderData.push_back(Jamgine::SpriteData(p_rectangle, p_texture, p_depth));
 		}
 
-		void DirectXEngine::Render(Point p_position, float p_width, float p_height, Texture2D* p_texture)
+		void DirectXEngine::Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture)
 		{
 			m_renderData.push_back(Jamgine::SpriteData(p_position,p_width, p_height, p_texture));
 		}
 
-		void DirectXEngine::Render(Point p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth)
+		void DirectXEngine::Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth)
 		{
 			m_renderData.push_back(Jamgine::SpriteData(p_position, p_width, p_height, p_texture, p_depth));
 		}
