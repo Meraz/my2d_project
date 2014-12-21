@@ -118,7 +118,7 @@ namespace Jamgine
 				return J_FAIL; 
 
 			// Create texturemanger
-			l_errorMessage = Texture2DManager::CreateTexture2DManager(&m_texture2DManager);
+			l_errorMessage = JDirectXTexture2DManager::CreateTexture2DManager(&m_texture2DManager);
 			m_texture2DManager->Initialize(m_device);
 			if(l_errorMessage != J_OK)
 				return J_FAIL; 
@@ -497,27 +497,27 @@ namespace Jamgine
 			return l_hr;
 		}
 
-		ErrorMessage DirectXEngine::LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath)
+		ErrorMessage DirectXEngine::LoadTexture(Texture2D** p_texture, char* p_filePath)
 		{
-			return m_texture2DManager->GetTexture(p_texture2DInterface, p_filePath);
+			return m_texture2DManager->GetTexture(p_texture, p_filePath);
 		}
 	
-		void DirectXEngine::Render(Rectangle p_rectangle, Texture2DInterface* p_texture)
+		void DirectXEngine::Render(Rectangle p_rectangle, Texture2D* p_texture)
 		{
 			m_renderData.push_back(Jamgine::SpriteData(p_rectangle, p_texture));
 		}
 		
-		void DirectXEngine::Render(Rectangle p_rectangle, Texture2DInterface* p_texture, float p_depth)
+		void DirectXEngine::Render(Rectangle p_rectangle, Texture2D* p_texture, float p_depth)
 		{
 			m_renderData.push_back(Jamgine::SpriteData(p_rectangle, p_texture, p_depth));
 		}
 
-		void DirectXEngine::Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture)
+		void DirectXEngine::Render(Point p_position, float p_width, float p_height, Texture2D* p_texture)
 		{
 			m_renderData.push_back(Jamgine::SpriteData(p_position,p_width, p_height, p_texture));
 		}
 
-		void DirectXEngine::Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture, float p_depth)
+		void DirectXEngine::Render(Point p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth)
 		{
 			m_renderData.push_back(Jamgine::SpriteData(p_position, p_width, p_height, p_texture, p_depth));
 		}
@@ -568,7 +568,7 @@ namespace Jamgine
 					l_amount++;
 				else
 				{
-					ID3D11ShaderResourceView* a = dynamic_cast<Texture2D*>(m_renderData[i].texture)->GetShaderResourceView();	// TODO change name
+					ID3D11ShaderResourceView* a = dynamic_cast<JDirectXTexture2D*>(m_renderData[i].texture)->GetShaderResourceView();	// TODO change name
 					m_deviceContext->PSSetShaderResources(0, 1, &a);
 
 					m_deviceContext->Draw(l_amount,l_currentIndex);
@@ -576,7 +576,7 @@ namespace Jamgine
 					l_amount = 1;
 				}	
 			}
-			ID3D11ShaderResourceView* b = dynamic_cast<Texture2D*>(m_renderData[l_currentIndex].texture)->GetShaderResourceView();	// TODO change name
+			ID3D11ShaderResourceView* b = dynamic_cast<JDirectXTexture2D*>(m_renderData[l_currentIndex].texture)->GetShaderResourceView();	// TODO change name
 			m_deviceContext->PSSetShaderResources(0, 1, &b);
 			m_deviceContext->Draw(l_amount, l_currentIndex);	
 

@@ -26,7 +26,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
 
-	Jamgine::Texture2DInterface* a;
+	Jamgine::Texture2D* a;
 	m_engine->LoadTexture(&a, "Alpha.dds");
 	for (unsigned int i = 0; i < 2; i++)
 	{

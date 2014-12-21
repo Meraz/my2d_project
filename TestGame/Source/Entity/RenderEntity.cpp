@@ -113,14 +113,14 @@ void RenderEntity::Initialize(Point p_position, float p_width, float p_height, b
 		);
 }
 
-void RenderEntity::Initialize(Jamgine::Rectangle p_rectangle, Texture2DInterface* p_texture, Jamgine::JamgineEngine* p_engine)
+void RenderEntity::Initialize(Jamgine::Rectangle p_rectangle, Texture2D* p_texture, Jamgine::JamgineEngine* p_engine)
 {
 	m_rectangle = p_rectangle;
 	m_texture = p_texture;
 	m_engine = p_engine;
 }
 
-void RenderEntity::SetTexture(Texture2DInterface* p_texture)
+void RenderEntity::SetTexture(Texture2D* p_texture)
 {
 	m_texture = p_texture;
 }

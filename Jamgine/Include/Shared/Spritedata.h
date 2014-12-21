@@ -2,7 +2,7 @@
 
 #include <Jamgine/Include/Shared/Rectangle.h>
 #include <Jamgine/Include/Shared/SpriteEffect.h>
-#include <Jamgine/Include/Texture2DInterface.h>
+#include <Jamgine/Include/Texture2D.h>
 
 namespace Jamgine
 {
@@ -12,7 +12,7 @@ namespace Jamgine
 		Rectangle rectangle;
 		Point origin;
 		Rectangle subTexture;
-		Texture2DInterface* texture;
+		Texture2D* texture;
 		SpriteEffect spriteEffect;
 		float depth;
 		float rotation;
@@ -25,7 +25,7 @@ namespace Jamgine
 			float p_height,
 			Point p_origin,
 			Rectangle p_subTexture,
-			Texture2DInterface* p_texture,
+			Texture2D* p_texture,
 			SpriteEffect p_spriteEffect,
 			float p_depth,
 			float p_rotation,
@@ -47,7 +47,7 @@ namespace Jamgine
 			Rectangle p_rectangle,
 			Point p_origin,
 			Rectangle p_subTexture,
-			Texture2DInterface* p_texture,
+			Texture2D* p_texture,
 			SpriteEffect p_spriteEffect,
 			float p_depth,
 			float p_rotation,
@@ -72,7 +72,7 @@ namespace Jamgine
 			float p_height,
 			Point p_origin,
 			Rectangle p_subTexture,
-			Texture2DInterface* p_texture,
+			Texture2D* p_texture,
 			float p_depth,
 			float p_rotation)
 		{
@@ -92,7 +92,7 @@ namespace Jamgine
 			Rectangle p_rectangle, 
 			Point p_origin,
 			Rectangle p_subTexture,
-			Texture2DInterface* p_texture,
+			Texture2D* p_texture,
 			float p_depth,
 			float p_rotation)
 		{
@@ -112,7 +112,7 @@ namespace Jamgine
 			float p_width,
 			float p_height,
 			Rectangle p_subTexture,
-			Texture2DInterface* p_texture,
+			Texture2D* p_texture,
 			float p_depth
 			)
 		{
@@ -130,7 +130,7 @@ namespace Jamgine
 		SpriteData(
 			Rectangle p_rectangle,
 			Rectangle p_subTexture,
-			Texture2DInterface* p_texture,
+			Texture2D* p_texture,
 			float p_depth
 			)
 		{
@@ -150,7 +150,7 @@ namespace Jamgine
 			float p_width,
 			float p_height,
 			Rectangle p_subTexture,
-			Texture2DInterface* p_texture,
+			Texture2D* p_texture,
 			SpriteEffect p_spriteEffect,
 			float p_depth
 			)
@@ -169,7 +169,7 @@ namespace Jamgine
 		SpriteData(
 			Rectangle p_rectangle,
 			Rectangle p_subTexture,
-			Texture2DInterface* p_texture,
+			Texture2D* p_texture,
 			SpriteEffect p_spriteEffect,
 			float p_depth
 			)
@@ -189,7 +189,7 @@ namespace Jamgine
 			Point p_position,
 			float p_width,
 			float p_height,
-			Texture2DInterface* p_texture
+			Texture2D* p_texture
 			)
 		{
 			rectangle = Rectangle(p_position, p_width, p_height);
@@ -202,10 +202,10 @@ namespace Jamgine
 			hasTransparent = false;
 		}
 
-	// As small as possible, but no rectangle
+		// As small as possible, but no rectangle
 		SpriteData(
 			Rectangle p_rectangle,
-			Texture2DInterface* p_texture
+			Texture2D* p_texture
 			)
 		{
 			rectangle = p_rectangle;
@@ -218,41 +218,40 @@ namespace Jamgine
 			hasTransparent = false;
 		}
 		
+		// As small as possible with depth, but no rectangle
+		SpriteData(
+			Point p_position,
+			float p_width,
+			float p_height,
+			Texture2D* p_texture,
+			float p_depth
+			)
+		{
+			rectangle = Rectangle(p_position, p_width, p_height);
+			origin = Point(0, 0);
+			subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
+			texture = p_texture;
+			spriteEffect = SpriteEffect::FLIP_NONE;
+			depth = p_depth;
+			rotation = 0;
+			hasTransparent = false;
+		}
 
-			// As small as possible with depth, but no rectangle
-			SpriteData(
-				Point p_position,
-				float p_width,
-				float p_height,
-				Texture2DInterface* p_texture,
-				float p_depth
-				)
-			{
-				rectangle = Rectangle(p_position, p_width, p_height);
-				origin = Point(0, 0);
-				subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
-				texture = p_texture;
-				spriteEffect = SpriteEffect::FLIP_NONE;
-				depth = p_depth;
-				rotation = 0;
-				hasTransparent = false;
-			}
-
-			// As small as possible with depth, but no rectangle
-			SpriteData(
-				Rectangle p_rectangle,
-				Texture2DInterface* p_texture,
-				float p_depth
-				)
-			{
-				rectangle = p_rectangle;
-				origin = Point(0, 0);
-				subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);	// Entire texture
-				texture = p_texture;
-				spriteEffect = SpriteEffect::FLIP_NONE;
-				depth = p_depth;
-				rotation = 0;
-				hasTransparent = false;
-			}
+		// As small as possible with depth, but no rectangle
+		SpriteData(
+			Rectangle p_rectangle,
+			Texture2D* p_texture,
+			float p_depth
+			)
+		{
+			rectangle = p_rectangle;
+			origin = Point(0, 0);
+			subTexture = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);	// Entire texture
+			texture = p_texture;
+			spriteEffect = SpriteEffect::FLIP_NONE;
+			depth = p_depth;
+			rotation = 0;
+			hasTransparent = false;
+		}
 	};
 }

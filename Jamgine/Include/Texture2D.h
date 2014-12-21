@@ -4,7 +4,7 @@
 
 namespace Jamgine
 {
-	class Texture2DInterface
+	class Texture2D
 	{
 	public:
 		virtual ErrorMessage LoadTexture(void* p_memory) = 0;

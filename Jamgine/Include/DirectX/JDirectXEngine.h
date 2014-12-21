@@ -17,8 +17,6 @@ namespace Jamgine
 {
 	namespace JDirectX
 	{
-
-		// 
 		struct SpriteData;
 		struct CameraMatrix
 		{
@@ -34,12 +32,12 @@ namespace Jamgine
 			
 			virtual ErrorMessage Initialize(void* p_data) override;
 			virtual ErrorMessage Initialize(Jamgine::Data_Send p_data) override;
-			virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath) override;
+			virtual ErrorMessage LoadTexture(Texture2D** p_texture2DInterface, char* p_filePath) override;
 			
-			virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture) override;
-			virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture, float p_depth) override;
-			virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture) override;
-			virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture, float p_depth) override;
+			virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture) override;
+			virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture, float p_depth) override;
+			virtual	void Render(Point p_position, float p_width, float p_height, Texture2D* p_texture) override;
+			virtual	void Render(Point p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth) override;
 
 			// Render with a pre-filled SpriteData struct
 			virtual void Render(Jamgine::SpriteData p_spriteData) override;
@@ -80,7 +78,7 @@ namespace Jamgine
 			ID3D11BlendState*			m_blendState;
 
 			// User defined pointers
-			Texture2DManager*	m_texture2DManager;
+			JDirectXTexture2DManager*	m_texture2DManager;
 			ShaderLoader*		m_shaderLoader;
 			ID3D11VertexShader*	m_vertexShader;
 			ID3D11PixelShader*	m_pixelShader;

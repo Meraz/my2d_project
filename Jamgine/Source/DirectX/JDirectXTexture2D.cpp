@@ -2,17 +2,17 @@
 
 namespace Jamgine
 {
-	Texture2D::Texture2D()
+	JDirectXTexture2D::JDirectXTexture2D()
 	{
 		
 	}
 		
-	Texture2D::~Texture2D()
+	JDirectXTexture2D::~JDirectXTexture2D()
 	{
 
 	}	
 
-	ErrorMessage Texture2D::LoadTexture(ID3D11Device* p_device, std::string p_filePath)
+	ErrorMessage JDirectXTexture2D::LoadTexture(ID3D11Device* p_device, std::string p_filePath)
 	{
 		HRESULT hr;
 		std::wstring l_wstring = std::wstring(p_filePath.begin(), p_filePath.end()); // FAUL
@@ -26,18 +26,18 @@ namespace Jamgine
 		return J_OK;
 	}
 
-	ErrorMessage Texture2D::LoadTexture(void* p_memory)
+	ErrorMessage JDirectXTexture2D::LoadTexture(void* p_memory)
 	{
 		m_texture2D_SRV = static_cast<ID3D11ShaderResourceView*>(p_memory);
 		return J_OK;	// TODO
 	}
 
-	void* Texture2D::GetRawData()
+	void* JDirectXTexture2D::GetRawData()
 	{
 		return nullptr; // Not implemented atm
 	}
 
-	ID3D11ShaderResourceView* Texture2D::GetShaderResourceView()
+	ID3D11ShaderResourceView* JDirectXTexture2D::GetShaderResourceView()
 	{
 		return m_texture2D_SRV;
 	}

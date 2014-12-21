@@ -22,12 +22,12 @@ namespace Jamgine
 		virtual ErrorMessage Initialize(Jamgine::Data_Send p_data) = 0;
 
 		// Because of a map, a texture will actually only be loaded once and the same pointer will be returned.
-		virtual ErrorMessage LoadTexture(Texture2DInterface** p_texture2DInterface, char* p_filePath) = 0;
+		virtual ErrorMessage LoadTexture(Texture2D** p_texture, char* p_filePath) = 0;
 
-		virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture) = 0;
-		virtual	void Render(Rectangle p_rectangle, Texture2DInterface* p_texture, float p_depth) = 0;
-		virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture) = 0;
-		virtual	void Render(Point p_position, float p_width, float p_height, Texture2DInterface* p_texture, float p_depth) = 0;
+		virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture) = 0;
+		virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture, float p_depth) = 0;
+		virtual	void Render(Point p_position, float p_width, float p_height, Texture2D* p_texture) = 0;
+		virtual	void Render(Point p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth) = 0;
 
 		// Render with a pre-filled SpriteData struct
 		virtual void Render(Jamgine::SpriteData p_spriteData) = 0;
