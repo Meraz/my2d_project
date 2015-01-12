@@ -27,12 +27,12 @@ public:
 	RenderEntity();
 	virtual ~RenderEntity();
 
-	virtual void Initialize(Point p_position, Point p_origin, Point p_currentSubImage, char* p_texture, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Point p_amountOfSubImages);
-	virtual void Initialize(Point p_position, Point p_currentSubImage, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Point p_amountOfSubImages);
-	virtual void Initialize(Point p_position, char* p_texture, float p_width, float p_height);
+	virtual void Initialize(JFloat2 p_position, JFloat2 p_origin, JFloat2 p_currentSubImage, char* p_texture, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, JFloat2 p_amountOfSubImages);
+	virtual void Initialize(JFloat2 p_position, JFloat2 p_currentSubImage, char* p_texture, float p_width, float p_height, bool p_hasTransparent, JFloat2 p_amountOfSubImages);
+	virtual void Initialize(JFloat2 p_position, char* p_texture, float p_width, float p_height);
 	virtual void Initialize(Jamgine::Rectangle p_rectangle,  char* p_texture);
-	virtual void Initialize(Point p_position, float p_width, float p_height);
-	virtual void Initialize(Point p_position, float p_width, float p_height, bool p_hasTransparent);
+	virtual void Initialize(JFloat2 p_position, float p_width, float p_height);
+	virtual void Initialize(JFloat2 p_position, float p_width, float p_height, bool p_hasTransparent);
 	virtual void Initialize(Jamgine::Rectangle p_rectangle, Texture2D* p_texture, Jamgine::JamgineEngine* p_engine);
 
 	void SetTexture(Texture2D* p_texture);
@@ -47,15 +47,15 @@ public:
 	char m_texturePath[50];
 	Jamgine::Texture2D*	m_texture;
 	Jamgine::SpriteEffect			m_spriteEffect;
-	Jamgine::Point					m_position;
-	Jamgine::Point					m_origin;
-	Jamgine::Point					m_currentSubImage; // 0-n
+	Jamgine::JFloat2					m_position;
+	Jamgine::JFloat2					m_origin;
+	Jamgine::JFloat2					m_currentSubImage; // 0-n
 	float m_width;
 	float m_height;
 	float m_depth;
 	float m_rotation;
 	bool			  m_hasTransparent;
-	Jamgine::Point m_amountOfSubImages;	//1-n
+	Jamgine::JFloat2 m_amountOfSubImages;	//1-n
 	Jamgine::JamgineEngine* m_engine;		//1-n
 	Jamgine::Rectangle m_rectangle;
 

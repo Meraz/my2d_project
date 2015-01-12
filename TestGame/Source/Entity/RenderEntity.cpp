@@ -11,7 +11,7 @@ RenderEntity::~RenderEntity()
 	delete m_texture;
 }
 
-void RenderEntity::Initialize(Point p_position, Point p_origin, Point p_currentSubImage, char* p_texturePath, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, Point p_amountOfSubImages)
+void RenderEntity::Initialize(JFloat2 p_position, JFloat2 p_origin, JFloat2 p_currentSubImage, char* p_texturePath, SpriteEffect p_spriteEffect, float p_width, float p_height, float p_depth, float p_rotation, bool p_hasTransparent, JFloat2 p_amountOfSubImages)
 {
 	strcpy(m_texturePath, p_texturePath);
 
@@ -29,11 +29,11 @@ void RenderEntity::Initialize(Point p_position, Point p_origin, Point p_currentS
 	m_rectangle = Rectangle(m_position, m_width, m_height);
 }
 
-void RenderEntity::Initialize(Point p_position, Point p_textureOffset, char* p_texture, float p_width, float p_height, bool p_hasTransparent, Point p_amountOfSubImages)
+void RenderEntity::Initialize(JFloat2 p_position, JFloat2 p_textureOffset, char* p_texture, float p_width, float p_height, bool p_hasTransparent, JFloat2 p_amountOfSubImages)
 {
 	Initialize(
 		p_position, 
-		Point(0, 0),
+		JFloat2(0, 0),
 		p_textureOffset, 
 		p_texture, 
 		SpriteEffect::FLIP_NONE,
@@ -42,15 +42,15 @@ void RenderEntity::Initialize(Point p_position, Point p_textureOffset, char* p_t
 		STANDARD_SPRITE_DEPTH, 
 		0,
 		false,
-		Point(1, 1)
+		JFloat2(1, 1)
 		);
 }
-void RenderEntity::Initialize(Point p_position, char* p_texture, float p_width, float p_height)
+void RenderEntity::Initialize(JFloat2 p_position, char* p_texture, float p_width, float p_height)
 {
 	Initialize(
 		p_position,
-		Point(0, 0),
-		Point(0, 0),
+		JFloat2(0, 0),
+		JFloat2(0, 0),
 		p_texture,
 		SpriteEffect::FLIP_NONE,
 		p_width,
@@ -58,16 +58,16 @@ void RenderEntity::Initialize(Point p_position, char* p_texture, float p_width, 
 		STANDARD_SPRITE_DEPTH,
 		0,
 		false,
-		Point(1, 1)
+		JFloat2(1, 1)
 		);
 }
 
-void RenderEntity::Initialize(Point p_position, float p_width, float p_height)
+void RenderEntity::Initialize(JFloat2 p_position, float p_width, float p_height)
 {
 	Initialize(
 		p_position,
-		Point(0, 0),
-		Point(1, 1),
+		JFloat2(0, 0),
+		JFloat2(1, 1),
 		nullptr,
 		SpriteEffect::FLIP_NONE,
 		p_width,
@@ -75,7 +75,7 @@ void RenderEntity::Initialize(Point p_position, float p_width, float p_height)
 		STANDARD_SPRITE_DEPTH,
 		0, 
 		false,
-		Point(1, 1)
+		JFloat2(1, 1)
 		);
 }
 
@@ -83,8 +83,8 @@ void RenderEntity::Initialize(Jamgine::Rectangle p_rectangle, char* p_texture)
 {
 	Initialize(
 		p_rectangle.position,
-		Point(0, 0),
-		Point(0, 0),
+		JFloat2(0, 0),
+		JFloat2(0, 0),
 		p_texture,
 		SpriteEffect::FLIP_NONE,
 		p_rectangle.width,
@@ -92,16 +92,16 @@ void RenderEntity::Initialize(Jamgine::Rectangle p_rectangle, char* p_texture)
 		STANDARD_SPRITE_DEPTH,
 		0,
 		false,
-		Point(1, 1)
+		JFloat2(1, 1)
 		);
 }
 
-void RenderEntity::Initialize(Point p_position, float p_width, float p_height, bool p_hasTransparent)
+void RenderEntity::Initialize(JFloat2 p_position, float p_width, float p_height, bool p_hasTransparent)
 {
 	Initialize(
 		p_position,
-		Point(0, 0),
-		Point(1, 1),
+		JFloat2(0, 0),
+		JFloat2(1, 1),
 		nullptr,
 		SpriteEffect::FLIP_NONE,
 		p_width,
@@ -109,7 +109,7 @@ void RenderEntity::Initialize(Point p_position, float p_width, float p_height, b
 		STANDARD_SPRITE_DEPTH,
 		0,
 		p_hasTransparent,
-		Point(1, 1)
+		JFloat2(1, 1)
 		);
 }
 
@@ -136,7 +136,7 @@ void RenderEntity::Update(double p_deltaTime)
 
 void RenderEntity::Render()
 {
-	m_engine->Render(Jamgine::SpriteData(m_rectangle, Point(200.0f, 200.0f), Jamgine::Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, Jamgine::SpriteEffect::FLIP_NONE, 0.0, 0.0f, false));
+	m_engine->Render(Jamgine::SpriteData(m_rectangle, JFloat2(200.0f, 200.0f), Jamgine::Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, Jamgine::SpriteEffect::FLIP_NONE, 0.0, 0.0f, false));
 }
 
 std::stringstream RenderEntity::ToFile()
