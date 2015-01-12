@@ -13,7 +13,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	return 0;
 }
 
-
 #elif defined(UNIX) && !defined(WIN32)
 /* Do linux stuff */
 int main()

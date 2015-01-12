@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 2.8)
 set(SOLUTION_NAME Jamgine)
 project(${SOLUTION_NAME})
 
-
 option(COMPILE_RELEASE_BUILD "Release build (Unchecked is debug)" OFF)
 option(COMPILE_64_BIT_BUILD "64 bit build (Unchecked is 64bit)" OFF)
 
@@ -44,3 +43,4 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Add subdirectories
 add_subdirectory(Jamgine)
 add_subdirectory(TestGame)
+add_subdirectory(SubsystemTest)
