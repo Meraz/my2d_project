@@ -1,13 +1,16 @@
-#include <SubsystemTest/Include/Math1.hpp>
+#include <SubsystemTest/Include/Math1.h>
 
-namespace Jamgine
-{
-	float Math1::floatAdd(float left, float right) {
-		return left + right;
+namespace Jamgine {
+	namespace MathSpace {
+
+		float Math1::floatAdd(float left, float right) {
+			return left + right;
+		}
+
 	}
 }
 
-Jamgine::MathInterface* CreateSoundInterface()
+Jamgine::MathSpace::MathInterface* CreateMathInterface(void)
 {
-	return new Jamgine::Math1();
+	return new Jamgine::MathSpace::Math1;
 }
