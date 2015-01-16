@@ -8,7 +8,7 @@ project(${PROJECT_NAME})
 # Set the files used in the target
 file(GLOB_RECURSE HEADERS Include/*.h)
 file(GLOB_RECURSE SOURCES Source/*.cpp)
-set(LIBRARIES ${EXTERNAL_LIBRARIES} Jamgine)
+set(LIBRARIES ${EXTERNAL_LIBRARIES} Jamgine DynamicLoader)
 
 # Add the target
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})

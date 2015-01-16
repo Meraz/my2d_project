@@ -27,7 +27,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 
 
 	Jamgine::Texture2D* a;
-	m_engine->LoadTexture(&a, "Alpha.dds");
+	m_engine->LoadTexture(&a, "ball.dds");
 	for (unsigned int i = 0; i < 2; i++)
 	{
 		m_renderEntities.push_back(new RenderEntity());
