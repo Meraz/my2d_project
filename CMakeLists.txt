@@ -33,6 +33,8 @@ set(EXTERNAL_INCLUDE_DIRS
 	
 set(EXTERNAL_LIBRARIES
 	${DIRECTX11_LIBRARY}
+	${DIRECTX11_COMPILER_LIBRARY}
+	${DIRECTX11_DXGUID_LIBRARY}
 )
 
 # Set global compiler options
@@ -44,3 +46,10 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Add subdirectories
 add_subdirectory(Jamgine)
 add_subdirectory(TestGame)
+
+# Copy game resources
+add_custom_target(_resourceCopy ALL 
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources/HLSL ${CMAKE_BINARY_DIR}/TestGame
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources/Level ${CMAKE_BINARY_DIR}/TestGame
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Resources/Texture ${CMAKE_BINARY_DIR}/TestGame
+)
