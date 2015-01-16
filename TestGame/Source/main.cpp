@@ -3,15 +3,23 @@
 /* Do windows stuff */
 #include <Windows.h>
 #include <SubsystemTest/Include/Math1.h>
+#include <DynamicLoader/Include/DynamicLoader.h>
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
+	void* m_math1Module = nullptr;
+	m_math1Module = DynamicLoader::LoadSharedLibrary("SubsystemTest.dll");
 
-	Jamgine::MathSpace::MathInterface* a = CreateMathInterface();
+	//if (m_math1Module != nullptr)
 	
-	float b = a->floatAdd(5.0f, 7.0f);
+		CREATEMATHINTERFACE libMath1Lib = (CREATEMATHINTERFACE)DynamicLoader::LoadProcess(m_math1Module, "CreateMathInterface");
+		Jamgine::MathSpace::Math1* math1 = (Jamgine::MathSpace::Math1*)libMath1Lib();
+		float test = math1->floatAdd(5.0f, 7.0f);
+
 	
+
+
 	Jamgame* l_jamgame = new Jamgame();
 	l_jamgame->Initialize(hInstance, lpCmdLine, nCmdShow);
 	l_jamgame->Run();
