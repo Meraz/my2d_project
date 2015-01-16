@@ -1,7 +1,7 @@
 #include <TestGame/Include/Jamgame.h>
 
 #include <Windowsx.h>
-#include <Jamgine/Include/DirectX/JDirectXDataSend.h>
+#include <Jamgine/Render/Include/DirectX/JDirectXDataSend.h>
 
 #define CLIENT_WIDTH 800
 #define CLIENT_HEIGHT 800
@@ -42,7 +42,7 @@ void Jamgame::Initialize(HINSTANCE p_hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	if (hr == J_FAIL)
 		return;
 
-	Jamgine::Data_Send l_data;
+	Jamgine::Render::Data_Send l_data;
 	l_data.hInstance	= p_hInstance;
 	l_data.messageProc	= &MainWndProc;
 	l_data.clientWidth	= CLIENT_WIDTH;

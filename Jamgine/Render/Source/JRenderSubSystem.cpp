@@ -1,4 +1,4 @@
-#include <Jamgine/Include/Jamgine.h>
+/*#include <Jamgine/Include/Jamgine.h>
 #include <Jamgine/Include/Shared.h>
 #include <exception>
 #include <Jamgine/Render/Include/DirectX/JDirectXEngine.h>
@@ -17,7 +17,7 @@ namespace Jamgine
 			if(p_graphicalSystem == GraphicalSystem::DIRECTX)
 			{
 				try{
-					m_jamgineEngine = new JamgineEngine();
+					m_jamgineEngine = new Render::DirectXEngine();
 				}
 				catch(std::exception e)
 				{
@@ -55,4 +55,5 @@ namespace Jamgine
 		//}
 		return l_errorMessage;
 	}	
-}
+	
+}*/

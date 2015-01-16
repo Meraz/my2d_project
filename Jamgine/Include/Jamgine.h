@@ -21,20 +21,6 @@ namespace Jamgine
 		// If Jamgine/Include/'API'Shared has been included, a definition of the struct exists.
 		virtual ErrorMessage Initialize(Jamgine::Data_Send p_data) = 0;
 
-		// Because of a map, a texture will actually only be loaded once and the same pointer will be returned.
-		virtual ErrorMessage LoadTexture(Texture2D** p_texture, char* p_filePath) = 0;
-
-		virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture) = 0;
-		virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture, float p_depth) = 0;
-		virtual	void Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture) = 0;
-		virtual	void Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth) = 0;
-
-		// Render with a pre-filled SpriteData struct
-		virtual void Render(Jamgine::SpriteData p_spriteData) = 0;
-
-		// This function is called once per draw, this call actually renders the sprites to the backbuffer.
-		virtual void PostRender() = 0;
-
 	private:
 		static JamgineEngine* m_jamgineEngine;		
 	

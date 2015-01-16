@@ -6,7 +6,7 @@
 // c++ includes
 
 // Jamgine includes
-#include <Jamgine/Include/DirectX/JDirectXTexture2D.h>
+#include <Jamgine/Render/Include/DirectX/JDirectXTexture2D.h>
 
 // Others
 
@@ -26,7 +26,7 @@ void GameScene::Initialize(SceneManagerInterface* p_sceneManagerInterface, Jamgi
 	BaseScene::Initialize(p_sceneManagerInterface, p_engine);
 
 
-	Jamgine::Texture2D* a;
+	Texture2D* a;
 	m_engine->LoadTexture(&a, "ball.dds");
 	for (unsigned int i = 0; i < 2; i++)
 	{

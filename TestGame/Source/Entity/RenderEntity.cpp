@@ -136,7 +136,7 @@ void RenderEntity::Update(double p_deltaTime)
 
 void RenderEntity::Render()
 {
-	m_engine->Render(Jamgine::SpriteData(m_rectangle, JFloat2(200.0f, 200.0f), Jamgine::Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, Jamgine::SpriteEffect::FLIP_NONE, 0.0, 0.0f, false));
+	m_engine->Render(SpriteData(m_rectangle, JFloat2(200.0f, 200.0f), Rectangle(0.0f, 0.0f, 1.0f, 1.0f), m_texture, SpriteEffect::FLIP_NONE, 0.0, 0.0f, false));
 }
 
 std::stringstream RenderEntity::ToFile()
