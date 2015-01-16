@@ -11,14 +11,12 @@ namespace
 	Jamgame* g_jamgame = nullptr;
 }
 
-
 LRESULT CALLBACK MainWndProc(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
 {
 	// Forward hwnd on because we can get messages (e.g., WM_CREATE)
 	// before CreateWindow returns, and thus before m_hMainWnd is valid.
 	return g_jamgame->MsgProc(p_hwnd, p_msg, p_wParam, p_lParam);
 }
-
 
 Jamgame::Jamgame()
 :	m_gameTimer(nullptr), m_gamePaused(false), m_mousePositionX(0), m_mousePositionY(0), m_mouseClicked(false),
