@@ -1,4 +1,4 @@
-#include "Jamgine\Include\MemoryAllocator\SingleFrameStack.h"
+#include <Jamgine/Memory/Include/SingleFrameStack.h>
 #include <stdlib.h>
 
 SingleFrameStack::SingleFrameStack(unsigned p_stacksize, bool p_shared)

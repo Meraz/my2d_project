@@ -1,4 +1,4 @@
-#include <Jamgine\Include\MemoryAllocator\MemoryAllocator.h>
+#include <Jamgine/Memory/Include/MemoryAllocator.h>
 
 MemoryAllocator::~MemoryAllocator()
 {

@@ -1,5 +1,11 @@
 #pragma once
 
+#if defined(_WINDLL)
+#define RENDER_SUBSYSTEM __declspec(dllexport)
+#else
+#define RENDER_SUBSYSTEM __declspec(dllimport)
+#endif
+
 /*
 *	Jamgine general includes
 */
@@ -22,12 +28,6 @@ namespace Jamgine
 		class JRenderSubsystem
 		{		
 		public:
-			// As long as the data is packed correctly it can be sent as a void*. This has the benefit of skipping one include file.
-			virtual ErrorMessage Initialize(void* p_data) = 0;
-			
-			// If Jamgine/Include/'API'Shared has been included, a definition of the struct exists.
-			virtual ErrorMessage Initialize(Data_Send p_data) = 0;
-
 			// Because of a map, a texture will actually only be loaded once and the same pointer will be returned.
 			virtual ErrorMessage LoadTexture(Texture2D** p_texture, char* p_filePath) = 0;
 
@@ -43,4 +43,10 @@ namespace Jamgine
 			virtual void PostRender() = 0;
 		};
 	}
+}
+
+extern "C"
+{
+	typedef Jamgine::Render::JRenderSubsystem* (*CREATERENDERSUBSYSTEM) (void);
+	RENDER_SUBSYSTEM Jamgine::Render::JRenderSubsystem* CreateRenderSubsystem(void);
 }

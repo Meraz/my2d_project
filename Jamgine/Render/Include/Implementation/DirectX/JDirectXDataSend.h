@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Jamgine/Render/Include/DirectX/JDirectXShared.h>
+#include <Jamgine/Render/Include/Implementation/DirectX/JDirectXShared.h>
 
 #include <DirectX/d3d11_1.h>
 

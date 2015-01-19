@@ -1,4 +1,4 @@
-#include "Jamgine\Include\MemoryAllocator\StackAllocator.h"
+#include <Jamgine/Memory/Include/StackAllocator.h>
 #include <stdlib.h>
 
 

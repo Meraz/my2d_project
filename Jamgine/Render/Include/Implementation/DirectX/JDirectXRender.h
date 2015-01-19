@@ -14,10 +14,10 @@
 *	Subsystem includes
 */
 #include <Jamgine/Render/Include/JRenderSubSystem.h>
-#include <Jamgine/Render/Include/DirectX/JDirectXTexture2DManager.h>
+#include <Jamgine/Render/Include/Implementation/DirectX/JDirectXTexture2DManager.h>
 #include <Jamgine/Render/Include/Shader/ShaderLoader.h>
 #include <Jamgine/Render/Include/JCamera.h>
-#include <Jamgine/Render/Include/DirectX/JDirectXDataSend.h>
+#include <Jamgine/Render/Include/Implementation/DirectX/JDirectXDataSend.h>
 
 /*
 *	Other subsystems
@@ -34,14 +34,17 @@ namespace Jamgine
 			DirectX::XMFLOAT4X4 m_proj;
 		};
 
-		class DirectXEngine : public JRenderSubsystem
+		struct Data_Send;
+
+		class JDirectXRender : public JRenderSubsystem
 		{
 		public:
-			DirectXEngine();
-			virtual ~DirectXEngine();
+			JDirectXRender();
+			virtual ~JDirectXRender();
+
+			// If Jamgine/Include/'API'Shared has been included, a definition of the struct exists.
+			virtual ErrorMessage Initialize(Data_Send p_data);
 			
-			virtual ErrorMessage Initialize(void* p_data) override;
-			virtual ErrorMessage Initialize(Data_Send p_data) override;
 			virtual ErrorMessage LoadTexture(Texture2D** p_texture2DInterface, char* p_filePath) override;
 			
 			virtual	void Render(Rectangle p_rectangle, Texture2D* p_texture) override;

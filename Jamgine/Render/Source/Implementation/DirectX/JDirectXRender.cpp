@@ -6,9 +6,9 @@
 #include <DirectXColors.h>
 
 // Project files
-#include <Jamgine/Render/Include/DirectX/JDirectXEngine.h>
-#include <Jamgine/Render/Include/DirectX/JDirectXDataSend.h>
-#include <Jamgine/Render/Include/DirectX/JDirectXCamera.h>
+#include <Jamgine/Render/Include/Implementation/DirectX/JDirectXRender.h>
+#include <Jamgine/Render/Include/Implementation/DirectX/JDirectXDataSend.h>
+#include <Jamgine/Render/Include/Implementation/DirectX/JDirectXCamera.h>
 #include <DirectXMath.h>
 
 
@@ -43,7 +43,7 @@ namespace Jamgine
 				}
 			};
 
-			DirectXEngine::DirectXEngine()
+			JDirectXRender::JDirectXRender()
 				: m_device(nullptr),
 				m_deviceContext(nullptr),
 				m_swapChain(nullptr),
@@ -73,33 +73,12 @@ namespace Jamgine
 
 			}
 
-			DirectXEngine::~DirectXEngine()
+			JDirectXRender::~JDirectXRender()
 			{
-
+				// TODO
 			}
 
-			ErrorMessage DirectXEngine::Initialize(void* p_data)
-			{
-				ErrorMessage l_errorMessage = J_OK;
-				Data_Send l_data;
-				try
-				{
-					l_data = *(Data_Send*)p_data;
-				}
-				catch (std::exception e)
-				{
-					return J_FAIL;
-				}
-
-				// Run regular init
-				l_errorMessage = Initialize(l_data);
-				if (l_errorMessage != J_OK)
-					return J_FAIL;
-
-				return l_errorMessage;
-			}
-
-			ErrorMessage DirectXEngine::Initialize(Data_Send p_data)
+			ErrorMessage JDirectXRender::Initialize(Data_Send p_data)
 			{
 				ErrorMessage l_errorMessage = J_OK;
 
@@ -139,7 +118,7 @@ namespace Jamgine
 				return l_errorMessage;
 			}
 
-			HRESULT DirectXEngine::RegisterWindow(Data_Send p_data)
+			HRESULT JDirectXRender::RegisterWindow(Data_Send p_data)
 			{
 				HRESULT l_hr = S_OK;
 
@@ -185,7 +164,7 @@ namespace Jamgine
 				return l_hr;
 			}
 
-			HRESULT DirectXEngine::InitializeSwapChain()
+			HRESULT JDirectXRender::InitializeSwapChain()
 			{
 				HRESULT l_hr = S_OK;
 
@@ -233,7 +212,7 @@ namespace Jamgine
 				return l_hr;
 			}
 
-			void DirectXEngine::SetViewport()
+			void JDirectXRender::SetViewport()
 			{
 				D3D11_VIEWPORT vp;
 				vp.Width = (FLOAT)m_clientWidth;
@@ -245,7 +224,7 @@ namespace Jamgine
 				m_deviceContext->RSSetViewports(1, &vp);
 			}
 
-			HRESULT DirectXEngine::CreateDepthBuffer()
+			HRESULT JDirectXRender::CreateDepthBuffer()
 			{
 				HRESULT l_hr = S_OK;
 
@@ -310,7 +289,7 @@ namespace Jamgine
 				return l_hr;
 			}
 
-			HRESULT DirectXEngine::InitializeRenderTarget()
+			HRESULT JDirectXRender::InitializeRenderTarget()
 			{
 				HRESULT l_hr = S_OK;
 				ID3D11Texture2D* l_backBuffer;
@@ -329,7 +308,7 @@ namespace Jamgine
 				return l_hr;
 			}
 
-			HRESULT DirectXEngine::CreateRasterizers()
+			HRESULT JDirectXRender::CreateRasterizers()
 			{
 				HRESULT l_hr = S_OK;
 				D3D11_RASTERIZER_DESC desc;
@@ -356,7 +335,7 @@ namespace Jamgine
 				return l_hr;
 			}
 
-			HRESULT DirectXEngine::SetBlendState()
+			HRESULT JDirectXRender::SetBlendState()
 			{
 				HRESULT l_hr = S_OK;
 				D3D11_BLEND_DESC l_blendStateDesc;
@@ -384,7 +363,7 @@ namespace Jamgine
 				// TODO return value
 			}
 
-			HRESULT DirectXEngine::CreateBuffer()
+			HRESULT JDirectXRender::CreateBuffer()
 			{
 				HRESULT l_hr = S_OK;
 
@@ -442,7 +421,7 @@ namespace Jamgine
 				// TODO return value
 			}
 
-			HRESULT DirectXEngine::LoadShaders()
+			HRESULT JDirectXRender::LoadShaders()
 			{
 				HRESULT l_hr;
 
@@ -488,7 +467,7 @@ namespace Jamgine
 				return l_hr;
 			}
 
-			HRESULT DirectXEngine::AllocateMemory()
+			HRESULT JDirectXRender::AllocateMemory()
 			{
 				HRESULT l_hr = S_OK;
 
@@ -497,37 +476,37 @@ namespace Jamgine
 				return l_hr;
 			}
 
-			ErrorMessage DirectXEngine::LoadTexture(Texture2D** p_texture, char* p_filePath)
+			ErrorMessage JDirectXRender::LoadTexture(Texture2D** p_texture, char* p_filePath)
 			{
 				return m_texture2DManager->GetTexture(p_texture, p_filePath);
 			}
 
-			void DirectXEngine::Render(Rectangle p_rectangle, Texture2D* p_texture)
+			void JDirectXRender::Render(Rectangle p_rectangle, Texture2D* p_texture)
 			{
 				m_renderData.push_back(SpriteData(p_rectangle, p_texture));
 			}
 
-			void DirectXEngine::Render(Rectangle p_rectangle, Texture2D* p_texture, float p_depth)
+			void JDirectXRender::Render(Rectangle p_rectangle, Texture2D* p_texture, float p_depth)
 			{
 				m_renderData.push_back(SpriteData(p_rectangle, p_texture, p_depth));
 			}
 
-			void DirectXEngine::Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture)
+			void JDirectXRender::Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture)
 			{
 				m_renderData.push_back(SpriteData(p_position, p_width, p_height, p_texture));
 			}
 
-			void DirectXEngine::Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth)
+			void JDirectXRender::Render(JFloat2 p_position, float p_width, float p_height, Texture2D* p_texture, float p_depth)
 			{
 				m_renderData.push_back(SpriteData(p_position, p_width, p_height, p_texture, p_depth));
 			}
 
-			void DirectXEngine::Render(SpriteData p_spriteData)
+			void JDirectXRender::Render(SpriteData p_spriteData)
 			{
 				m_renderData.push_back(p_spriteData);
 			}
 
-			void DirectXEngine::PostRender()
+			void JDirectXRender::PostRender()
 			{
 				int max = m_renderData.size() - 1;
 				if (max < 0)
@@ -585,7 +564,7 @@ namespace Jamgine
 				m_singleFrameStack->Wipe();
 			}
 
-			void DirectXEngine::updateCameraMatrix()
+			void JDirectXRender::updateCameraMatrix()
 			{
 
 			}
@@ -630,7 +609,7 @@ namespace Jamgine
 				return (p_a.depth > p_b.depth);
 			}
 
-			void DirectXEngine::SortSprites()
+			void JDirectXRender::SortSprites()
 			{
 				int size = m_renderData.size() - 1;
 				bool NOTWORKING = TRUE;

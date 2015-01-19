@@ -1,7 +1,8 @@
 #include <Jamgine/Include/Jamgine.h>
 #include <Jamgine/Include/Shared.h>
 #include <exception>
-#include <Jamgine/Render/Include/DirectX/JDirectXEngine.h>
+
+#include <Jamgine/Include/Implementation/JamgineImplementation.h>
 
 namespace Jamgine
 {
@@ -17,7 +18,7 @@ namespace Jamgine
 			if(p_graphicalSystem == GraphicalSystem::DIRECTX)
 			{
 				try{
-					m_jamgineEngine = new JamgineEngine();
+					m_jamgineEngine = new JamgineImplementation();
 				}
 				catch(std::exception e)
 				{

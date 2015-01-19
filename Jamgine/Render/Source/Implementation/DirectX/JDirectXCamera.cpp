@@ -1,4 +1,4 @@
-#include <Jamgine/Render/Include/DirectX/JDirectXCamera.h>
+#include <Jamgine/Render/Include/Implementation/DirectX/JDirectXCamera.h>
 
 using namespace DirectX;
 
