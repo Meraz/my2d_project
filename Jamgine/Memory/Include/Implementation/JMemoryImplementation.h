@@ -9,10 +9,10 @@ namespace Jamgine
 		class JMemoryImplementation : public JMemorySubsystem
 		{
 		public:
-			virtual void GetMemoryPool() override {
-
-			}
-
+			JMemoryImplementation();
+			virtual ~JMemoryImplementation();
+			virtual SingleFrameStack* CreateSingleFrameStack(unsigned int p_stacksize, bool p_shared) override;
+			virtual StackAllocator* CreateStack(unsigned int p_stacksize, bool p_shared) override;
 		};
 	}
 }

@@ -127,7 +127,7 @@ namespace Jamgine
 			CameraMatrix m_cameraMatrix;
 
 			// Memory stuff
-			SingleFrameStack* m_singleFrameStack;
+			Memory::SingleFrameStack* m_singleFrameStack;
 		};
 	}
 }

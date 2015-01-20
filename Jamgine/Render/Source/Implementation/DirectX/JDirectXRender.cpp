@@ -471,7 +471,7 @@ namespace Jamgine
 			{
 				HRESULT l_hr = S_OK;
 
-				m_singleFrameStack = new SingleFrameStack(sizeof(Vertex)* 10000, false); // TODO, fix hardcoded size
+				m_singleFrameStack = new Memory::SingleFrameStack(sizeof(Vertex)* 10000, false); // TODO, fix hardcoded size
 
 				return l_hr;
 			}
