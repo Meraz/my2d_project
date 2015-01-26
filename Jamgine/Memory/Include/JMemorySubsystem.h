@@ -15,7 +15,6 @@ namespace Jamgine
 	namespace Memory
 	{
 		class SingleFrameStack;
-		class SingleFrameStack;
 
 		class JMemorySubsystem 
 		{		

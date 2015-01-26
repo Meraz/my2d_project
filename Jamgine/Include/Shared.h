@@ -4,9 +4,10 @@
 
 namespace Jamgine
 {	
-	enum class GraphicalSystem
+	enum class Subsystem 
 	{
-		DIRECTX,
-		OPENGL
+		GRAPHIC = 1,
+		GRAPHIC_DIRECTX = 2,
+		GRAPHIC_OPENGL = 4,
 	};
 }

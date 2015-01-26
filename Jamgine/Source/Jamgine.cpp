@@ -9,7 +9,7 @@ namespace Jamgine
 	
 	JamgineEngine* JamgineEngine::m_jamgineEngine = nullptr;
 
-	ErrorMessage JamgineEngine::CreateEngine(JamgineEngine** p_jamgineEngine, GraphicalSystem p_graphicalSystem)
+	ErrorMessage JamgineEngine::CreateEngine(JamgineEngine** p_jamgineEngine, Subsystem p_subsystems,  GraphicalSystem p_graphicalSystem)
 	{
 		ErrorMessage l_errorMessage = J_OK;
 		
